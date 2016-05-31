@@ -1,0 +1,11 @@
+Package: bhm
+Type: Package
+Title: Biomarker Threshold Models
+Version: 1.05
+Date: 2016-05-29
+Author: Bingshu E. Chen
+Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
+Depends: survival
+Description: bhm is a set of tools to fit both predictive and prognostic biomarker threshold models. 
+License: GPL (>=2)
+LazyLoad: yes

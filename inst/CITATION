@@ -1,0 +1,27 @@
+#citHeader("To cite package 'bhm' in publications use:")
+
+# Grab the version and date from the DESCRIPTION file
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("bhm")
+#year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
+vers <- paste("R package version", meta$Version)
+
+bibentry(bibtype="Manual",
+         title = "A Package for Hierarchical Bayes Threshold Model",
+	 author= c(person(c("Bingshu E"), "Chen"), person(c("Tian"), "Fang")),
+	 year = "2013",
+	 note =vers,
+ 	 url="http://CRAN.R-project.org/package=bhm",
+	 key= "Hierarchical Bayes Threshold Model-package"
+	 )
+
+bibentry(bibtype= "article",
+         title="A Hierarchical Bayes Model for Biomarker Subset Effects in Clinical Trials",
+	 author=c(person(c("Bingshu E"), "Chen"),
+	          person(c("Wenyu", "Jiang")),
+		  person(c("Dongsheng", "Tu"))),
+         year = "2014",
+         journal= "Computational Statistics and Data Analysis",
+         address = "New York",
+         isbn = "",
+	 key = "Hierarchical Bayes Model"
+	 )
