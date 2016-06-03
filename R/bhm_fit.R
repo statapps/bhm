@@ -17,12 +17,11 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
     }
   } else {
     D = min(0.05, cx/2, (1-cx)/2)
-    cu = runif(1, cx-D, cx+D)
+    cu = runif(1, max(0.05, cx-D), min(cx+D, 0.95))
   }
   lik1 = thm.lik(x, y, family, beta, q, cu, control)
-  alpha = exp(lik1 - lik)
- 
-  if( runif(1, 0, 1) < alpha) {
+  alpha1 = exp(lik1 - lik)
+  if( runif(1, 0, 1) < alpha1) {
     cx = cu
     lik = lik1
   }
@@ -37,8 +36,8 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   A = chol(sd)
   b1 = bhat + t(A)%*%rnorm(ncol(A), 0, 1)
   lik1 = thm.lik(x, y, family, b1, q, cx, control)
-  alpha = exp(lik1 - lik)
-  if(runif(1, 0, 1) < alpha) {
+  alpha2 = exp(lik1 - lik)
+  if(runif(1, 0, 1) < alpha2) {
     beta = b1
     lik = lik1
   }
