@@ -4,11 +4,12 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   
   #generate cut point cx
   lik = thm.lik(x, y, family, beta, q, cx, control)
+  d0 = 0.005
   if(c.n==2){
     rpt = TRUE
-    D   = min(0.05, (cx[2]-cx[1])/3)
-    D1  = min(0.05, cx[1]/2)
-    D2  = min(0.05, (1-cx[2])/2)
+    D   = min(d0, (cx[2]-cx[1])/3)
+    D1  = min(d0, cx[1]/2)
+    D2  = min(d0, (1-cx[2])/2)
 
     while (rpt) {
       cu = c(runif(1, cx[1]-D1, cx[1]+D), runif(1, cx[2]-D, cx[2]+D2))
@@ -16,15 +17,16 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
       rpt = !(fit$converged)
     }
   } else {
-    D = min(0.05, cx/2, (1-cx)/2)
+    D = min(d0, cx/2, (1-cx)/2)
     cu = runif(1, max(0.05, cx-D), min(cx+D, 0.95))
   }
   lik1 = thm.lik(x, y, family, beta, q, cu, control)
   alpha1 = exp(lik1 - lik)
-  if( runif(1, 0, 1) < alpha1) {
+  if(runif(1, 0, 1) < alpha1) {
     cx = cu
     lik = lik1
   }
+  #cat('cx = ', cx, alpha1, cu, '\n')
 
 #generate beta value using Metropolis-Hasting algorithm. 
 #Candidate value is obtained from the fitted model with 
@@ -35,6 +37,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   A = chol(vb)
   b1 = bhat + t(A)%*%rnorm(ncol(A), 0, 1)
   lik1 = thm.lik(x, y, family, b1, q, cx, control)
+  # Note that prior of beta ~ phi(beta|beta0) was calculated in thm.lik()
   alpha2 = exp(lik1 - lik)
   if(runif(1, 0, 1) < alpha2) {
     beta = b1
