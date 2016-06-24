@@ -4,7 +4,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   
   #generate cut point cx
   lik = thm.lik(x, y, family, beta, q, cx, control)
-  d0 = 0.005
+  d0 = 0.0025
   if(c.n==2){
     rpt = TRUE
     D   = min(d0, (cx[2]-cx[1])/3)
