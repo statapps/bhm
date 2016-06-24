@@ -31,9 +31,8 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
 #current iteraction of cut points.
   fit = thm.fit(x, y, family, cx)
   bhat = fit$coefficient
-  #print(bhat)
-  sd = vcov(fit)
-  A = chol(sd)
+  vb = vcov(fit)
+  A = chol(vb)
   b1 = bhat + t(A)%*%rnorm(ncol(A), 0, 1)
   lik1 = thm.lik(x, y, family, b1, q, cx, control)
   alpha2 = exp(lik1 - lik)
@@ -58,6 +57,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
 bhmFit = function(x, y, family, control){
   R   = control$R
   c.n = control$c.n
+  tn  = control$thining
   var_names = colnames(x)
   
 # use profile likelihood method to get initial value of cut-points
@@ -70,15 +70,20 @@ bhmFit = function(x, y, family, control){
   for (i in 1:control$B) g = bhmGibbs(x, y, family, g$beta, g$q, g$cx, control)
 
 #replications from B+1 to R(total length of Markov Chain is B+R)
+  R1 = R*tn
   bg = matrix(NaN, R, length(g$beta))
   cg = matrix(NaN, R, c.n)
   qg = matrix(NaN, R, c.n)
-
-  for (i in 1:R){
-    g<-bhmGibbs(x, y, family, g$beta, g$q, g$cx, control)
-    qg[i, ] = g$q
-    cg[i, ] = g$cx
-    bg[i, ] = g$beta
+  i = 1
+  for (j in 1:R1){
+    g = bhmGibbs(x, y, family, g$beta, g$q, g$cx, control)
+   
+    if(j%%tn == 0){ 
+      qg[i, ] = g$q
+      cg[i, ] = g$cx
+      bg[i, ] = g$beta
+      i = i + 1
+    }
   }
  
 #estimates and credible interval for the thresholds
@@ -98,9 +103,6 @@ bhmFit = function(x, y, family, control){
   rownames(vcov) = var_names
   se<-sqrt(diag(vcov))
 
-  #fitted.values<-as.vector(X%*%coef)
-  #res<-y - fitted.values
- 
   fit = list(cg=cg,bg=bg,qg=qg,c.max=c.max,cqtl=cqtl,coefficients=coef,coefqtl=coefqtl,vcov=vcov,StdErr=se,var_names=var_names, c.fit = c.fit)
   return(fit)
 }

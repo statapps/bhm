@@ -20,7 +20,6 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   mf = model.frame(formula=formula, data=data)
   
   x = model.matrix(attr(mf, "terms"), data = mf)
-  #print(x[1:10,])
   y = model.response(mf)
   
   if (class(y) == "Surv") {
@@ -87,7 +86,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   return(fit)
 }
 
-bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, epsilon = 0.01, seed = 1, c.n = 1, beta0=0, sigma0 = 1) {
+bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thining = 2, epsilon = 0.01, seed = 1, c.n = 1, beta0=0, sigma0 = 1) {
 
   if(method != 'profile' && method != 'Bayes')
     stop("Please use either 'Bayes' or 'profile' method for model fit")
@@ -113,7 +112,7 @@ bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE,
     stop("value of 'sigma' [varince for beta prior] must be > or = 0")
   sigma0.inv = solve(sigma0)
 
-  return(list(method = method,  interaction = interaction, biomarker.main = biomarker.main, B=B, R=R, epsilon = epsilon, alpha = alpha, seed = seed, c.n=c.n, beta0 = beta0, sigma0.inv = sigma0.inv))
+  return(list(method = method,  interaction = interaction, biomarker.main = biomarker.main, B=B, R=R, thining = thining, epsilon = epsilon, alpha = alpha, seed = seed, c.n=c.n, beta0 = beta0, sigma0.inv = sigma0.inv))
 }
 
 summary.bhm=function(object,...){
@@ -125,6 +124,7 @@ summary.bhm=function(object,...){
     TAB1<-t(rbind(Estimate=x$coefficients,StdErr=x$StdErr,CredibleInterval=x$coefqtl))
     rownames(TAB1) = x$var_names
     TAB2<-t(rbind(Estimate=x$c.max,CredibleInterval=x$cqtl))
+
     #threshold parameter
     if (length(TAB2[, 1]) == 2) {
       rownames(TAB2)=c("lower","higer")

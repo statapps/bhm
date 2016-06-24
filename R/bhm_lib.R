@@ -55,6 +55,11 @@ thm.lik = function(x, y, family, beta, q, cx, control){
     exb = exp(xbeta)  
     lik = sum(y*xbeta - log(1+exb))
   }
+
+  if (family == "gaussian") {
+    xbeta = x%*%beta
+    lik = sum((y-xbeta)^2)
+  }
   
   if (c.n==1) 
     lik2=dbeta(cx, 2, q, log = TRUE)
