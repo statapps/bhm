@@ -11,7 +11,7 @@ for binary data and survival data with an unknown cutoff point of biomarker.
 }
 \details{
 "bhm" is a R package for Biomarker Threshold Models.
-Please use the following steps to install 'bhthm' package:
+Please use the following steps to install 'bhm' package:
 
 1. First, you need to install the 'devtools' package. You can skip this step if you have 'devtools' installed in your R. Invoke R and then type
 

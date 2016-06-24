@@ -43,7 +43,7 @@ This function checks the internal consisitency and returns a list of value as in
 }
 \author{Bingshu E. Chen and Tian Fang}
 \note{
-%%  ~~further notes~~
+  Based on code from Tian Fang
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
