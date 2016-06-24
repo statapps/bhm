@@ -1,5 +1,4 @@
-# bhm
-h1 Biomarker Threhold Models
+# bhm: Biomarker Threhold Models
 
 "bhm" is a R package for Biomarker Threshold Models.
 Please use the following steps to install 'bhm' package:
