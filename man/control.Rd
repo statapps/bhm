@@ -10,7 +10,7 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
 }
 \usage{
   bhmControl(method = 'Bayes', interaction, biomarker.main, alpha, 
-               B, R, thining, epsilon, seed, c.n, beta0, sigma0)
+               B, R, thining, epsilon, c.n, beta0, sigma0)
 }
 
 \arguments{
@@ -25,7 +25,6 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
   \item{R}{set number of replications for Bayes meothd or number of Bootstrap for profile likelihood method}
   \item{thining}{thining parameter for Gibbs samples, default is 2}
   \item{epsilon}{step length for profile likelihood method, default is 0.01}
-  \item{seed}{set random seed}
   \item{alpha}{specify the significance level (e.g. alpha=0.05)}
   \item{c.n}{specify number of threshold (i.e. cut point), default is 1}
   \item{beta0}{initial value for mean of the prior distribution of beta}
