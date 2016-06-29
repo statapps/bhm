@@ -4,7 +4,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   
   #generate cut point cx
   lik = thm.lik(x, y, family, beta, q, cx, control)
-  d0 = 0.025
+  d0 = 0.1
   if(c.n==2){
     rpt = TRUE
     D   = min(d0, (cx[2]-cx[1])/3)
@@ -26,7 +26,6 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
     cx = cu
     lik = lik1
   }
-  #cat('cx = ', cx, alpha1, cu, '\n')
 
 #generate beta value using Metropolis-Hasting algorithm. 
 #Candidate value is obtained from the fitted model with 
@@ -43,6 +42,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
     beta = b1
     lik = lik1
   }
+  #cat('b = ', b1[4], 'bh = ', bhat[4], beta[4], 'alpha = ', alpha2, '\n')
 
 #generate hyper parameter q
   if (c.n == 2) {
