@@ -1,8 +1,6 @@
 # fit threshold method using profile likelihood method
-#prolik = function(x, ...) UseMethod("prolik")
 
 prolikFit = function(x, y, family, control) {
-#  cat("prolik: Profile likelihood  model for covariate defined subset effect\n")
   R = control$R
   x = as.matrix(x)
   fit = pro.fit(x, y, family, control)

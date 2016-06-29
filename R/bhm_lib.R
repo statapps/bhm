@@ -108,7 +108,6 @@ glm.gendat =  function(n, c0, beta){
   return(dat)
 }
 
-
 #empirical cdf tranformation used to convert time interval
 x.cdf = function(x){
   n = length(x)
@@ -118,21 +117,4 @@ x.cdf = function(x){
   }
   p = (p-0.5)/n
   return(p)
-}
-
-#empirical mode
-dismode = function(cg) {
-  ch = hist(cg, breaks = 20)
-  ct = ch$counts
-  cv = ch$breaks
-  i.max = 1
-  n.max = ct[1]
-  for (i in 2:length(ct)) {
-    if(n.max < ct[i]) {
-       n.max = ct[i]
-       i.max = i
-    }
-  }
-  c.max = (cv[i.max] + cv[i.max+1])/2
-  return(c.max)
 }

@@ -106,6 +106,9 @@ bhmFit = function(x, y, family, control){
   rownames(vcov) = var_names
   se<-sqrt(diag(vcov))
 
+  cg = mcmc(cg)
+  bg = mcmc(bg)
+
   fit = list(cg=cg,bg=bg,qg=qg,c.max=c.max,cqtl=cqtl,coefficients=coef,coefqtl=coefqtl,vcov=vcov,StdErr=se,var_names=var_names, c.fit = c.fit)
   return(fit)
 }
