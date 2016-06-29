@@ -29,7 +29,7 @@ thm.fit <-function(x, y, family, cx){
 thm.lik = function(x, y, family, beta, q, cx, control){
   c.n = control$c.n
   beta0 = control$beta0
-  sigma0.inv = (control$sigma0.inv)
+  s0.inv = control$sigma0.inv
   n.col = length(x[1, ])
 
   w = x[, 2]
@@ -65,7 +65,7 @@ thm.lik = function(x, y, family, beta, q, cx, control){
     lik2=dbeta(cx, 2, q, log = TRUE)
   else
     lik2=log(cx[1])+(q[1]-1)*log(cx[2]-cx[1])-q[1]*log(cx[2])+(q[2]-1)*log(1-cx[2])
-  lik = lik + lik2 - 0.5*t(beta-beta0)%*%sigma0.inv%*%(beta-beta0)
+  lik = lik + lik2 - 0.5*t(beta-beta0)%*%s0.inv%*%(beta-beta0)
   return(lik)
 }
 

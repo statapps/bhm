@@ -60,8 +60,9 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
 bhmFit = function(x, y, family, control){
   R   = control$R
   c.n = control$c.n
-  tn  = control$thining
+  tn  = control$thin
   var_names = colnames(x)
+  if(c.n==1) c_names = c('c') else c_names=c('c1', 'c2')
   
 # use profile likelihood method to get initial value of cut-points
   pfit = pro.fit(x, y, family, control=list(R = 0, epsilon=0.1, c.n = c.n))
@@ -77,6 +78,8 @@ bhmFit = function(x, y, family, control){
   bg = matrix(NaN, R, length(g$beta))
   cg = matrix(NaN, R, c.n)
   qg = matrix(NaN, R, c.n)
+  colnames(bg) = var_names
+  colnames(cg) = c_names
   i = 1
   for (j in 1:R1){
     g = bhmGibbs(x, y, family, g$beta, g$q, g$cx, control)
@@ -108,6 +111,7 @@ bhmFit = function(x, y, family, control){
 
   cg = mcmc(cg)
   bg = mcmc(bg)
+  coefqtl = t(HPDinterval(bg))
 
   fit = list(cg=cg,bg=bg,qg=qg,c.max=c.max,cqtl=cqtl,coefficients=coef,coefqtl=coefqtl,vcov=vcov,StdErr=se,var_names=var_names, c.fit = c.fit)
   return(fit)

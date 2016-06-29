@@ -86,7 +86,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   return(fit)
 }
 
-bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thining = 2, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 1) {
+bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thin = 2, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 10000) {
 
   if(method != 'profile' && method != 'Bayes')
     stop("Please use either 'Bayes' or 'profile' method for model fit")
@@ -112,7 +112,7 @@ bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE,
     stop("value of 'sigma' [varince for beta prior] must be > or = 0")
   sigma0.inv = solve(sigma0)
 
-  return(list(method = method,  interaction = interaction, biomarker.main = biomarker.main, B=B, R=R, thining = thining, epsilon = epsilon, alpha = alpha, c.n=c.n, beta0 = beta0, sigma0.inv = sigma0.inv))
+  return(list(method = method,  interaction = interaction, biomarker.main = biomarker.main, B=B, R=R, thin = thin, epsilon = epsilon, alpha = alpha, c.n=c.n, beta0 = beta0, sigma0.inv = sigma0.inv))
 }
 
 summary.bhm=function(object,...){

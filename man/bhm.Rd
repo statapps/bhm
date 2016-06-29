@@ -8,6 +8,8 @@
 \alias{prolikFit}
 \alias{thm.fit}
 \alias{thm.lik}
+\alias{pro.fit}
+\alias{x.cdf}
 
 \title{
 Fitting Biomarker Threshold Models
@@ -66,6 +68,8 @@ When interaction = FALSE, a prognostic biomarker model will be fitted.
 Both Biomarker and Treatment variables are required if 'interaction' = TRUE and 'treatment' shall be the second variable in the formula.
 
 'bhmFit' and 'bhmGibbs' are the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
+
+'x.cdf' is a function that maps biomarker values to interval (0, 1) using its empirical cumulative distribution function.
 }
 \value{
 %%  ~Describe the value returned
