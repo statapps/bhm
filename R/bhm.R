@@ -30,12 +30,16 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
     x = x[idx, ]
   }
   
-  # inverse cdf transformation of biomarker
-  w = x[, 2]
-  x[, 2] = x.cdf(x[, 2])
-
   control = do.call("bhmControl", control)
   n.col  = ncol(x)
+
+  # inverse cdf transformation of biomarker
+  w = x[, 2]
+  if((min(w) < 0) | (max(w) > 1)) {
+    x[, 2] = x.cdf(x[, 2])
+    transform = TRUE
+  } else transform = FALSE
+
 
   #Fit a prognostic model with biomarker term only
   if(n.col == 2) {
@@ -57,7 +61,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
       x = x1
       colnames(x) = var_names
     } else {
-      colnames(x)[3] = int_names
+      colnames(x)[2] = int_names
     }
   }
   #print(x[1:5, ])
@@ -75,18 +79,19 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   fit = bhm.default(x, y, family, control, ...)
 
   # transoform the value of biomarker back to original value
-  fit$c.max = quantile(w, fit$c.max)
-
-  qtlName = rownames(fit$cqtl)
-  fit$cqtl = matrix(quantile(w, fit$cqtl), nrow = 2)
-  rownames(fit$cqtl) = qtlName
+  if(transform) {
+    fit$c.max = quantile(w, fit$c.max)
+    qtlName = rownames(fit$cqtl)
+    fit$cqtl = matrix(quantile(w, fit$cqtl), nrow = 2)
+    rownames(fit$cqtl) = qtlName
+  }
 
   fit$call = match.call()
   fit$formula = formula
   return(fit)
 }
 
-bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thin = 2, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 10000) {
+bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thin = 1, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 10000) {
 
   if(method != 'profile' && method != 'Bayes')
     stop("Please use either 'Bayes' or 'profile' method for model fit")

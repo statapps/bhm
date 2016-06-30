@@ -13,8 +13,11 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
 
     while (rpt) {
       cu = c(runif(1, cx[1]-D1, cx[1]+D), runif(1, cx[2]-D, cx[2]+D2))
-      fit = thm.fit(x, y, family, cu)
-      rpt = !(fit$converged)
+      if(cu[2] - cu[1] < 0.05) rpt = TRUE
+      else {
+        fit = thm.fit(x, y, family, cu)
+        rpt = !(fit$converged)
+      }
     }
   } else {
     D = min(d0, cx/2, (1-cx)/2)
@@ -42,7 +45,6 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
     beta = b1
     lik = lik1
   }
-  #cat('b = ', b1[4], 'bh = ', bhat[4], beta[4], 'alpha = ', alpha2, '\n')
 
 #generate hyper parameter q
   if (c.n == 2) {
@@ -65,7 +67,7 @@ bhmFit = function(x, y, family, control){
   if(c.n==1) c_names = c('c') else c_names=c('c1', 'c2')
   
 # use profile likelihood method to get initial value of cut-points
-  pfit = pro.fit(x, y, family, control=list(R = 0, epsilon=0.1, c.n = c.n))
+  pfit = pro.fit(x, y, family, control=list(R = 0, epsilon=0.02, c.n = c.n))
 
 # generate initial values for parameters
   g = list(cx = pfit$c.max, beta = pfit$coefficient, q = rep(2, c.n))
@@ -78,8 +80,6 @@ bhmFit = function(x, y, family, control){
   bg = matrix(NaN, R, length(g$beta))
   cg = matrix(NaN, R, c.n)
   qg = matrix(NaN, R, c.n)
-  colnames(bg) = var_names
-  colnames(cg) = c_names
   i = 1
   for (j in 1:R1){
     g = bhmGibbs(x, y, family, g$beta, g$q, g$cx, control)
@@ -105,6 +105,8 @@ bhmFit = function(x, y, family, control){
    
   vcov<-cov(bg)
   if (family == "surv") var_names = var_names[-1]
+  colnames(cg)   =   c_names
+  colnames(bg)   = var_names
   colnames(vcov) = var_names
   rownames(vcov) = var_names
   se<-sqrt(diag(vcov))

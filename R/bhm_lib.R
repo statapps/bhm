@@ -4,23 +4,24 @@ thm.fit <-function(x, y, family, cx){
   c.n = length(cx)
   n.col = length(x[1, ])
   x = x[, -1]
+  #remove intercept x1 biomarker, x2 trt 
   if(n.col == 2) x = matrix(x, ncol = 1)
   w = x[, 1]
   if (c.n == 1) x[, 1] = ifelse(cx <= w, 1, 0)
   if (c.n == 2) x[, 1] = ifelse((cx[1]<=w) & (w<=cx[2]), 1, 0)
   
   if (length(grep(":", colnames(x)[3])) == 1) 
-    x[, 3]=x[, 1]*x[, 2]
-  else if(length(grep(":", colnames(x)[2])) == 1) 
-    x[, 2] = x[, 1]*x[, 2]
+    x[, 3] = x[, 1]*x[, 2]
+  else if(length(grep(":", colnames(x)[1])) == 1) 
+    x[, 1] = x[, 1]*x[, 2]
 
   x.c_ = x
   if (family == "surv") {
-    fit = coxph(y~x.c_)
-    fit$converged = TRUE
+    fit = tryCatch(coxph(y~x.c_), warning = function(w) w)
+    if(is(fit, "warning")) fit = list(converged = FALSE)
+    else fit$converged = TRUE
   }
-  else 
-    fit = glm(y~x.c_, family=family)
+  else fit = glm(y~x.c_, family=family)
   
   return(fit)
 }
@@ -36,10 +37,11 @@ thm.lik = function(x, y, family, beta, q, cx, control){
   if (c.n == 1) x[, 2] = ifelse(cx <= w, 1, 0)
   if (c.n == 2) x[, 2] = ifelse((cx[1]<=w) & (w<=cx[2]), 1, 0)
 
+  # x1 intercept, x2 biomarker, x3 trt
   if(length(grep(":", colnames(x)[4])) == 1) 
     x[, 4] = x[, 2]*x[, 3]
-  else if(length(grep(":", colnames(x)[3])) == 1)
-    x[, 2] = x[, 2]*x[, 3]
+  else if(length(grep(":", colnames(x)[2])) == 1)  #no bmk main effect, use x2 for 
+    x[, 2] = x[, 2]*x[, 3]                         #interaction
 
   if (family == "surv") {
     x = x[, -1]
@@ -65,6 +67,7 @@ thm.lik = function(x, y, family, beta, q, cx, control){
     lik2=dbeta(cx, 2, q, log = TRUE)
   else
     lik2=log(cx[1])+(q[1]-1)*log(cx[2]-cx[1])-q[1]*log(cx[2])+(q[2]-1)*log(1-cx[2])
+
   lik = lik + lik2 - 0.5*t(beta-beta0)%*%s0.inv%*%(beta-beta0)
   return(lik)
 }
@@ -93,8 +96,8 @@ glm.gendat =  function(n, c0, beta){
   x = runif(n, 0, 1)
   c.n = length(c0)
   
-  if (c.n == 1) x1 = ifelse(x > c0, 1, 0)
-  if (c.n == 2) x1 = ifelse((c0[1] < x) & (x < c0[2]), 1, 0)
+  if (c.n == 1) x1 = ifelse(x <= c0, 1, 0)
+  if (c.n == 2) x1 = ifelse((c0[1] <= x) & (x <= c0[2]), 1, 0)
 
   z = c(rep(0, n1), rep(1, n1))
   zx = z*x1
