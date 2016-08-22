@@ -7,7 +7,8 @@ Biomarker Threshold Models
 }
 \description{
 This package fits a threshold regression model for predictive and prognostic biomarker effect 
-for binary data and survival data with an unknown cutoff point of biomarker.
+for binary data and survival data with an unknown biomarker cutoff point. 
+Multivariable models can also be fitted for adjusted biomarker effect. 
 }
 \details{
 "bhm" is a R package for Biomarker Threshold Models.
@@ -36,6 +37,8 @@ Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
 }
 \references{
 Chen, B. E., Jiang, W. and Tu, D. (2014). A hierarchical Bayes model for biomarker subset effects in clinical trials. Computational Statistics and Data Analysis. vol 71, page 324-334.
+
+Fang, T., Mackillop, W., Jiang, W., Hildesheim, A., Wacholder, S. and Chen, B. E. (2016). A Bayesian Model for Estimating a Risk Window:  Methods and Application. Manuscript submitted to: Computational Statistics and Data Analysis. 
 }
 \keyword{bhm}
 \seealso{

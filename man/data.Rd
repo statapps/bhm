@@ -8,8 +8,8 @@
 \description{
 dataset for biomarker threshold model (bhm)
 }
-\usage{surv.gendat(n, c0, beta)
-}
+\usage{surv.gendat(n, c0, beta)}
+\usage{glm.gendat(n, c0, beta)}
 \arguments{
   \item{n}{sample size}
   \item{c0}{cut off point, for example c0 = 0.4}
@@ -17,7 +17,7 @@ dataset for biomarker threshold model (bhm)
 }
 \format{
   The format of the data set for analysis shall be a data frame with a response variable (either a 
-Surv object for Cox model or a glm response variable object) and at least one depend variable as 
+Surv object for Cox model or a glm response variable object) and at least one dependent variable as 
 the biomarker variable.
 }
 \details{

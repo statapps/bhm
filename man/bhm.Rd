@@ -16,8 +16,8 @@ Fitting Biomarker Threshold Models
 }
 \description{
 \{bhm\} is a R package for Biomarker Threshold Models.
-It uses either Hierarchical Bayes method or proflie likehood method (Chen, et al, 2014) 
-to identify cut-point (thershold parameter) for the biomarker in either generalized 
+It uses either Hierarchical Bayes method or proflie likehood method (Chen, et al, 2014 and Tian, et al, 2016) 
+to identify a cut-point (thershold parameter) for the biomarker in either generalized 
 linear models or Cox proportional hazards model.
 The model is specified by giving a symbolic description of the linear predictor and a description of the distribution family.
 }
@@ -29,7 +29,9 @@ bhm(x, ...)
 # use 
 #          bhm(y ~ biomarker)             
 #
-# to fit a prognostic model with biomarker term only, use 
+# to fit a prognostic model with biomarker term only
+#
+# use 
 #
 #          bhm(y ~ biomarker+treatment)
 #
@@ -40,7 +42,7 @@ bhm(x, ...)
 #
 # to fit a model without the formula
 #
-# Biomarker shall be in the first dependend variable
+# Biomarker shall be in the first dependent variable
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -53,7 +55,7 @@ The available family function are either "binomial" for fitting a logistic regre
   \item{data}{an optional data frame, list or environment (or object coercible by 'as.data.frame' to a data frame) containing the variables in the model. 
 If not found in data, the variables are taken from environment(formula), typically the environment from which glm is called.}
 
-  \item{x, y}{For 'bhmFit', x is a design matrix of dimension n * p and y is a vector of observations of length n for "glm" or a "Surv" object for "coxph".}
+  \item{x, y}{For 'bhmFit', x is a design matrix of dimension n * p and y is a vector of observations of length n for "glm" models or a "Surv" survival object for "coxph" models.}
 
   \item{control}{a list of parameters for controlling the fitting process. See 'bhmControl' for details} 
 
@@ -69,13 +71,14 @@ Both Biomarker and Treatment variables are required if 'interaction' = TRUE and 
 
 'bhmFit' and 'bhmGibbs' are the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
 
-'x.cdf' is a function that maps biomarker values to interval (0, 1) using its empirical cumulative distribution function.
+'x.cdf' is a function that maps biomarker values to interval (0, 1) using its empirical cumulative distribution function. After the threshold parameters are identified, the biomarker variable will be transformed back to its original scale.
 }
 \value{
 %%  ~Describe the value returned
 bhm returns an object of class inheriting from "bhm" which inherits from the class glm or 'coxph'. See later in this section.  
 
-The function "summary" (i.e., "summary.bhm") can be used to obtain or print a summary of the results.
+The function "summary" (i.e., "summary.bhm") can be used to obtain or print a summary of the results, 
+for example, the 95% CI of the parameters.
 
 An object of class "bhm" is a list containing at least the following components:
   

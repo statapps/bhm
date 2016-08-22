@@ -21,7 +21,9 @@ print and summary are used to provide a short summary of bhm outputs.
   \item{object}{object returned from bhm fit}
 }
 \details{
-  print.bhm is called to print object or summary of object from the biomarker threshold model \code{\link{bhm}}.
+  print.bhm is called to print object or summary of object from the biomarker threshold model \code{\link{bhm}}.  
+  summary(fit) provides detail summary of `bhm' model fit, including parameter estimates, 
+standard errors, and 95% CIs.
 
   The default method, print.default has its own help page. Use methods("print") to get all the methods for the print generic.
 }

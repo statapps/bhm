@@ -13,8 +13,8 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
 }
 
 \arguments{
-  \item{method}{choose either 'Bayes' for Bayes method with MCMC or 'profile' for profile likelihood method with Bootstrap. The default value is 'Bayes'}
-  \item{interaction}{an option of fitting model with itneractin term
+  \item{method}{choose either `Bayes' for Bayes method with MCMC or `profile' for profile likelihood method with Bootstrap. The default value is 'Bayes'}
+  \item{interaction}{an option of fitting model with interaction term
      When interaction = TRUE, a predictive biomarker model will be fitted
      When interaction = FALSE, a prognostic biomarker model will be fitted
      The default value is interaction = TRUE.}
@@ -30,7 +30,7 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
 }
 
 \details{
-Conctrol is used in model fitting of bhm.
+Control is used in model fitting of `bhm'.
 }
 \value{
 This function checks the internal consisitency and returns a list of value as inputed to control model fit of bhm.
