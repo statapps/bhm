@@ -4,7 +4,7 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
   
   #generate cut point cx
   lik = thm.lik(x, y, family, beta, q, cx, control)
-  d0 = 0.1
+  d0 = 0.025
   if(c.n==2){
     rpt = TRUE
     D   = min(d0, (cx[2]-cx[1])/3)
@@ -34,10 +34,11 @@ bhmGibbs<-function(x, y, family, beta, q, cx, control){
 #Candidate value is obtained from the fitted model with 
 #current iteraction of cut points.
   fit = thm.fit(x, y, family, cx)
-  bhat = fit$coefficient
+  #fixed the error that candidate shall be phi(betai^*|beta^k), can not use beta_hat
+  #bhat = fit$coefficient
   vb = vcov(fit)
   A = chol(vb)
-  b1 = bhat + t(A)%*%rnorm(ncol(A), 0, 1)
+  b1 = beta + t(A)%*%rnorm(length(beta), 0, 1)
   lik1 = thm.lik(x, y, family, b1, q, cx, control)
   # Note that prior of beta ~ phi(beta|beta0) was calculated in thm.lik()
   alpha2 = exp(lik1 - lik)

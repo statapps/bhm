@@ -68,7 +68,10 @@ thm.lik = function(x, y, family, beta, q, cx, control){
   else
     lik2=log(cx[1])+(q[1]-1)*log(cx[2]-cx[1])-q[1]*log(cx[2])+(q[2]-1)*log(1-cx[2])
 
-  lik = lik + lik2 - 0.5*t(beta-beta0)%*%s0.inv%*%(beta-beta0)
+  if (length(beta) == 1) phib0 = 0.5*(beta-beta0)^2*s0.inv
+  else phib0 = 0.5*t(beta-beta0)%*%s0.inv%*%(beta-beta0)
+
+  lik = lik + lik2 - phib0
   return(lik)
 }
 

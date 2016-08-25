@@ -71,8 +71,9 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
     n.col = n.col - 1
   }
   
-  if (length(control$sigma0.inv) == 1)
+  if (length(control$sigma0.inv) == 1 & n.col > 1)
     control$sigma0.inv = diag(rep(control$sigma0.inv, n.col))
+
   if (length(control$beta0) == 1)
     control$beta0 = rep(control$beta0, n.col)
 
@@ -113,8 +114,8 @@ bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE,
     stop("number of replication 'alpha' must be between 0 and 1")
   if (c.n > 2 || c.n < 1)
     stop("number of cutpoints 'c.n' must be either 1 or 2")
-  if (!is.numeric(sigma0) || sigma0 < 0) 
-    stop("value of 'sigma' [varince for beta prior] must be > or = 0")
+  if (!is.numeric(sigma0) || sigma0 <= 0) 
+    stop("value of 'sigma' [varince for beta prior] must be > 0")
   sigma0.inv = solve(sigma0)
 
   return(list(method = method,  interaction = interaction, biomarker.main = biomarker.main, B=B, R=R, thin = thin, epsilon = epsilon, alpha = alpha, c.n=c.n, beta0 = beta0, sigma0.inv = sigma0.inv))
