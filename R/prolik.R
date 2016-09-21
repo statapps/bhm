@@ -27,6 +27,7 @@ pro.fit = function(x, y, family, control){
   epsilon = control$epsilon
 
   lik = -nrow(x)*10
+  lglk = lik
   for (u in seq(0.05, 0.95, epsilon)) {
     if (c.n == 2) {
       for (u1 in seq(0.05, 0.9, epsilon)) {
