@@ -33,7 +33,7 @@ pro.fit = function(x, y, family, control){
         if (u1 < (u-0.05)) {
           cu = c(u1, u)
           cfit = thm.fit(x, y, family, cu)
-          lglk= logLik(cfit)
+          if(cfit$converged) lglk= logLik(cfit)
           if(length(lglk) == 2) lglk = lglk[2]
           if (lglk > lik) {
             lik = lglk
@@ -43,7 +43,7 @@ pro.fit = function(x, y, family, control){
       }
     } else {
       cfit = thm.fit(x, y, family, u)
-      lglk= logLik(cfit)
+      if(cfit$converged) lglk= logLik(cfit)
       if(length(lglk) == 2) lglk = lglk[2]
       if (lglk > lik) {
         lik = lglk
