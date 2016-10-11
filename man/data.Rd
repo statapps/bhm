@@ -8,8 +8,15 @@
 \description{
 dataset for biomarker threshold model (bhm)
 }
-\usage{surv.gendat(n, c0, beta)}
-\usage{glm.gendat(n, c0, beta)}
+\usage{
+# to generate survival data, use: 
+
+   surv.gendat(n, c0, beta)
+
+# to generate glm data, use:
+
+   glm.gendat(n, c0, beta)
+}
 \arguments{
   \item{n}{sample size}
   \item{c0}{cut off point, for example c0 = 0.4}
