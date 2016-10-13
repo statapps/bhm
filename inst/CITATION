@@ -6,12 +6,12 @@ if(!exists("meta") || is.null(meta)) meta <- packageDescription("bhm")
 vers <- paste("R package version", meta$Version)
 
 bibentry(bibtype="Manual",
-         title = "A Package for Hierarchical Bayes Threshold Model",
-	 author= c(person(c("Bingshu E"), "Chen"), person(c("Tian"), "Fang")),
-	 year = "2013",
+         title = "A Package for Biomarker Threshold Models",
+	 author= c(person(c("Bingshu E"), "Chen")),
+	 year = "2016",
 	 note =vers,
- 	 url="http://CRAN.R-project.org/package=bhm",
-	 key= "Hierarchical Bayes Threshold Model-package"
+ 	 url="https://CRAN.R-project.org/package=bhm",
+	 key= "Biomarker Threshold Models-package"
 	 )
 
 bibentry(bibtype= "article",
@@ -23,5 +23,5 @@ bibentry(bibtype= "article",
          journal= "Computational Statistics and Data Analysis",
          address = "New York",
          isbn = "",
-	 key = "Hierarchical Bayes Model"
+	 key = "Biomarker Threshold Models"
 	 )

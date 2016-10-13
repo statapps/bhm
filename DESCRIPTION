@@ -1,11 +1,12 @@
 Package: bhm
 Type: Package
 Title: Biomarker Threshold Models
-Version: 1.1
-Date: 2016-10-11
+Version: 1.11
+Date: 2016-10-15
 Author: Bingshu E. Chen
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
-Depends: coda, survival
-Description: bhm is a set of tools to fit both predictive and prognostic biomarker threshold models. 
+Depends: R (>= 2.10.0), coda, survival
+Imports: methods
+Description: Biomarker threshold models are tools to fit both predictive and prognostic biomarker effects. Both generalized linear models and Cox proportional hazards models can be fitted using either Bayesian method or profile likelihood method. 
 License: GPL (>=2)
 LazyLoad: yes
