@@ -1,4 +1,5 @@
-exportPattern("^[[:alpha:]]+")
+#exportPattern("^[[:alpha:]]+")
+exportPattern("^[^\\.]")
 import(coda)
 import(survival)
 importFrom("methods", "is")
