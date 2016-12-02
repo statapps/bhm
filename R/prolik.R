@@ -3,13 +3,13 @@
 prolikFit = function(x, y, family, control) {
   R = control$R
   x = as.matrix(x)
-  fit = pro.fit(x, y, family, control)
+  fit = .profit(x, y, family, control)
   cg = NULL
   cqtl = NULL
   if (R > 0) {
     cg = matrix(0, R, control$c.n)
     for (b in 1:R){
-      ftb = pro.fit(x, y, family, control)
+      ftb = .profit(x, y, family, control)
       cg[b, ] = ftb$c.max
     }
   
@@ -22,7 +22,7 @@ prolikFit = function(x, y, family, control) {
   return(pfit)
 }
 
-pro.fit = function(x, y, family, control){
+.profit = function(x, y, family, control){
   c.n = control$c.n
   epsilon = control$epsilon
 
