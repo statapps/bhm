@@ -68,7 +68,7 @@ bhmFit = function(x, y, family, control){
   if(c.n==1) c_names = c('c') else c_names=c('c1', 'c2')
   
 # use profile likelihood method to get initial value of cut-points
-  pfit = pro.fit(x, y, family, control=list(R = 0, epsilon=0.02, c.n = c.n))
+  pfit = .profit(x, y, family, control=list(R = 0, epsilon=0.02, c.n = c.n))
 
 # generate initial values for parameters
   g = list(cx = pfit$c.max, beta = pfit$coefficient, q = rep(2, c.n))
