@@ -64,7 +64,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
       colnames(x)[2] = int_names
     }
   }
-  print(x[1:5, ])
+  #print(x[1:5, ])
 
   n.col = length(x[1, ])
   if(family == "surv"){
