@@ -19,6 +19,15 @@ group 1 and $T_2$ is surval time in group 2.
 pIndex(x, ...)
 
 \method{pIndex}{formula}(formula, data, control = list(...),...)
+###To estimate probability index for treatment and control groups (define by trt):
+#
+# fit = pIndex(Surv(time, status) ~ trt)
+#
+###To estimate probability index difference for treatment and control groups (define by trt) between 
+###biomarker postive and biomarker negative subjects:
+#
+# fit = pIndex(Surv(time, status) ~ trt+biomarker)
+#
 }
 
 \arguments{
