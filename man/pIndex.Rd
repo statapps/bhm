@@ -89,4 +89,9 @@ tm = data[, 1]
 status = data[, 2]
 trt = data[, 3]
 ki67 = data[, 4]
+#
+### No run
+# 
+# fit = pIndex(Surv(tm, status) ~ trt + ki67) 
+#
 }
