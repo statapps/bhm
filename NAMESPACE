@@ -1,13 +1,18 @@
 #exportPattern("^[[:alpha:]]+")
 exportPattern("^[^\\.]")
+
 import(coda)
 import(survival)
 importFrom("methods", "is")
 importFrom("stats", "cov", "dbeta", "glm", "logLik", "model.frame",
-           "model.matrix", "model.response", "printCoefmat",
+           "model.matrix", "model.response", "nlm", "printCoefmat",
            "quantile", "rbinom", "rexp", "rgamma", "rnorm", "runif", "vcov")
+
 S3method(print, bhm)
 S3method(bhm, default)
 S3method(bhm, formula)
 S3method(summary, bhm)
 S3method(print, summary.bhm)
+
+S3method(pIndex, default)
+S3method(pIndex, formula)

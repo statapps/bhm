@@ -14,7 +14,7 @@ pIndex.default = function(x, y, control, ...) {
   n = length(y[, 1])
   ci = control$ci
   
-  theta = pIndexFit(x, y, control)
+  theta = .pIndexFit(x, y, control)
   fit = list(theta = theta)
   B = control$B
   if(ci == "Jackknife") {
@@ -22,7 +22,7 @@ pIndex.default = function(x, y, control, ...) {
     for(i in 1:n) {
       x.b = x[-i, ]
       y.b = y[-i, ]
-      theta.b[i] = pIndexFit(x.b, y.b, control)
+      theta.b[i] = .pIndexFit(x.b, y.b, control)
     }
     fit$theta.b = theta.b
   }
@@ -32,7 +32,7 @@ pIndex.default = function(x, y, control, ...) {
       idx = sample(1:n, n, replace = TRUE)
       x.b = x[idx, ]
       y.b = y[idx, ]
-      theta.b[i] = pIndexFit(x.b, y.b, control)
+      theta.b[i] = .pIndexFit(x.b, y.b, control)
     }
     fit$theta.b = theta.b
   }
@@ -85,10 +85,10 @@ print.pIndex = function(x, ...) {
    print(ci1)
 }
 
-pIndexFit = function(x, y, control) {
+.pIndexFit = function(x, y, control) {
   x = as.matrix(x)
   x.ncol = ncol(x)
-  if(x.ncol>2) stop("x shall be a vector or a matrix with 2 columns.")
+  if(x.ncol>2) stop("x shall be a vector or a matrix with one or two 2 columns.")
   
   if(x.ncol == 2) {
     xm = as.factor(x[, 2])

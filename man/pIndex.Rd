@@ -3,8 +3,7 @@
 \alias{pIndex}
 \alias{pIndex.default}
 \alias{pIndex.formula}
-\alias{pIndexControl}
-\alias{pIndexFit}
+%\alias{pIndexFit}
 \alias{print.pIndex}
 
 \title{
@@ -20,8 +19,6 @@ group 1 and $T_2$ is surval time in group 2.
 pIndex(x, ...)
 
 \method{pIndex}{formula}(formula, data, control = list(...),...)
-
-pIndexFit(x, y, control)
 }
 
 \arguments{
@@ -34,9 +31,8 @@ mbolic description of the model to be fitted.
 If not found in data, the variables are taken from environment(formula), typically the enviro
 nment from which pIndex is called.}
 
-  \item{x, y}{For 'pIndexFit', x is a design matrix of dimension n * 1 (for two sample test) 
-or dimension n * 2 (for treatment * biomarker interaction) and 
-y is a "Surv" survival object.}
+  \item{x}{Here covariate x is a design matrix of dimension n * 1 (for two sample test) 
+or dimension n * 2 (for treatment * biomarker interaction).}
 
   \item{control}{a list of parameters for controlling the fitting process. 
 See 'pIndexControl' for details} 
@@ -46,8 +42,10 @@ functions (see below).}
 }
 
 \details{
-'biomarker' is a Biomarker variable.
-print(x) function can be used to print a summary of pIndex results.
+pIndex(y~x) will estimate probability index of two groups (eg. treatment vs control) define by x. 
+pIndex(y~x1 + x2) will estimate the difference of probability index of x1 (eg. treatment vs control)
+between biomarker positive and biomarker negative groups (x2).
+Function print(x) can be used to print a summary of pIndex results.
 }
 
 \value{
@@ -63,13 +61,13 @@ Bingshu E. Chen (bingshu.chen@queensu.ca)
 }
 
 \note{
-The logistic regression part are based on codes wrote by Tian Fang. 
+This function is part of the bhm package.
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %% code{\link{prolik}},
-\code{\link{bhm}}, 
+\code{\link{bhm}, \link{pIndexControl}}, 
 }
 \examples{
 ##

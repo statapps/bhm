@@ -8,7 +8,6 @@
 \alias{prolikFit}
 \alias{thm.fit}
 \alias{thm.lik}
-\alias{pro.fit}
 \alias{x.cdf}
 
 \title{
