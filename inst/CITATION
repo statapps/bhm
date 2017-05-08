@@ -8,7 +8,7 @@ vers <- paste("R package version", meta$Version)
 bibentry(bibtype="Manual",
          title = "A Package for Biomarker Threshold Models",
 	 author= c(person(c("Bingshu E"), "Chen")),
-	 year = "2016",
+	 year = "2017",
 	 note =vers,
  	 url="https://CRAN.R-project.org/package=bhm",
 	 key= "Biomarker Threshold Models-package"
@@ -25,3 +25,21 @@ bibentry(bibtype= "article",
          isbn = "",
 	 key = "Biomarker Threshold Models"
 	 )
+
+bibentry(bibtype= "article",
+         title="A Bayesian method for risk window estimation with application to HPV vaccine trial",
+         author=c(person("Tian", "Fang"),
+                  person("William", "Mackillop"),
+                  person("Wenyu", "Jiang"),
+                  person("Allan", "Hildesheim"),
+                  person("Sholom", "Wacholder"),
+                  person(c("Bingshu E"), "Chen")
+
+         ),
+         year = "2017",
+         journal= "Computational Statistics and Data Analysis",
+         address = "New York",
+         isbn = "",
+         key = "Biomarker Threshold Models"
+         )
+

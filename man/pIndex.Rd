@@ -11,7 +11,7 @@ Probability Index for Survival Time Difference
 }
 \description{
 \{pIndex\} is a function to estimate and test differce of survival time among groups.
-It is defined as p = Pr{ T_1 < T_2 }, where $T_1$ is survival time for subjects in 
+It is defined as p = Pr\{T_1 < T_2 \}, where $T_1$ is survival time for subjects in 
 group 1 and $T_2$ is surval time in group 2.
 }
 
@@ -23,8 +23,9 @@ pIndex(x, ...)
 #
 # fit = pIndex(Surv(time, status) ~ trt)
 #
-###To estimate probability index difference for treatment and control groups (define by trt) between 
-###biomarker postive and biomarker negative subjects:
+###To estimate probability index difference for treatment and control 
+###groups (define by trt) between biomarker postive and biomarker negative
+###subjects(i.e. Treatment-biomarker interaction):
 #
 # fit = pIndex(Surv(time, status) ~ trt+biomarker)
 #

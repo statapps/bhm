@@ -15,7 +15,7 @@ Fitting Biomarker Threshold Models
 }
 \description{
 \{bhm\} is a R package for Biomarker Threshold Models.
-It uses either Hierarchical Bayes method or proflie likehood method (Chen, et al, 2014 and Tian, et al, 2016) 
+It uses either Hierarchical Bayes method or proflie likehood method (Chen, et al, 2014 and Tian, et al, 2017) 
 to identify a cut-point (thershold parameter) for the biomarker in either generalized 
 linear models or Cox proportional hazards model.
 The model is specified by giving a symbolic description of the linear predictor and a description of the distribution family.
