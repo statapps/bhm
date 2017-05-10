@@ -7,15 +7,16 @@ Biomarker Threshold Models
 }
 \description{
 This package fits biomarker threshold regression models for predictive and prognostic biomarker effects 
-with binary data and survival data with an unknown biomarker cutoff point. 
-Multivariable models can also be fitted for adjusted biomarker effect. 
-Tools such as Probability index are included to measure treatment effect, biomarker effect or treatment-biomarker interaction. 
+with binary data and survival data with an unknown biomarker cutoff point (Chen et al, 2014)<DOI:10.1016/j.csda.2013.05.015>. 
+Multivariable models can also be fitted for adjusted biomarker effect (Fang et al, 2017)<DOI:10.1016/j.csda.2017.02.011>. 
+Tools such as Probability index are included to measure treatment effect, biomarker effect or treatment-biomarker interaction(Jiang et al, 2016)<DOI:10.1002/sim.6907>. 
 }
 \details{
 "bhm" is a R package for Biomarker Threshold Models.
-Please use the following steps to install 'bhm' package:
+Please use the following steps to install the most recent version of 'bhm' package:
 
-1. First, you need to install the 'devtools' package. You can skip this step if you have 'devtools' installed in your R. Invoke R and then type
+1. First, you need to install the 'devtools' package. 
+   You can skip this step if you have 'devtools' installed in your R. Invoke R and then type
 
   install.packages("devtools")
 
@@ -23,14 +24,19 @@ Please use the following steps to install 'bhm' package:
 
   library(devtools)
 
-3. Install "bhm" package with R commond
+3. Install "bhm" package from github with R commond
 
   install_github("statapps/bhm")
 
 
-"bhm" uses different statistical methods to identify cut-point 
-(thershold parameter) for the biomarker in either generalized 
-linear models or Cox proportional hazards model.
+"bhm" uses different statistical methods to identify cut-point (thershold parameter) for the 
+biomarker in either generalized linear models or Cox proportional hazards model.
+
+A stable version of View the "bhm" package is also available from the Comprehensive R Archive Network 
+(https://CRAN.R-project.org/package=bhm) and can be installed using R command 
+
+  install.packages("bhm")
+
 }
 \author{Bingshu E. Chen
 
@@ -52,4 +58,5 @@ easure of treatment effects and censored survival data. Statistics in Medicine. 
 }
 \examples{
 # fit = bhm(y~biomarker+treatment)
+# print(summary(fit))
 } 
