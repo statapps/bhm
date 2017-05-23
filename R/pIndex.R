@@ -3,14 +3,29 @@ pIndex = function(x, ...) UseMethod("pIndex")
 pIndex.default = function(x, y, control, ...) {
   cat("pIndex: Porbability Index method for survival data\n")
   x = as.matrix(x)
-
+  x.ncol = ncol(x)
+  if(x.ncol>2) stop("x shall be a vector or a matrix with one or two 2 columns.")
+  
   xm = as.factor(x[, 1])
   x.n = as.numeric(xm)
   if (max(x.n) > 2) {
-     warning("x1 is converted to a binary variable")
-     x.n = ifelse(x.n > quantile(x.n, control$pct), 2, 1)
+    cat("\nNote: x1 is converted to a binary variable using", control$pct*100, 
+        '% percenttile\n', sep = "")
+    x.n = ifelse(x.n > quantile(x.n, control$pct), 2, 1)
   }
   x[, 1] = x.n - 1
+
+  if(x.ncol == 2) {
+    xm = as.factor(x[, 2])
+    x.n = as.numeric(xm)
+    if (max(x.n) > 2) {
+      cat("\nNote: x2 is converted to a binary variable using ", control$pct*100, 
+          '% percentile\n', sep = "")
+      x.n = ifelse(x.n > quantile(x.n, control$pct), 2, 1)
+    }
+    x[, 2] = x.n
+  }
+  
   n = length(y[, 1])
   ci = control$ci
   
@@ -19,20 +34,31 @@ pIndex.default = function(x, y, control, ...) {
   B = control$B
   if(ci == "Jackknife") {
     theta.b = rep(0, n)
+    cat("\n\nJackknife resampling...\n")
+    if(n > 100){
+      cat("|=>                                             Done!\n|")
+    } 
     for(i in 1:n) {
       x.b = x[-i, ]
       y.b = y[-i, ]
       theta.b[i] = .pIndexFit(x.b, y.b, control)
+      if(n > 100 & i %% floor(n/40) == 0) cat("=")
+      control$B = n
     }
     fit$theta.b = theta.b
   }
   if(ci == "Bootstrap" & B > 0) {
     theta.b = rep(0, B)
+    cat("\nBootstrap resampling...\n")
+    if(B > 100){
+      cat("|=>                                              Done!\n|")
+    } 
     for(i in 1:B) {
       idx = sample(1:n, n, replace = TRUE)
       x.b = x[idx, ]
       y.b = y[idx, ]
       theta.b[i] = .pIndexFit(x.b, y.b, control)
+      if(B > 100 & i %% floor(B/40) == 0) cat("=")
     }
     fit$theta.b = theta.b
   }
@@ -80,9 +106,11 @@ print.pIndex = function(x, ...) {
    if(x$interaction) cat("\nThe probability index for interaction: Pr(T1a<T2a) - Pr(T1b<T2b) \n\n")
    else cat("\nThe probability index for two groups: Pr(T1<T2) \n\n")
    cat("    theta = ", theta, '\n')
-   cat("       sd = ", sd, '\n')
-   cat("95% confidence interval, \n")
-   print(ci1)
+   if(control$B > 0) {
+     cat("       sd = ", sd, '\n\n', control$ci, '')
+     cat((1-control$alpha)*100, "% confidence interval based on B = ", control$B, " resampling\n", sep = "")
+     print(ci1)
+   }
 }
 
 .pIndexFit = function(x, y, control) {
@@ -91,13 +119,7 @@ print.pIndex = function(x, ...) {
   if(x.ncol>2) stop("x shall be a vector or a matrix with one or two 2 columns.")
   
   if(x.ncol == 2) {
-    xm = as.factor(x[, 2])
-    x.n = as.numeric(xm)
-    if (max(x.n) > 2) {
-      warning("x2 is converted to a binary variable")
-      x.n = ifelse(x.n > quantile(x.n, control$pct), 2, 1)
-    }
-
+    x.n = x[, 2]
     y0 = y[x.n==1, ]
     y1 = y[x.n==2, ]
     x0 = x[x.n==1, 1]
@@ -200,13 +222,14 @@ print.pIndex = function(x, ...) {
   beta.max = c(0, 0)
   elm = 1e10
   for (i in 1:length(rx)){
-    fitb = try(nlm(.ellc, beta.max, r = rx[i], m1 = m1, m2 = m2, W = W))
+    fitb = try(optim(beta.max, .ellc, method = "BFGS", r = rx[i], m1 = m1, m2 = m2, W = W), 
+               silent = TRUE)
     if(class(fitb) == "try-error") next
-    ell = fitb$minimum
+    ell = fitb$value
     if (ell < elm) {
       elm = ell
       r.max = rx[i]
-      beta.max = fitb$estimate
+      beta.max = fitb$par
     }
     lx[i] = ell
   }
@@ -261,13 +284,14 @@ print.pIndex = function(x, ...) {
   beta.max = c(0, 0)
   elm = 1e10
   for (i in 1:length(rx)){
-    fitb = try(nlm(.ellw, beta.max, r = rx[i], m1 = m1, m2 = m2, W = W))
+    fitb = try(optim(beta.max, .ellw, method = "BFGS", r = rx[i], m1 = m1, m2 = m2, W = W), 
+               silent = TRUE)
     if(class(fitb) == 'try-error') next
-    ell = fitb$minimum
+    ell = fitb$value
     if (ell < elm) {
       elm = ell
       r.max = rx[i]
-      beta.max = fitb$estimate
+      beta.max = fitb$par
     }
     lx[i] = ell
   }
