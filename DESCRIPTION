@@ -1,12 +1,12 @@
 Package: bhm
 Type: Package
 Title: Biomarker Threshold Models
-Version: 1.11
-Date: 2017-05-06
+Version: 1.12
+Date: 2017-05-23
 Author: Bingshu E. Chen
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
 Depends: R (>= 2.10.0), coda, survival
 Imports: methods
-Description: Biomarker threshold models are tools to fit both predictive and prognostic biomarker effects. 
+Description: Contains tools to fit both predictive and prognostic biomarker effects using threshold models, evaluate the treatment effect, biomarker effect and treatment-biomarker interaction using probability index measurement. 
 License: GPL (>=2)
 LazyLoad: yes
