@@ -60,7 +60,12 @@ Function print(x) can be used to print a summary of pIndex results.
 
 \value{
 %%  ~Describe the value returned
-pIndex returns an object of class inheriting from "pIndex". See later in this section.  
+pIndex returns an object of class inheriting from "pIndex". 
+When B > 0, an object of class "pIndex" is a list containing at least the following components:
+  \item{theta}{the estimated probability index}  
+  \item{theta.b}{Bootstrap or Jackknife sample of the probability index}
+  \item{sd}{standard deviation of theta based on resampling}
+  \item{ci}{(1-alpha) percent confidence interval based on resampling}
 }
 
 \references{
