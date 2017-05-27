@@ -46,6 +46,8 @@ pIndex.default = function(x, y, control, ...) {
       control$B = n
     }
     fit$theta.b = theta.b
+    theta.bar = mean(theta.b)
+    fit$sd = sqrt((n-1)/n*sum((theta.b-theta.bar)^2))
   }
   if(ci == "Bootstrap" & B > 0) {
     theta.b = rep(0, B)
@@ -61,9 +63,13 @@ pIndex.default = function(x, y, control, ...) {
       if(B > 100 & i %% floor(B/40) == 0) cat("=")
     }
     fit$theta.b = theta.b
+    fit$sd = sd(theta.b)
   }
+  cat('\n')
   fit$call = match.call()
   fit$control = control
+  z.a = qnorm(1-control$alpha/2)
+  fit$ci = c(theta - z.a*fit$sd, theta + z.a*fit$sd)
   if(ncol(x) == 2) fit$interaction = TRUE 
   else fit$interaction = FALSE
   class(fit) = "pIndex"
@@ -95,22 +101,24 @@ pIndex.formula = function (formula, data = list(...), control = list(...), ...) 
 }
 
 print.pIndex = function(x, ...) {
-   control = x$control
-   theta = x$theta
-   theta.b = x$theta.b
-   cat("Call:\n")
-   print(x$call)
-   sd = sd(theta.b)
-   alpha = control$alpha
-   ci1 = quantile(theta.b, c(alpha/2, 1-alpha/2))
-   if(x$interaction) cat("\nThe probability index for interaction: Pr(T1a<T2a) - Pr(T1b<T2b) \n\n")
-   else cat("\nThe probability index for two groups: Pr(T1<T2) \n\n")
-   cat("    theta = ", theta, '\n')
-   if(control$B > 0) {
-     cat("       sd = ", sd, '\n\n', control$ci, '')
-     cat((1-control$alpha)*100, "% confidence interval based on B = ", control$B, " resampling\n", sep = "")
-     print(ci1)
-   }
+  control = x$control
+  theta = x$theta
+  theta.b = x$theta.b
+  cat("Call:\n")
+  print(x$call)
+  sd = x$sd
+  alpha = control$alpha
+  ci = quantile(theta.b, c(alpha/2, 1-alpha/2))
+  ci[1] = x$ci[1]
+  ci[2] = x$ci[2]
+  if(x$interaction) cat("\nThe probability index for interaction: Pr(T1a<T2a) - Pr(T1b<T2b) \n\n")
+  else cat("\nThe probability index for two groups: Pr(T1<T2) \n\n")
+  cat("    theta = ", theta, '\n')
+  if(control$B > 0) {
+    cat("       sd = ", sd, '\n\n', control$ci, '')
+    cat((1-control$alpha)*100, "% confidence interval based on B = ", control$B, " resampling\n", sep = "")
+    print(ci)
+  }
 }
 
 .pIndexFit = function(x, y, control) {
