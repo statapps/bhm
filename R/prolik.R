@@ -3,6 +3,8 @@
 prolikFit = function(x, y, family, control) {
   R = control$R
   x = as.matrix(x)
+  var_names = colnames(x)
+  if (family == "surv") var_names = var_names[-1]
   n = length(x[, 1])
   fit = .profit(x, y, family, control)
   cg = NULL
@@ -22,7 +24,7 @@ prolikFit = function(x, y, family, control) {
     cqtl = apply(cg, 2, quantile, ptl)
   }
   cfit = fit$c.fit
-  pfit = list(cg = cg, c.max = fit$c.max, cqtl=cqtl, coefficients = cfit$coefficients, StdErr = sqrt(diag(vcov(cfit))), c.fit = cfit, var_names = colnames(x))
+  pfit = list(cg = cg, c.max = fit$c.max, cqtl=cqtl, coefficients = cfit$coefficients, StdErr = sqrt(diag(vcov(cfit))), c.fit = cfit, var_names = var_names)
   return(pfit)
 }
 
@@ -56,6 +58,7 @@ prolikFit = function(x, y, family, control) {
       }
     }
   }
+  cfit = thm.fit(x, y, family, cx)
   fit = list(c.max=cx, coefficients=cfit$coefficients, c.fit = cfit)
   return(fit)
 }
