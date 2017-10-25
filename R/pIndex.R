@@ -15,7 +15,8 @@ pIndex.default = function(x, y, control, ...) {
   }
   x[, 1] = x.n - 1
 
-  if(x.ncol == 2) {
+  # kernel is null, use percentage cutpoint
+  if(x.ncol==2 & is.null(control$kernel)) {
     xm = as.factor(x[, 2])
     x.n = as.numeric(xm)
     if (max(x.n) > 2) {
@@ -29,8 +30,17 @@ pIndex.default = function(x, y, control, ...) {
   n = length(y[, 1])
   ci = control$ci
   
-  theta = .pIndexFit(x, y, control)
-  fit = list(theta = theta)
+  # use local fit when kernel is not null
+  if(is.null(control$kernel)) {
+    theta = .pIndexFit(x, y, control)
+    fit = list(theta = theta)
+  } else {
+    xc = x
+    xc[, 2] = x.cdf(x[, 2])
+    fit = .pIndexFitLocal(xc, y, control)
+    fit$w0 = quantile(x[, 2], fit$w, type = 3)
+  }
+
   B = control$B
   if(ci == "Jackknife") {
     theta.b = rep(0, n)
@@ -48,6 +58,7 @@ pIndex.default = function(x, y, control, ...) {
     fit$theta.b = theta.b
     theta.bar = mean(theta.b)
     fit$sd = sqrt((n-1)/n*sum((theta.b-theta.bar)^2))
+    B = n
   }
   if(ci == "Bootstrap" & B > 0) {
     theta.b = rep(0, B)
@@ -69,7 +80,7 @@ pIndex.default = function(x, y, control, ...) {
   fit$call = match.call()
   fit$control = control
   z.a = qnorm(1-control$alpha/2)
-  fit$ci = c(theta - z.a*fit$sd, theta + z.a*fit$sd)
+  if(B>0) fit$ci = c(theta - z.a*fit$sd, theta + z.a*fit$sd)
   if(ncol(x) == 2) fit$interaction = TRUE 
   else fit$interaction = FALSE
   class(fit) = "pIndex"
@@ -77,15 +88,22 @@ pIndex.default = function(x, y, control, ...) {
 }
 
 pIndexControl = function(method = c("Efron", "Elc", "Elw"), ci = c("Bootstrap", "Jackknife"), 
-                         alpha = 0.05, B = 0, pct = 0.5) {
+          weights=NULL, kernel = NULL, h=0.1, w=seq(0.05, 0.95, 0.05), alpha = 0.05, B = 0, pct = 0.5) {
   method = match.arg(method)
   ci = match.arg(ci)
   if (!is.numeric(alpha) || alpha <= 0 || alpha >= 1) 
     stop("number of replication 'alpha' must be between 0 and 1")
   if (!is.numeric(B) || B < 0) 
     stop("value of 'B' must be >= 0")
+
+  if (!is.null(weights) && !is.numeric(weights)) 
+    stop("'weights' must be a numeric vector")
+  if (!is.null(weights) && any(weights < 0)) 
+    stop("negative weights not allowed")
+
+  if(!is.null(kernel) && B>0) stop("Bootstrap for local estimate coming soon")
   
-  return(list(method = method, ci=ci, alpha = alpha, B = B, pct = pct))
+  return(list(method = method, ci=ci, weights=weights, kernel=kernel, h=h, w=w, alpha = alpha, B = B, pct = pct))
 }
 
 pIndex.formula = function (formula, data = list(...), control = list(...), ...) {
@@ -97,6 +115,7 @@ pIndex.formula = function (formula, data = list(...), control = list(...), ...) 
   control = do.call("pIndexControl", control)
   fit = pIndex.default(x, y, control, ...)
   fit$call = match.call()
+  fit$x = x
   return(fit)
 }
 
@@ -104,17 +123,30 @@ print.pIndex = function(x, ...) {
   control = x$control
   theta = x$theta
   theta.b = x$theta.b
+  kernel = control$kernel
   cat("Call:\n")
   print(x$call)
-  sd = x$sd
-  alpha = control$alpha
-  ci = quantile(theta.b, c(alpha/2, 1-alpha/2))
-  ci[1] = x$ci[1]
-  ci[2] = x$ci[2]
+
   if(x$interaction) cat("\nThe probability index for interaction: Pr(T1a<T2a) - Pr(T1b<T2b) \n\n")
-  else cat("\nThe probability index for two groups: Pr(T1<T2) \n\n")
-  cat("    theta = ", theta, '\n')
+  if(is.null(control$kernel)) cat("\nThe probability index for two groups: Pr(T1<T2) \n\n")
+
+  #print probability index for regular fit
+  if(is.null(kernel)) cat("    theta = ", theta, '\n')
+
+  #print list of probability index for local smooth fit
+  if(!is.null(kernel)) {
+    cat('\nSmooth probability index for Pr(T1<T2|W = w): \n\n')
+    out = cbind(w=x$w0, theta = x$theta)
+    out = round(out*10000)/10000
+    colnames(out) = c(colnames(x$x)[2], 'theta')
+    print(out[ceiling(length(x$w0)*seq(0.1, 0.9, 0.1)), ])
+  }
   if(control$B > 0) {
+    sd = x$sd
+    alpha = control$alpha
+    ci = quantile(theta.b, c(alpha/2, 1-alpha/2))
+    ci[1] = x$ci[1]
+    ci[2] = x$ci[2]
     cat("       sd = ", sd, '\n\n', control$ci, '')
     cat((1-control$alpha)*100, "% confidence interval based on B = ", control$B, " resampling\n", sep = "")
     print(ci)
@@ -125,34 +157,61 @@ print.pIndex = function(x, ...) {
   x = as.matrix(x)
   x.ncol = ncol(x)
   if(x.ncol>2) stop("x shall be a vector or a matrix with one or two 2 columns.")
+
+  weights = control$weights
+  if(is.null(weights)) 
+    weights = rep(1, nrow(x))
   
   if(x.ncol == 2) {
     x.n = x[, 2]
     y0 = y[x.n==1, ]
     y1 = y[x.n==2, ]
+
     x0 = x[x.n==1, 1]
     x1 = x[x.n==2, 1]
+
+    w0 = weights[x.n==1]
+    w1 = weights[x.n==2]
   }
   
   method = control$method
   if (method == "Efron") {
-    if(x.ncol == 1) theta = .pIndexEfron(x, y)
-    if(x.ncol == 2) theta = .pIndexEfron(x1, y1) - .pIndexEfron(x0, y0)
+    if(x.ncol == 1) theta = .pIndexEfron(x, y, weights)
+    if(x.ncol == 2) theta = .pIndexEfron(x1, y1, w1) - .pIndexEfron(x0, y0, w0)
   }
   if (method == "Elc") {
-    if(x.ncol == 1) theta = .pIndexElc(x, y)
-    if(x.ncol == 2) theta = .pIndexElc(x1, y1) - .pIndexElc(x0, y0)
+    if(x.ncol == 1) theta = .pIndexElc(x, y, weights)
+    if(x.ncol == 2) theta = .pIndexElc(x1, y1, w1) - .pIndexElc(x0, y0, w0)
   }
   if (method == "Elw") {
-    if(x.ncol == 1) theta = .pIndexElw(x, y)
-    if(x.ncol == 2) theta = .pIndexElw(x1, y1) - .pIndexElw(x0, y0)
+    if(x.ncol == 1) theta = .pIndexElw(x, y, weights)
+    if(x.ncol == 2) theta = .pIndexElw(x1, y1, w1) - .pIndexElw(x0, y0, w0)
   }
   return(theta)
 }
 
+### Kernal fit for local biomarker variable
+.pIndexFitLocal=function(x, y, control) {
+  h = control$h
+  if(is.null(control$w))
+    w = sort(x[, 2])
+  else w = control$w
+
+  x1 = x[, 1]
+  x2 = x[, 2]
+  theta = w
+  control_w = control
+  for(i in 1:length(w)) {
+    wg = .K_func(x2, w[i], control$h, control$kernel)
+    control_w$weights = wg
+    theta[i] = .pIndexFit(x1, y, control_w)
+  }
+  return(list(theta = theta, w = w))
+}
+
 ### Efron method
-.pdfcdf = function(y, group) {
-  fit = survfit(y~1)
+.pdfcdf = function(y, group, weights) {
+  fit = survfit(y~1, weights=weights, subset=(weights>0))
   cdf = 1-fit$surv
   pdf = diff(c(0, cdf))
   z = rep(group, length(cdf))
@@ -168,9 +227,9 @@ print.pIndex = function(x, ...) {
   return(tx)
 }
 
-.pIndexEfron = function(x, y){
-  cf1 = .pdfcdf(y[x == 1, ], 1)
-  cf2 = .pdfcdf(y[x == 0, ], 0)
+.pIndexEfron = function(x, y, weights){
+  cf1 = .pdfcdf(y[x==1, ], 1, weights[x==1])
+  cf2 = .pdfcdf(y[x==0, ], 0, weights[x==0])
 
   t1 = cf1[, 1]
   t0 = cf2[, 1]
@@ -181,6 +240,7 @@ print.pIndex = function(x, ...) {
   m0 = length(t0)
   
   theta = 0
+  #checking using althernative method theta1
   #theta1 = 0
   for (i in 1:m0) {
     for (j in 1:m1) {
@@ -188,7 +248,7 @@ print.pIndex = function(x, ...) {
       theta = theta + p0[i]*p1[j]*dij
       #theta1 = theta1 + dij
     }
-  }  #theta1 = theta1/(n*n)*4
+  } #theta1 = theta1/(n*n)*4
   return(theta)
 }
 
@@ -212,9 +272,9 @@ print.pIndex = function(x, ...) {
   return(-ell)
 }
 
-.pIndexElc = function(x, y) {
-  cf1 = .pdfcdf(y[x==1, ], 1)
-  cf2 = .pdfcdf(y[x==0, ], 0)
+.pIndexElc = function(x, y, weights) {
+  cf1 = .pdfcdf(y[x==1, ], 1, weights[x==1])
+  cf2 = .pdfcdf(y[x==0, ], 0, weights[x==0])
   
   t1 = cf1[, 1]
   t2 = cf2[, 1]
@@ -275,9 +335,9 @@ print.pIndex = function(x, ...) {
   return(-ell)
 }
 
-.pIndexElw = function(x, y) {
-  cf1 = .pdfcdf(y[x==1, ], 1)
-  cf2 = .pdfcdf(y[x==0, ], 0)
+.pIndexElw = function(x, y, weights) {
+  cf1 = .pdfcdf(y[x==1, ], 1, weights[x==1])
+  cf2 = .pdfcdf(y[x==0, ], 0, weights[x==0])
   
   t1 = cf1[, 1]
   t2 = cf2[, 1]

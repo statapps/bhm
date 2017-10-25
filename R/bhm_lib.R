@@ -119,8 +119,27 @@ x.cdf = function(x){
   n = length(x)
   p = rep(0, n)
   for (i in 1:n) {
-    p[i] = sum(x<x[i])
+    p[i] = sum(x<=x[i])
   }
   p = (p-0.5)/n
   return(p)
 }
+
+## Kernel function
+.K_func = function(w, u, h, kernel = c("gaussian", "epanechnikov", "rectangular", 
+		     "triangular", "biweight", "cosine", "optcosine")) {
+  kernel = match.arg(kernel)
+  x = w-u
+  ax = abs(x)
+  esp = 1e-40
+
+  kh = switch(kernel, gaussian = dnorm(x, sd = h/2),
+    rectangular = ifelse(ax < h, 0.5/h, esp), 
+    triangular = ifelse(ax < h, (1 - ax/h)/h, esp),
+    epanechnikov = ifelse(ax < h, 3/4 * (1 - (ax/h)^2)/h, esp),
+    biweight = ifelse(ax < h, 15/16 * (1 - (ax/h)^2)^2/h, esp),
+    cosine = ifelse(ax < h, (1 + cos(pi * x/h))/(2*h), esp),
+    optcosine = ifelse(ax < h, pi/4 * cos(pi * x/(2*h))/h, esp))
+  return(kh)
+}
+
