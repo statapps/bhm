@@ -3,8 +3,9 @@
 \alias{pIndex}
 \alias{pIndex.default}
 \alias{pIndex.formula}
-%\alias{pIndexFit}
-\alias{print.pIndex}
+\alias{pIndexFit}
+\alias{pIndexLocal}
+\alias{pIndexThreshold}
 
 \title{
 Probability Index for Survival Time Difference
@@ -101,3 +102,5 @@ ki67 = data[, 4]
 # fit = pIndex(Surv(tm, status) ~ trt + ki67) 
 #
 }
+\keyword{ Biomarker interaction }
+\keyword{ Probability index }

@@ -1,37 +1,45 @@
 \name{print}
 \alias{print.bhm}
+\alias{print.pIndex}
+\alias{print.resboot}
 \alias{summary.bhm}
 \alias{print.summary.bhm}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-print a bhm object or a summary of bhm object
+print a fitted object or a summary of fitted object
 }
 \description{
-print and summary are used to provide a short summary of bhm outputs.
+print and summary are used to provide a short summary of outputs from "bhm", "pIndex", "resboot".
 }
 \usage{
 \method{print}{bhm}(x, ...)
+\method{print}{pIndex}(x, ...)
+\method{print}{resboot}(x, ...)
 \method{print}{summary.bhm}(x, ...)
 \method{summary}{bhm}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a bhm class returned from bhm fit}
+  \item{x}{a class returned from bhm, pIndex or resboot fit}
   \item{\dots}{other options used in print()}
-  \item{object}{object returned from bhm fit}
+  \item{object}{object returned from model fit}
 }
 \details{
-  print.bhm is called to print object or summary of object from the biomarker threshold model \code{\link{bhm}}.  
+  print.bhm is called to print object or summary of object from the biomarker threshold models \code{\link{bhm}}.  
+  print.pIndex is called to print object or summary of object from the probability index model \code{\link{pIndex}}.
+  print.resboot is called to print object or summary of object from the residuall bootstrap method for biomarker threshold models \code{\link{resboot}}.
   summary(fit) provides detail summary of `bhm' model fit, including parameter estimates, 
-standard errors, and 95% CIs.
+standard errors, and 95 percent CIs.
 
   The default method, print.default has its own help page. Use methods("print") to get all the methods for the print generic.
 }
-\author{Bingshu E. Chen and Fang Tian}
+\author{Bingshu E. Chen}
 \seealso{
  The default method for print \code{\link{print.default}}.
 \code{\link{glm}}
 \code{\link{bhm}}
+\code{\link{pIndex}}
+\code{\link{resboot}}
 }
 \examples{
 #

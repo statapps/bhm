@@ -1,4 +1,4 @@
-\name{control}
+\name{bhmControl}
 \alias{bhmControl}
 \alias{prolikControl}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -22,7 +22,7 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
   \item{B}{number of burn in}
   \item{R}{number of replications for Bayes meothd or number of Bootstrap for profile likelihood method}
   \item{thin}{thinning parameter for Gibbs samples, default is 2}
-  \item{epsilon}{step length for profile likelihood method, default is 0.01}
+  \item{epsilon}{biomarker (transformed) step length for profile likelihood method, default is 0.01}
   \item{alpha}{significance level (e.g. alpha=0.05)}
   \item{c.n}{number of threshold (i.e. the cut point), default is 1}
   \item{beta0}{initial value for mean of the prior distribution of beta, default is 0}
@@ -30,13 +30,13 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
 }
 
 \details{
-Control is used in model fitting of `bhm'.
+Control is used in model fitting of "bhm".
 }
 \value{
 This function checks the internal consisitency and returns a list of value as inputed to control model fit of bhm.
 }
 
-\author{Bingshu E. Chen and Tian Fang}
+\author{Bingshu E. Chen}
 \note{
   Based on code from Tian Fang.
 }

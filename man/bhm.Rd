@@ -54,23 +54,23 @@ The available family function are either "binomial" for fitting a logistic regre
   \item{data}{an optional data frame, list or environment (or object coercible by 'as.data.frame' to a data frame) containing the variables in the model. 
 If not found in data, the variables are taken from environment(formula), typically the environment from which glm is called.}
 
-  \item{x, y}{For 'bhmFit', x is a design matrix of dimension n * p and y is a vector of observations of length n for "glm" models or a "Surv" survival object for "coxph" models.}
+  \item{x, y}{For "bhmFit", x is a design matrix of dimension n * p and y is a vector of observations of length n for "glm" models or a "Surv" survival object for "coxph" models.}
 
-  \item{control}{a list of parameters for controlling the fitting process. See 'bhmControl' for details} 
+  \item{control}{a list of parameters for controlling the fitting process. See "bhmControl" for details} 
 
   \item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below).}  
 }
 \details{
 'biomarker' is a Biomarker variable. This variable is required and shall be the first dependent variable in the formula.
 
-'interaction' is an option of fitting model with itneractin term.
+"interaction" is an option of fitting model with itneractin term.
 When interaction = TRUE, a predictive biomarker model will be fitted.
 When interaction = FALSE, a prognostic biomarker model will be fitted.
 Both Biomarker and Treatment variables are required if 'interaction' = TRUE and 'treatment' shall be the second variable in the formula.
 
-'bhmFit' and 'bhmGibbs' are the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
+"bhmFit" and "bhmGibbs" are the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
 
-'x.cdf' is a function that maps biomarker values to interval (0, 1) using its empirical cumulative distribution function. After the threshold parameters are identified, the biomarker variable will be transformed back to its original scale.
+"x.cdf" is a function that maps biomarker values to interval (0, 1) using its empirical cumulative distribution function. After the threshold parameters are identified, the biomarker variable will be transformed back to its original scale.
 }
 \value{
 %%  ~Describe the value returned

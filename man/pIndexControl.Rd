@@ -7,16 +7,25 @@ Auxiliary function for \code{\link{pIndex}} fitting.
 Typically only used internally by 'pIndexFit', but may be used to construct a control argument to either function. 
 }
 \usage{
-  pIndexControl(method = c("Efron", "Elc", "Elw"), ci = c("Bootstrap", "Jackknife"), 
-                         alpha = 0.05, B = 0, pct = 0.5) 
+  pIndexControl(method = c("Efron", "Elc", "Elw", "Pic"), 
+                model = c("default", "local", "threshold"), 
+	        ci = c("Bootstrap", "Jackknife"), weights = NULL, 
+		kernel = NULL, h = 0.1, w  = seq(0.05, 0.95, 0.05), 
+		alpha = 0.05, B = 0, pct = 0.5) 
 }
 
 \arguments{
   \item{method}{choose either `Efron' for Efron method, 
    'Elc' for conditional empirical likelihood, 
     or `Elw' for weighted empirical likelihood method. The default value is `Efron'}
+  \item{model}{`default' for default pIndex model, `local' for kernel method, `threshold' for threshold method}
   \item{ci}{Method to construct confidence interval, `Bootstrap' for Bootstrap method and 
    `Jackknife' for Jackknife method}
+  \item{weights}{case weight}
+  \item{kernel}{kernel funtion types, including "gaussian", "epanechnikov", "rectangular", "triangular", "biweiht", "cosine", "optcosine". The default value is `gaussian'}
+
+  \item{h}{bandwidth, defaul is 0.1}
+  \item{w}{percentile of biomarker value for local fit}
   \item{B}{number of Bootstrap sample}
   \item{alpha}{significance level (e.g. alpha=0.05)}
   \item{pct}{Percentile of threshold (i.e. the cut point), default is 0.5}
