@@ -9,7 +9,10 @@ Rresidual Bootstrap Test (RBT) for treatment-biomarker interaction
 }
 \description{
 \{resboot\} is a function to test the existance of treatment-biomarker 
-interaction in biomarker threshold model g(Y) = b0+b1*I(w>c) + b2*z + b3*I(w>c)*z.
+interaction in biomarker threshold model 
+
+g(Y) = b0+b1*I(w>c) + b2*z + b3*I(w>c)*z.
+
 }
 
 \usage{

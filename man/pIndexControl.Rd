@@ -16,8 +16,9 @@ Typically only used internally by 'pIndexFit', but may be used to construct a co
 
 \arguments{
   \item{method}{choose either `Efron' for Efron method, 
-   'Elc' for conditional empirical likelihood, 
-    or `Elw' for weighted empirical likelihood method. The default value is `Efron'}
+   `Elc' for conditional empirical likelihood, 
+   `Elw' for weighted empirical likelihood method, and 
+   `Pic' for piecewise exponential distribution. The default value is `Efron'}
   \item{model}{`default' for default pIndex model, `local' for kernel method, `threshold' for threshold method}
   \item{ci}{Method to construct confidence interval, `Bootstrap' for Bootstrap method and 
    `Jackknife' for Jackknife method}

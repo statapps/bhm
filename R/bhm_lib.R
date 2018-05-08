@@ -84,13 +84,14 @@ surv.gendat =  function(n, c0, beta){
   zx = z*x1
   x0 = rep(1, n)
   X = cbind(z, x1, zx)
-  h0 = 1
+  h0 = 0.5
   h = h0*exp(X%*%beta)
   stime = rexp(n, h)               #Failure time.
-  endstudy = runif(n, 2, 4)
+  endstudy = runif(n, 0, 5)
   cstatus = ifelse(stime>endstudy, 0, 1) ##Censored at end of study time.
+  cat('\nCensoring: ', 1-mean(cstatus), '\n')
   stime = ifelse(stime>endstudy, endstudy, stime)
-  dat = cbind(stime, cstatus, z, x)
+  dat = cbind(time=stime, status=cstatus, z=z, x=x)
   return(dat)
 }
 
