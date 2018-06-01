@@ -14,7 +14,8 @@ prolikFit = function(x, y, family, control) {
     for (b in 1:R){
       idx = sample(1:n, n, replace = TRUE)
       x.b = x[idx, ]
-      y.b = y[idx, ]
+      if(is.vector(y)) y.b = y[idx]  #For binomial or continuous
+      else y.b = y[idx, ] #For survival
       ftb = .profit(x.b, y.b, family, control)
       cg[b, ] = ftb$c.max
     }
