@@ -47,8 +47,9 @@ Chen, B. E., Jiang, W. and Tu, D. (2014). A hierarchical Bayes model for biomark
 
 Fang, T., Mackillop, W., Jiang, W., Hildesheim, A., Wacholder, S. and Chen, B. E. (2017). A Bayesian method for risk window estimatin with application to HPV vaccine trial. Computational Statistics and Data Analysis. 112, page 53-62.
 
-Jiang, S., Chen, B. E. and Tu, D.(2016). Inference on treatment-covariate interaction based on a nonparametric m
-easure of treatment effects and censored survival data. Statistics in Medicine. 35, 2715-2725.
+Jiang, S., Chen, B. E. and Tu, D.(2016). Inference on treatment-covariate interaction based on a nonparametric measure of treatment effects and censored survival data. Statistics in Medicine. 35, 2715-2725.
+
+Gavanji, P., Chen, B. E. and Jiang, W.(2018). Residual Bootstrap test for interactions in biomarker threshold models with survival data. Statistics in Biosciences.
 }
 \keyword{bhm}
 \seealso{

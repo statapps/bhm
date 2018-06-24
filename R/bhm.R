@@ -11,6 +11,7 @@ bhm.default = function(x, y, family, control, ...) {
     fit = prolikFit(x, y, family, control)
 
   fit$family = family
+  fit$control = control
   fit$call = match.call()
   class(fit) = "bhm"
   return(fit)
@@ -35,6 +36,10 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
 
   # inverse cdf transformation of biomarker
   w = x[, 2]
+  # Check for possible wrong order of formula
+  if (length(unique(w)) < 4)
+    stop("Either the formula is not in correct order of 'y~biomarker + trt' or the biomarker is not a continuous variable.")
+
   if((min(w) < 0) | (max(w) > 1)) {
     x[, 2] = x.cdf(x[, 2])
     transform = TRUE
@@ -176,4 +181,21 @@ print.bhm = function(x,...) {
    print(c.max)
    cat('\nConditional regression coefficient given ', bname, 'biomarker = ', c.max, '\n')  
    print(x$c.fit)
+}
+
+plot.bhm = function(x, type = c("profile", "density"), ...) {
+  type = match.arg(type)
+  cgrid = x$cgrid
+  lgrid = x$lgrid
+  if(type == "profile") {
+    if(x$control$c.n == 1) {
+      plot(cgrid, lgrid, type = 'n', xlab = 'Biomarker', ylab = 'Log likelihood')
+      lines(cgrid, lgrid, lwd = 2)
+      title("Profile log likelihood")
+    }
+    else cat("Profile plot for c.n = 1 only. \n")
+  }
+  if(type == "density") {
+    plot(x$cg)
+  }
 }

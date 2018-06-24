@@ -116,6 +116,6 @@ bhmFit = function(x, y, family, control){
   bg = mcmc(bg)
   coefqtl = t(HPDinterval(bg))
 
-  fit = list(cg=cg,bg=bg,qg=qg,c.max=c.max,cqtl=cqtl,coefficients=coef,coefqtl=coefqtl,vcov=vcov,StdErr=se,var_names=var_names, c.fit = c.fit)
+  fit = list(cg=cg,bg=bg,qg=qg,c.max=c.max,cqtl=cqtl,coefficients=coef,coefqtl=coefqtl,vcov=vcov,StdErr=se,var_names=var_names, c.fit = c.fit, cgrid = pfit$cgrid, lgrid = pfit$lgrid)
   return(fit)
 }

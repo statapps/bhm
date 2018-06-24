@@ -35,11 +35,11 @@ standard errors, and 95 percent CIs.
 }
 \author{Bingshu E. Chen}
 \seealso{
- The default method for print \code{\link{print.default}}.
-\code{\link{glm}}
-\code{\link{bhm}}
-\code{\link{pIndex}}
-\code{\link{resboot}}
+ The default method for print \code{\link{print.default}}. Other methods include
+\code{\link{glm}}, 
+\code{\link{bhm}}, 
+\code{\link{pIndex}},
+\code{\link{resboot}}.
 }
 \examples{
 #

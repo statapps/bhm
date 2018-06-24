@@ -25,7 +25,8 @@ prolikFit = function(x, y, family, control) {
     cqtl = apply(cg, 2, quantile, ptl)
   }
   cfit = fit$c.fit
-  pfit = list(cg = cg, c.max = fit$c.max, cqtl=cqtl, coefficients = cfit$coefficients, StdErr = sqrt(diag(vcov(cfit))), c.fit = cfit, var_names = var_names)
+  cg = mcmc(cg)
+  pfit = list(cg = cg, c.max = fit$c.max, cqtl=cqtl, coefficients = cfit$coefficients, StdErr = sqrt(diag(vcov(cfit))), c.fit = cfit, var_names = var_names, cgrid = fit$cgrid, lgrid = fit$lgrid)
   return(pfit)
 }
 
@@ -35,9 +36,13 @@ prolikFit = function(x, y, family, control) {
 
   lik = -nrow(x)*10
   lglk = lik
-  for (u in seq(0.05, 0.95, epsilon)) {
+  cgrid = seq(0.05, 0.95, epsilon)
+  lgrid = cgrid
+  k = 1
+  for (u in cgrid) {
     if (c.n == 2) {
-      for (u1 in seq(0.05, 0.9, epsilon)) {
+      for (u1 in seq(0.05, u, epsilon)) {
+	#Make sure 5% of data to be used
         if (u1 < (u-0.05)) {
           cu = c(u1, u)
           cfit = thm.fit(x, y, family, cu)
@@ -53,6 +58,8 @@ prolikFit = function(x, y, family, control) {
       cfit = thm.fit(x, y, family, u)
       if(cfit$converged) lglk= logLik(cfit)
       if(length(lglk) == 2) lglk = lglk[2]
+      lgrid[k] = lglk
+      k = k + 1
       if (lglk > lik) {
         lik = lglk
         cx = u
@@ -60,6 +67,6 @@ prolikFit = function(x, y, family, control) {
     }
   }
   cfit = thm.fit(x, y, family, cx)
-  fit = list(c.max=cx, coefficients=cfit$coefficients, c.fit = cfit)
+  fit = list(c.max=cx, coefficients=cfit$coefficients, c.fit = cfit, cgrid = cgrid, lgrid = lgrid)
   return(fit)
 }

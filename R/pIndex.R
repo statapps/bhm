@@ -65,6 +65,10 @@ pIndex.formula = function (formula, data = list(...), control = list(...), ...) 
   y = model.response(mf)
   
   x = as.matrix(x)
+  trt = x[, 1]
+  if(length(unique(trt)) > 2)
+    stop("Either the formula is not in correct order of 'y~trt+biomarker' or the treatment variable has too many groups.")
+
   x.ncol = ncol(x)
   if(x.ncol>2) stop("x shall be a vector or a matrix with 1 or 2 columns.")
 
