@@ -1,11 +1,11 @@
 Package: bhm
 Type: Package
 Title: Biomarker Threshold Models
-Version: 1.13
-Date: 2017-12-19
+Version: 1.15
+Date: 2018-12-29
 Author: Bingshu E. Chen
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
-Depends: R (>= 2.10.0), coda, survival
+Depends: R (>= 2.10.0), coda, MASS, survival
 Imports: methods
 Description: Contains tools to fit both predictive and prognostic biomarker effects using biomarker threshold models. Evaluate the treatment effect, biomarker effect and treatment-biomarker interaction using probability index measurement. Test for treatment-biomarker interaction using residual bootstrap method.
 License: GPL (>=2)

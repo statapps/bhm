@@ -7,11 +7,11 @@ mpl = function(formula, ...) {
   UseMethod("mpl", formula)
 }
 
-mpl.formula = function(formula.glm, formula.cox, formula.cluster, data, weights=NULL, subset=NULL, 
+mpl.formula = function(formula, formula.cox, formula.cluster, data, weights=NULL, subset=NULL, 
                        max.iter = 100, tol = 0.005, jackknife=TRUE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
-  indx = match(c("formula.glm", "formula.cox", "formula.cluster", "data", "weights", "subset", "na.action"),
+  indx = match(c("formula", "formula.cox", "formula.cluster", "data", "weights", "subset", "na.action"),
                names(Call), nomatch = 0)
   
   print(Call)
@@ -22,12 +22,12 @@ mpl.formula = function(formula.glm, formula.cox, formula.cluster, data, weights=
   mf = model.frame(formula = formula.cox, data=data)
   s = model.response(mf)
   if(!inherits(s, "Surv")) stop("Second formula response must be a survival object")
-  st = sort(s[, 1], decr = TRUE, index = TRUE)
+  st = sort(s[, 1], decreasing = TRUE, index = TRUE)
   idx = st$ix
   data.sorted = data[idx, ]
     
-  mf1 = model.frame(formula = formula.glm,     data=data.sorted)
-  mf2 = model.frame(formula = formula.cox,     data=data.sorted)
+  mf1 = model.frame(formula = formula, data=data.sorted)
+  mf2 = model.frame(formula = formula.cox, data=data.sorted)
   mf3 = model.frame(formula = formula.cluster, data=data.sorted)
   cluster = mf3[, 1]
   cluster = as.factor(as.numeric(as.factor(mf3[, 1])))
@@ -86,7 +86,7 @@ mpl.formula = function(formula.glm, formula.cox, formula.cluster, data, weights=
   se.gamma<-as.numeric(summary(ph)$coefficients[,3])
   
   tm = as.data.frame(time)
-  df2<-as.data.frame(basehaz(ph, center=F))
+  df2<-as.data.frame(basehaz(ph, centered=FALSE))
   #print(df)
   df<-merge(tm,df2,by="time")
 
@@ -326,4 +326,4 @@ print.mpl = function(x, digits = 3,...) {
   print(out, digits=digits)
 }
 ### test
-source("main_mpl.R")
+#source("main_mpl.R")

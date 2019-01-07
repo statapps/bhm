@@ -322,13 +322,13 @@ pIndexThreshold = function(x, y, control) {
   return(tab)
 }
 
-#mix
+#mix distribution, to be added.
 
-pictail=function(y, group, cut) {
-  weights = 1
-  sf = .pdfcdf(y, group, weights)
-  
-}
+#pictail=function(y, group, cut) {
+#  weights = 1
+#  sf = .pdfcdf(y, group, weights)
+#  
+#}
 
 # pIndex for piecewise
 .pIndexPic=function(x, y, control){

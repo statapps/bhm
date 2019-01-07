@@ -1,5 +1,6 @@
 \name{print}
 \alias{print.bhm}
+\alias{print.mpl}
 \alias{print.pIndex}
 \alias{print.resboot}
 \alias{summary.bhm}
@@ -13,6 +14,7 @@ print and summary are used to provide a short summary of outputs from "bhm", "pI
 }
 \usage{
 \method{print}{bhm}(x, ...)
+\method{print}{mpl}(x, digits = 3, ...)
 \method{print}{pIndex}(x, ...)
 \method{print}{resboot}(x, ...)
 \method{print}{summary.bhm}(x, ...)
@@ -21,6 +23,7 @@ print and summary are used to provide a short summary of outputs from "bhm", "pI
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a class returned from bhm, pIndex or resboot fit}
+  \item{digits}{number if digits to be printed}
   \item{\dots}{other options used in print()}
   \item{object}{object returned from model fit}
 }

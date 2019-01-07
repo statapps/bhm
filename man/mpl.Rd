@@ -2,6 +2,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \alias{mpl}
 \alias{mpl.formula}
+\alias{mplFit}
 
 \title{
 Joint models for clustered data with robust variance
@@ -11,9 +12,9 @@ Joint models for clustered data with robust variance
 }
 
 \usage{
-mpl(x, ...)
+mpl(formula, ...)
 
-\method{mpl}{formula}(formula.glm, formula.cox, formula.cluster, data, weights=NULL
+\method{mpl}{formula}(formula, formula.cox, formula.cluster, data, weights=NULL,
     subset = NULL, max.iter=100, tol = 0.005, jackknife=TRUE, ...)
 #
 ##use:
@@ -23,11 +24,11 @@ mpl(x, ...)
 }
 
 \arguments{
-  \item{formula.glm}{an object of class "formula"(or one that can be coerced to 
+  \item{formula}{an object of class "formula"(or one that can be coerced to 
         that class): a symbolic description of the generalized linear model to be fitted for 
         binary data.}
 
-  \item{formula.surv}{an object of class "formula"(or one that can be coerced to
+  \item{formula.cox}{an object of class "formula"(or one that can be coerced to
         that class): a symbolic description of the Cox proportiobal hazards model to be fitted
         for survival data.}
 
@@ -64,6 +65,7 @@ When jackknife = TRUE, an object of class "mpl" is a list containing the followi
   \item{theta}{the maximum estimate of the regression coefficients and varaince component}  
   \item{ase}{Asymptotic standard error for theta, which is usually understimated}
   \item{jse}{Jackknife standard error of theta based on resampling, this is considered to be more robust}
+}
 
 \references{
 Chen, B. E. and Wang, J.(2018). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine.

@@ -11,7 +11,7 @@ Typically only used internally by 'pIndexFit', but may be used to construct a co
                 model = c("default", "local", "threshold"), 
 	        ci = c("Bootstrap", "Jackknife"), weights = NULL, 
 		kernel = NULL, h = 0.1, w  = seq(0.05, 0.95, 0.05), 
-		alpha = 0.05, B = 0, pct = 0.5) 
+		alpha = 0.05, B = 0, pct = 0.5, tau=NULL) 
 }
 
 \arguments{
@@ -30,6 +30,7 @@ Typically only used internally by 'pIndexFit', but may be used to construct a co
   \item{B}{number of Bootstrap sample}
   \item{alpha}{significance level (e.g. alpha=0.05)}
   \item{pct}{Percentile of threshold (i.e. the cut point), default is 0.5}
+  \item{tau}{maximum time tau to be used for pIndex}
 }
 
 \details{
