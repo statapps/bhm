@@ -2,6 +2,7 @@
 exportPattern("^[^\\.]")
 
 import(coda)
+import(MASS)
 import(survival)
 importFrom("graphics", "abline", "hist", "lines", "plot")
 importFrom("methods", "is")

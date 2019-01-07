@@ -4,8 +4,7 @@ pIndex.default = function(x, y, control, ...) {
   #cat("pIndex: Porbability Index method for survival data\n")
  
   if(is.null(control$cut)) control$cut = as.vector(quantile(y[, 1], seq(0.2, 1.0, 0.2)))
-  #.pIndexPic(x1, y, control)
-  #
+
   x = as.matrix(x)
   x.ncol = ncol(x)
   xm = as.factor(x[, 1])
@@ -39,7 +38,8 @@ pIndex.default = function(x, y, control, ...) {
 pIndexControl = function(method = c("Efron", "Elc", "Elw", "Pic"), 
 			 model = c("default", "local", "threshold"), 
 			 ci = c("Bootstrap", "Jackknife"), 
-          weights=NULL, kernel = NULL, h=0.1, w=seq(0.05, 0.95, 0.05), alpha = 0.05, B = 0, pct = 0.5) {
+          weights=NULL, kernel = NULL, h=0.1, w=seq(0.05, 0.95, 0.05), 
+	  alpha = 0.05, B = 0, pct = 0.5, tau = NULL) {
   method = match.arg(method)
   model  = match.arg(model)
   ci = match.arg(ci)
@@ -55,7 +55,7 @@ pIndexControl = function(method = c("Efron", "Elc", "Elw", "Pic"),
 
   if(!is.null(kernel) && B>0) stop("Bootstrap for local estimate coming soon")
   
-  return(list(method = method, model = model, ci=ci, weights=weights, kernel=kernel, h=h, w=w, alpha = alpha, B = B, pct = pct))
+  return(list(method = method, model = model, ci=ci, weights=weights, kernel=kernel, h=h, w=w, alpha = alpha, B = B, pct = pct, tau = tau))
 }
 
 pIndex.formula = function (formula, data = list(...), control = list(...), ...) {
@@ -155,6 +155,7 @@ plot.pIndex = function(x, ...) {
     abline(h = 0)
   }
 }
+
 pIndexFit = function(x, y, control) {
   x.ncol = ncol(x)
   B = control$B

@@ -4,10 +4,13 @@
 \alias{plot.resboot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-plot a fitted object or a summary of fitted object
+Plot a fitted biomarker threhold model
 }
 \description{
-plot and summary are used to provide a short summary of outputs from "bhm", "pIndex", "resboot".
+Several different type of plots can be produced for biomarker threshold mdels. 
+Plot method is used to provide a summary of outputs from "bhm", "pIndex", "resboot".
+
+Use ‘methods(plot)’ and the documentation for these for other plot methods.
 }
 \usage{
 \method{plot}{bhm}(x, type = c("profile", "density"), ...)
