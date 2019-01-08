@@ -7,11 +7,11 @@ mpl = function(formula, ...) {
   UseMethod("mpl", formula)
 }
 
-mpl.formula = function(formula, formula.cox, formula.cluster, data, weights=NULL, subset=NULL, 
+mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
                        max.iter = 100, tol = 0.005, jackknife=TRUE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
-  indx = match(c("formula", "formula.cox", "formula.cluster", "data", "weights", "subset", "na.action"),
+  indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
                names(Call), nomatch = 0)
   
   print(Call)
@@ -19,30 +19,27 @@ mpl.formula = function(formula, formula.cox, formula.cluster, data, weights=NULL
   # sort the survival  data
   if (indx[1] == 0) stop("a formula argument is required")
 
-  mf = model.frame(formula = formula.cox, data=data)
+  mf = model.frame(formula = formula, data=data)
   s = model.response(mf)
-  if(!inherits(s, "Surv")) stop("Second formula response must be a survival object")
+  if(!inherits(s, "Surv")) stop("The first formula response must be a survival object")
   st = sort(s[, 1], decreasing = TRUE, index = TRUE)
   idx = st$ix
   data.sorted = data[idx, ]
     
   mf1 = model.frame(formula = formula, data=data.sorted)
-  mf2 = model.frame(formula = formula.cox, data=data.sorted)
+  mf2 = model.frame(formula = formula.glm, data=data.sorted)
   mf3 = model.frame(formula = formula.cluster, data=data.sorted)
   cluster = mf3[, 1]
   cluster = as.factor(as.numeric(as.factor(mf3[, 1])))
   
-  Z.glm   = model.matrix(attr(mf1, "terms"), data=mf1)
-  W.cox   = model.matrix(attr(mf2, "terms"), data=mf2)
+  W.cox   = model.matrix(attr(mf1, "terms"), data=mf1)
+  Z.glm   = model.matrix(attr(mf2, "terms"), data=mf2)
   
   ## remove intercept term
   W.cox = W.cox[, -1]
-  #Z.glm = Z.glm[, -1]
-  
-  #print(Z.glm)
-  
-  y.glm = model.response(mf1)
-  s.cox = model.response(mf2)
+
+  s.cox = model.response(mf1)
+  y.glm = model.response(mf2)
   
   zNames = colnames(Z.glm)
   wNames = colnames(W.cox)
@@ -60,6 +57,10 @@ mpl.formula = function(formula, formula.cox, formula.cluster, data, weights=NULL
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
     fit$jse = jfit$theta.jse
   }
+  theta = fit$theta
+  p = length(theta)
+  fit$coefficients = theta
+  fit$OR_HR = exp(theta)[1:(p-2)]
   fit$control = control
   class(fit) = 'mpl'
   return(fit)

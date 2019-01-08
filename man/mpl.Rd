@@ -14,23 +14,23 @@ Joint models for clustered data with robust variance
 \usage{
 mpl(formula, ...)
 
-\method{mpl}{formula}(formula, formula.cox, formula.cluster, data, weights=NULL,
+\method{mpl}{formula}(formula, formula.glm, formula.cluster, data, weights=NULL,
     subset = NULL, max.iter=100, tol = 0.005, jackknife=TRUE, ...)
 #
 ##use:
 #
-# fit = mpl(y~x, Surv(time, status) ~ w + z, ~cluster, data = data)
+# fit = mpl(Surv(time, status) ~ w + z, y~x, ~cluster, data = data)
 #
 }
 
 \arguments{
-  \item{formula}{an object of class "formula"(or one that can be coerced to 
+    \item{formula}{an object of class "formula"(or one that can be coerced to
+	  that class): a symbolic description of the Cox proportiobal hazards model to be fitted
+	  for survival data.}
+
+  \item{formula.glm}{an object of class "formula"(or one that can be coerced to 
         that class): a symbolic description of the generalized linear model to be fitted for 
         binary data.}
-
-  \item{formula.cox}{an object of class "formula"(or one that can be coerced to
-        that class): a symbolic description of the Cox proportiobal hazards model to be fitted
-        for survival data.}
 
   \item{formula.cluster}{an object of class "formula"(or one that can be coerced to
          that class): a symbolic description of the cluster variable.}
@@ -40,8 +40,9 @@ mpl(formula, ...)
 If not found in data, the variables are taken from environment(formula), typically the enviro
 nment from which mpl is called.}
 
-  \item{weights}{To be added in the future.}
-  \item{subset}{To be added in the future.}
+  \item{weights}{To be added in the future}
+
+  \item{subset}{To be added in the future}
 
   \item{max.iter}{Maximum number of iterations, default is max.iter = 100}
 
@@ -63,6 +64,7 @@ Function print(x) can be used to print a summary of mpl results.
 mpl returns an object of class inheriting from "mpl". 
 When jackknife = TRUE, an object of class "mpl" is a list containing the following components:
   \item{theta}{the maximum estimate of the regression coefficients and varaince component}  
+  \item{OR_HR}{Odds ratios (OR) and hazard ratios (HR) for binary and survival outcomes, respectively}
   \item{ase}{Asymptotic standard error for theta, which is usually understimated}
   \item{jse}{Jackknife standard error of theta based on resampling, this is considered to be more robust}
 }

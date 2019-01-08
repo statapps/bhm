@@ -18,7 +18,7 @@ Please use the following steps to install the most recent version of 'bhm' packa
 1. First, you need to install the 'devtools' package. 
    You can skip this step if you have 'devtools' installed in your R. Invoke R and then type
 
-  install.packages("devtools")
+   install.packages("devtools")
 
 2. Load the devtools package.
 

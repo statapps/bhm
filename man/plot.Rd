@@ -10,7 +10,7 @@ Plot a fitted biomarker threhold model
 Several different type of plots can be produced for biomarker threshold mdels. 
 Plot method is used to provide a summary of outputs from "bhm", "pIndex", "resboot".
 
-Use ‘methods(plot)’ and the documentation for these for other plot methods.
+Use "methods(plot)" and the documentation for these for other plot methods.
 }
 \usage{
 \method{plot}{bhm}(x, type = c("profile", "density"), ...)
