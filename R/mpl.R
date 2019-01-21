@@ -75,13 +75,16 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   n = length(y)
 
   Z1 = Z[, -1]
+  #print(head(c_matrix))
   U_p = c_matrix%*%U
   ##For given U, estimate beta, gamma with survival and logistic function
   ##baseline hazard for each observation was obtained by basehaz
   logi = glm(y ~ Z1 + offset(U_p[, 1]),family=binomial)
   beta<-as.numeric(logi$coefficients) 
   se.beta<-as.numeric(summary(logi)$coefficients[,2])
-  
+  #cat('\n length s', length(s[, 1]))
+  #cat('\n length W', length(W[, 1]))
+  #cat('\n')
   ph = coxph(s~W+offset(U_p[, 2]))
   gamma<-as.numeric(ph$coefficients)
   se.gamma<-as.numeric(summary(ph)$coefficients[,3])
@@ -310,19 +313,29 @@ print.mpl = function(x, digits = 3,...) {
   out[s.idx, 2] = NA
   if(control$jackknife) {
     jse = x$jse
-    lci = exp(theta-1.96*jse)
-    uci = exp(theta+1.96*jse)
-    out = cbind(out, JSE = x$jse, Lower.CI = lci, Upper.CI = uci)
-    
-    sga = out[s.idx, 1]
-    lsga = log(abs(sga))
-    sga.jse = jse[s.idx]/sga
-    
-    out[s.idx, 5] = exp(lsga-1.96*sga.jse)
-    out[s.idx, 6] = exp(lsga+1.96*sga.jse)
-    out[p, 5] = theta[p]-1.96*jse[p]
-    out[p, 6] = theta[p]+1.96*jse[p]
+    out = cbind(out, JSE = jse)
   }
+  else {
+    jse = ase
+    out = cbind(out, JSE = NA)
+  }
+
+  lci = exp(theta-1.96*jse)
+  uci = exp(theta+1.96*jse)
+  out = cbind(out, Lower.CI = lci, Upper.CI = uci)
+    
+  sga = out[s.idx, 1]
+  lsga = log(abs(sga))
+  sga.jse = jse[s.idx]/sga
+    
+  out[s.idx, 5] = exp(lsga-1.96*sga.jse)
+  out[s.idx, 6] = exp(lsga+1.96*sga.jse)
+  out[p, 5] = theta[p]-1.96*jse[p]
+  out[p, 6] = theta[p]+1.96*jse[p]
+  pv  = 2*pnorm(-abs(theta/ase))
+  pv = round(pv*10000)/10000
+  out = cbind(out, pValue = pv)
+
   rownames(out) = control$varNames
   print(out, digits=digits)
 }
