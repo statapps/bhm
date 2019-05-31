@@ -98,7 +98,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   tm = as.data.frame(time)
   df2<-as.data.frame(basehaz(ph, centered=FALSE))
   #print(df)
-  df<-merge(tm,df2,by="time")
+  df<-merge(tm, df2, by="time")
 
   lambda<-df$hazard[n:1]
   #print(lambda)
@@ -148,31 +148,30 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
       U[e, ] = uv-score%*%inverse
       list_info[[e]] = inverse
     }
-    U = ifelse(U >  10,  10, U)
-    U = ifelse(U < -10, -10, U)
+    U = ifelse(U >  5,  5, U)
+    U = ifelse(U < -5, -5, U)
     esp = max(abs(cur - U))
-    #print(esp)
+    #print(U)
     if(esp < 0.01){ flag <- 1; break}   
   } 
   return (list(U = U, beta=beta, gamma=gamma,list_info=list_info,se.beta=se.beta,se.gamma=se.gamma,A=A,B=B))
 }
 
 
-########### PPL1 is to find the MLE of beta, gamma and random effect (u and v) given variance-covariance matrix
+########### PPL is to find the MLE of beta, gamma and random effect (u and v) given variance-covariance matrix
 .PPL = function(y, s, Z, W, c_matrix, U, sigma, control){
 ## max.iter and tol for the inner layer: updateMPL()
   flag = 0
   
   n = length(y)
-  cur = 0
+  coef1 = 0
   for(k in 1:control$max.iter){
-    #cur <- c(u,v,beta,gamma)   
-    coef = cur
+    coef = coef1
 
     ufit = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
     U = ufit$U
     coef1 = c(ufit$beta, ufit$gamma)
-    cur = coef1
+    #cur = coef1
 
     esp = max(abs(coef-coef1))
     # Stop iteration if difference between current and new estimates is less than tol
@@ -335,14 +334,16 @@ mplFit = function (y, s, Z, W, centre, control) {
     s.b = s.k[ix, ]
     Z.b = Z.k[ix, ]
     W.b = as.matrix(W.k[ix, ])
-    centre.b = centre.k[idx]
+    centre.b = centre.k[ix]
 
     bfit = mplFit(y.b, s.b, Z.b, W.b, centre.b, control)
     thetab[i, ] = bfit$theta
     cat('.')
   }
   cat('\n')
-  sdb = apply(thetab, 2, sd)
+  #sdb = apply(thetab, 2, sd)
+  Vb = var(thetab)
+  sdb = sqrt(diag(Vb))
   theta.bar = apply(thetab, 2, mean)
   return(list(theta.bar = theta.bar, theta.jse = sdb))
 }
