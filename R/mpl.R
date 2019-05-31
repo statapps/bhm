@@ -53,9 +53,10 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
-  if(bootstrap & jackknife)
-    error("Only one of bootstrap or jackknife can be true")
+  #if(bootstrap & jackknife)
+  #  error("Only one of bootstrap or jackknife can be true")
   if(jackknife) {
+    bootstrap = FALSE
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
     fit$jse = jfit$theta.jse
   }
@@ -157,36 +158,14 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   return (list(U = U, beta=beta, gamma=gamma,list_info=list_info,se.beta=se.beta,se.gamma=se.gamma,A=A,B=B))
 }
 
-
-########### PPL is to find the MLE of beta, gamma and random effect (u and v) given variance-covariance matrix
-.PPL = function(y, s, Z, W, c_matrix, U, sigma, control){
-## max.iter and tol for the inner layer: updateMPL()
-  flag = 0
-  
-  n = length(y)
-  coef1 = 0
-  for(k in 1:control$max.iter){
-    coef = coef1
-
-    ufit = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
-    U = ufit$U
-    coef1 = c(ufit$beta, ufit$gamma)
-    #cur = coef1
-
-    esp = max(abs(coef-coef1))
-    # Stop iteration if difference between current and new estimates is less than tol
-    if(esp < control$tol){ flag <- 1; break}   
-  }
-  if(!flag) warning("Not converge\n") 
-  return(ufit)
-}
-
 ####joint model utilizing all the data
 mplFit = function (y, s, Z, W, centre, control) {
   beta  = rep(0, length(Z[1, ]))
   gamma = rep(0, length(W[1, ]))
   sigma = c(1, 1, 0) #var_u var_v cov_uv
   theta = c(beta, gamma, sigma)
+  p     = length(theta)
+  p2    = c(p-2, p-1)
   
   ncentre<-nlevels(centre)
   n = length(y)
@@ -194,8 +173,6 @@ mplFit = function (y, s, Z, W, centre, control) {
 
   var_cov<-matrix(c(sigma[1], sigma[3], sigma[3], sigma[2]),2,2)
   #print(centre)
-  #print(var_cov)
-  #print(ncentre)
   U = mvrnorm(ncentre, c(0,0), var_cov)
 
   ###create the matrix which indicates the centre ID for each patient
@@ -210,7 +187,8 @@ mplFit = function (y, s, Z, W, centre, control) {
   for (l in 1:control$max.iter){
     theta2 = theta
     # find max penalized profile likelihood given sigma
-    pfit = .PPL(y, s, Z, W, c_matrix, U, sigma, control)
+    #pfit = .PPL(y, s, Z, W, c_matrix, U, sigma, control)
+    pfit  = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
     U = pfit$U
     #v <- pfit$v
     beta <- pfit$beta
@@ -227,17 +205,16 @@ mplFit = function (y, s, Z, W, centre, control) {
     theta = c(beta, gamma, sigma) 
     
     # Stop iteration if difference between current and new estimates is less than tol
-    if( max(abs(theta2 - theta)) < control$tol){ flag <- 1; break}   
-    # Otherwise continue iteration
+    if( max(abs(theta2 - theta)) < control$tol){ flag = 1; break}
   }
-  if(!flag) warning("Not converge\n") 
+  if(!flag) warning("Not converge.\n") 
   se.beta  = pfit$se.beta
   se.gamma = pfit$se.gamma
   
   ####manual calcuation of var of sigma
-  A<-pfit$A; B<-pfit$B
+  A = pfit$A
+  B = pfit$B
   u = U[, 1]; v = U[, 2]
-  #a<-var_u;   b<-var_v;  c<-cov_uv
   a = sigma[1]; b = sigma[2]; c = sigma[3]
   #sigma = c(a, b, c)
   if(control$varsig) {
@@ -260,9 +237,10 @@ mplFit = function (y, s, Z, W, centre, control) {
     se.sigma = sqrt(c(inv_Iabc[1,1],inv_Iabc[2,2],inv_Iabc[3,3]))
   } 
   else { se.sigma = rep(NaN, 3) }
-  
   theta.se = c(se.beta, se.gamma, se.sigma)
-  #return(fit)
+  
+  ### log transoformed of sigma11 and sigma22
+  theta[p2]  = log(theta[p2])
   return(list(theta=theta, ase = theta.se))
 }  
 
@@ -275,6 +253,8 @@ mplFit = function (y, s, Z, W, centre, control) {
   thetai = matrix(0, ncentre, length(theta))
   w = rep(0, ncentre)
   theta.bar = 0
+  p = length(theta)
+  p2 = c(p-2, p-1)
   
   for (k in 1:ncentre) { 
     ####jack-knife method: each time remove one centre from the dataset
@@ -304,6 +284,9 @@ mplFit = function (y, s, Z, W, centre, control) {
   }
   V = V/ncentre
   theta.jse = sqrt(diag(V))
+  theta.bar[p2] = exp(theta.bar[p2])
+  theta.jse[p2] = theta.bar[p2]*theta.jse[p2]
+  
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
 
@@ -311,7 +294,9 @@ mplFit = function (y, s, Z, W, centre, control) {
   n = length(centre)
   ncentre = length(unique(centre))
   control$varsig = FALSE
-
+  #p = length(theta)
+  #p2 = c(p-2, p-1)
+  
   theta.bar = 0
 
   B = control$B
@@ -343,40 +328,44 @@ mplFit = function (y, s, Z, W, centre, control) {
   cat('\n')
   #sdb = apply(thetab, 2, sd)
   Vb = var(thetab)
-  sdb = sqrt(diag(Vb))
+  theta.jse = sqrt(diag(Vb))
   theta.bar = apply(thetab, 2, mean)
-  return(list(theta.bar = theta.bar, theta.jse = sdb))
+  
+  #theta.bar[p2] = exp(theta.bar[p2])
+  #theta.jse[p2] = theta.bar[p2]*theta.jse[p2]
+  return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
 
 print.mpl = function(x, digits = 3,...) {
   control = x$control
   theta = x$theta
   p = length(theta)
+  
   ase = x$ase
   s.idx = (p-2):p
-  out = cbind(Coefficients = theta, OR_HR = exp(theta), ASE = ase)
-  out[s.idx, 2] = NA
+  p2    = c(p-2, p-1)
+  out = cbind(Coefficients = theta, ASE = ase)
   #if(control$jackknife) {
   jse = x$jse
-  out = cbind(out, JSE = jse)
-  #else {
-  #  jse = ase
-  #  out = cbind(out, JSE = NA)
-  #}
 
   lci = exp(theta-1.96*jse)
   uci = exp(theta+1.96*jse)
-  out = cbind(out, Lower.CI = lci, Upper.CI = uci)
-    
-  sga = out[s.idx, 1]
-  lsga = log(abs(sga))
-  sga.jse = jse[s.idx]/sga
-    
-  out[s.idx, 5] = exp(lsga-1.96*sga.jse)
-  out[s.idx, 6] = exp(lsga+1.96*sga.jse)
+  
+  ### transfer s11, s22 to exp scale
+  jse[p2] = exp(theta[p2])*jse[p2]
+  out[p2, 1] = exp(out[p2, 1])
+  out = cbind(out, B.SE = jse, OR_HR = exp(theta), Lower.CI = lci, Upper.CI = uci)
+
+  ## NA for sigma in OR_HR column
+  out[s.idx, 4] = NA
+  
+  #lsga = log(abs(sga))
+  ### jse for log(sigma11, sigma22)
+  #s.jse = jse[p2]
+  
   out[p, 5] = theta[p]-1.96*jse[p]
   out[p, 6] = theta[p]+1.96*jse[p]
-  pv  = 2*pnorm(-abs(theta/ase))
+  pv  = 2*pnorm(-abs(out[, 1]/jse))
   pv = round(pv*10000)/10000
   out = cbind(out, pValue = pv)
 
