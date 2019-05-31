@@ -8,7 +8,7 @@ mpl = function(formula, ...) {
 }
 
 mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
-                       max.iter = 100, tol = 0.005, jackknife=TRUE, ...) {
+                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
   indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
@@ -36,7 +36,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   Z.glm   = model.matrix(attr(mf2, "terms"), data=mf2)
   
   ## remove intercept term
-  W.cox = W.cox[, -1]
+  W.cox = as.matrix(W.cox[, -1])
 
   s.cox = model.response(mf1)
   y.glm = model.response(mf2)
@@ -46,16 +46,22 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   zNames = paste('glm', zNames, sep = '_')
   wNames = paste('cox', wNames, sep = '_')
   
-  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, jackknife=jackknife)
+  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
   control$subset = subset
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
+  if(bootstrap & jackknife)
+    error("Only one of bootstrap or jackknife can be true")
   if(jackknife) {
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
     fit$jse = jfit$theta.jse
+  }
+  if(bootstrap) {
+    bfit = .mplBoot(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
+    fit$jse = bfit$theta.jse
   }
   theta = fit$theta
   p = length(theta)
@@ -146,7 +152,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
     U = ifelse(U < -10, -10, U)
     esp = max(abs(cur - U))
     #print(esp)
-    if(esp < control$tol){ flag <- 1; break}   
+    if(esp < 0.01){ flag <- 1; break}   
   } 
   return (list(U = U, beta=beta, gamma=gamma,list_info=list_info,se.beta=se.beta,se.gamma=se.gamma,A=A,B=B))
 }
@@ -155,7 +161,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
 ########### PPL1 is to find the MLE of beta, gamma and random effect (u and v) given variance-covariance matrix
 .PPL = function(y, s, Z, W, c_matrix, U, sigma, control){
 ## max.iter and tol for the inner layer: updateMPL()
-  flag <- 0
+  flag = 0
   
   n = length(y)
   cur = 0
@@ -224,7 +230,6 @@ mplFit = function (y, s, Z, W, centre, control) {
     # Stop iteration if difference between current and new estimates is less than tol
     if( max(abs(theta2 - theta)) < control$tol){ flag <- 1; break}   
     # Otherwise continue iteration
-
   }
   if(!flag) warning("Not converge\n") 
   se.beta  = pfit$se.beta
@@ -262,7 +267,7 @@ mplFit = function (y, s, Z, W, centre, control) {
   return(list(theta=theta, ase = theta.se))
 }  
 
-.mplJK <- function (y, s, Z, W, centre, theta, control) {
+.mplJK=function (y, s, Z, W, centre, theta, control) {
   n = length(centre)
   ncentre = length(unique(centre))
 
@@ -300,7 +305,46 @@ mplFit = function (y, s, Z, W, centre, control) {
   }
   V = V/ncentre
   theta.jse = sqrt(diag(V))
-  return(list(theta = theta.bar, theta.jse = theta.jse))
+  return(list(theta.bar = theta.bar, theta.jse = theta.jse))
+}
+
+.mplBoot = function (y, s, Z, W, centre, theta, control) {
+  n = length(centre)
+  ncentre = length(unique(centre))
+  control$varsig = FALSE
+
+  theta.bar = 0
+
+  B = control$B
+  thetab = matrix(0, B, length(theta))
+  for (i in 1:B) {
+    idx = sample(n, replace = TRUE)
+    #datab = data[idx, ]
+
+    y.k = y[idx]
+    s.k = s[idx, ]
+    Z.k = Z[idx, ]
+    W.k = as.matrix(W[idx, ])
+    ###convert all centres into 1 to ncentre ID scale
+    centre.k = as.factor(as.numeric(as.factor(centre[idx])))
+
+    st = sort(s.k[, 1], decreasing = TRUE, index = TRUE)
+    ix = st$ix
+
+    y.b = y.k[ix]
+    s.b = s.k[ix, ]
+    Z.b = Z.k[ix, ]
+    W.b = as.matrix(W.k[ix, ])
+    centre.b = centre.k[idx]
+
+    bfit = mplFit(y.b, s.b, Z.b, W.b, centre.b, control)
+    thetab[i, ] = bfit$theta
+    cat('.')
+  }
+  cat('\n')
+  sdb = apply(thetab, 2, sd)
+  theta.bar = apply(thetab, 2, mean)
+  return(list(theta.bar = theta.bar, theta.jse = sdb))
 }
 
 print.mpl = function(x, digits = 3,...) {
@@ -311,14 +355,13 @@ print.mpl = function(x, digits = 3,...) {
   s.idx = (p-2):p
   out = cbind(Coefficients = theta, OR_HR = exp(theta), ASE = ase)
   out[s.idx, 2] = NA
-  if(control$jackknife) {
-    jse = x$jse
-    out = cbind(out, JSE = jse)
-  }
-  else {
-    jse = ase
-    out = cbind(out, JSE = NA)
-  }
+  #if(control$jackknife) {
+  jse = x$jse
+  out = cbind(out, JSE = jse)
+  #else {
+  #  jse = ase
+  #  out = cbind(out, JSE = NA)
+  #}
 
   lci = exp(theta-1.96*jse)
   uci = exp(theta+1.96*jse)
@@ -339,5 +382,3 @@ print.mpl = function(x, digits = 3,...) {
   rownames(out) = control$varNames
   print(out, digits=digits)
 }
-### test
-#source("main_mpl.R")
