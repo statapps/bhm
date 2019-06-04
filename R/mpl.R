@@ -8,7 +8,8 @@ mpl = function(formula, ...) {
 }
 
 mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
-                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,...) {
+                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,
+                       parallel = FALSE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
   indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
@@ -18,7 +19,9 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   #print(indx)
   # sort the survival  data
   if (indx[1] == 0) stop("a formula argument is required")
+  if(!is.null(subset)) data = subset(data, subset)
 
+  
   mf = model.frame(formula = formula, data=data)
   s = model.response(mf)
   if(!inherits(s, "Surv")) stop("The first formula response must be a survival object")
@@ -46,10 +49,10 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   zNames = paste('glm', zNames, sep = '_')
   wNames = paste('cox', wNames, sep = '_')
   
-  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
+  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B, parallel = parallel)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
-  control$subset = subset
+  #control$subset = subset
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
@@ -183,14 +186,14 @@ mplFit = function (y, s, Z, W, centre, control) {
     }
   }
   
-  flag<-0
+  flag = 0
   for (l in 1:control$max.iter){
     theta2 = theta
     # find max penalized profile likelihood given sigma
     #pfit = .PPL(y, s, Z, W, c_matrix, U, sigma, control)
     pfit  = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
     U = pfit$U
-    #v <- pfit$v
+    
     beta <- pfit$beta
     gamma <- pfit$gamma
 
@@ -291,40 +294,74 @@ mplFit = function (y, s, Z, W, centre, control) {
 }
 
 .mplBoot = function (y, s, Z, W, centre, theta, control) {
+  control = control
+  centre = centre
+  y = y
+  s = s
+  Z = Z
+  W = W
+  
   n = length(centre)
   ncentre = length(unique(centre))
   control$varsig = FALSE
-  #p = length(theta)
-  #p2 = c(p-2, p-1)
+  parallel = control$parallel
   
   theta.bar = 0
 
   B = control$B
+  sqB = seq_len(B)
+  
   thetab = matrix(0, B, length(theta))
-  for (i in 1:B) {
-    idx = sample(n, replace = TRUE)
-    #datab = data[idx, ]
-
+  idxn = matrix(sample(1:n, n * B, replace = TRUE), B, n)
+  cat("\nBootstraping...\n")
+  
+  fn = function(r) {
+    idx = idxn[r, ]
+    
     y.k = y[idx]
     s.k = s[idx, ]
     Z.k = Z[idx, ]
     W.k = as.matrix(W[idx, ])
     ###convert all centres into 1 to ncentre ID scale
     centre.k = as.factor(as.numeric(as.factor(centre[idx])))
-
+    
     st = sort(s.k[, 1], decreasing = TRUE, index = TRUE)
     ix = st$ix
-
+    
     y.b = y.k[ix]
     s.b = s.k[ix, ]
     Z.b = Z.k[ix, ]
     W.b = as.matrix(W.k[ix, ])
     centre.b = centre.k[ix]
-
-    bfit = mplFit(y.b, s.b, Z.b, W.b, centre.b, control)
-    thetab[i, ] = bfit$theta
-    cat('.')
+    
+    bfit = bhm::mplFit(y.b, s.b, Z.b, W.b, centre.b, control)
+    #thetab[i, ] = bfit$theta
+    return(bfit$theta)
+  } 
+  if(parallel) {
+    n.cores = detectCores() - 1
+    cl = makeCluster(n.cores)
+    clusterEvalQ(cl, library(survival))
+    cat("Note: Parallel with", n.cores, "cores.\n")
+    
+    boots = parLapply(cl, sqB, fn)
+    stopCluster(cl)
+  } else {
+    boots = lapply(sqB, fn)
   }
+  
+  #print(boots)
+  
+  for (r in sqB) {
+    thetab[r, ] = boots[[r]] #[[1]]
+    #boot.beta[r, ] = beta_b
+    #pb[r] = max(abs(beta_b - beta_w)/boots[[r]][[2]])
+  }
+  
+  #for (i in 1:B) {
+    #idx = sample(n, replace = TRUE)
+    #cat('.')
+  #}
   cat('\n')
   #sdb = apply(thetab, 2, sd)
   Vb = var(thetab)
