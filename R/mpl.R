@@ -21,6 +21,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
 
   mf = model.frame(formula = formula, data=data)
   s = model.response(mf)
+
   if(!inherits(s, "Surv")) stop("The first formula response must be a survival object")
   st = sort(s[, 1], decreasing = TRUE, index = TRUE)
   idx = st$ix
@@ -53,8 +54,6 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
-  #if(bootstrap & jackknife)
-  #  error("Only one of bootstrap or jackknife can be true")
   if(jackknife) {
     bootstrap = FALSE
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
@@ -188,9 +187,19 @@ mplFit = function (y, s, Z, W, centre, control) {
     theta2 = theta
     # find max penalized profile likelihood given sigma
     #pfit = .PPL(y, s, Z, W, c_matrix, U, sigma, control)
-    pfit  = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
+    coef1 = c(beta, gamma)
+    for(ii in 1:control$max.iter) {
+      coef2 = coef1
+      pfit  = .updateMPL(y, s, Z, W, c_matrix, U, sigma, control)
+      U = pfit$U
+      coef1 = c(pfit$beta, pfit$gamma)
+      espc = max(abs(coef2-coef1))
+      #cat(espc, '\n')
+      if(espc<0.01) break
+      if(ii > 20) {
+       stop("No converge")}
+    }
     U = pfit$U
-    #v <- pfit$v
     beta <- pfit$beta
     gamma <- pfit$gamma
 
@@ -216,7 +225,6 @@ mplFit = function (y, s, Z, W, centre, control) {
   B = pfit$B
   u = U[, 1]; v = U[, 2]
   a = sigma[1]; b = sigma[2]; c = sigma[3]
-  #sigma = c(a, b, c)
   if(control$varsig) {
     K<-A*B*(a*b-c^2)^2-B*(a*b-c^2)*b-A*(a*b-c^2)*a+(a*b-c^2)
     Iaa<-ncentre*b^2/(2*(a*b-c^2)^2)+1/2*sum((B*b^2+A*c^2-b)*(A*B*(2*a*b^2-2*b*c^2)-B*b^2-(2*a*b-c^2)*A+b)/(K^2))-
@@ -240,7 +248,7 @@ mplFit = function (y, s, Z, W, centre, control) {
   theta.se = c(se.beta, se.gamma, se.sigma)
   
   ### log transoformed of sigma11 and sigma22
-  theta[p2]  = log(theta[p2])
+  #theta[p2]  = log(theta[p2])
   return(list(theta=theta, ase = theta.se))
 }  
 
@@ -254,7 +262,7 @@ mplFit = function (y, s, Z, W, centre, control) {
   w = rep(0, ncentre)
   theta.bar = 0
   p = length(theta)
-  p2 = c(p-2, p-1)
+  #p2 = c(p-2, p-1)
   
   for (k in 1:ncentre) { 
     ####jack-knife method: each time remove one centre from the dataset
@@ -275,7 +283,6 @@ mplFit = function (y, s, Z, W, centre, control) {
     theta.bar = theta.bar + w[k]*thetai[k, ]
     cat('.')
   }
-  #cat('w =', w)
   cat('\n')
   V = 0
   for (k in 1:ncentre){
@@ -284,8 +291,6 @@ mplFit = function (y, s, Z, W, centre, control) {
   }
   V = V/ncentre
   theta.jse = sqrt(diag(V))
-  theta.bar[p2] = exp(theta.bar[p2])
-  theta.jse[p2] = theta.bar[p2]*theta.jse[p2]
   
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
@@ -294,17 +299,13 @@ mplFit = function (y, s, Z, W, centre, control) {
   n = length(centre)
   ncentre = length(unique(centre))
   control$varsig = FALSE
-  #p = length(theta)
-  #p2 = c(p-2, p-1)
   
   theta.bar = 0
-
   B = control$B
   thetab = matrix(0, B, length(theta))
-  for (i in 1:B) {
+  i = 1
+  while (i <= B) {
     idx = sample(n, replace = TRUE)
-    #datab = data[idx, ]
-
     y.k = y[idx]
     s.k = s[idx, ]
     Z.k = Z[idx, ]
@@ -314,25 +315,24 @@ mplFit = function (y, s, Z, W, centre, control) {
 
     st = sort(s.k[, 1], decreasing = TRUE, index = TRUE)
     ix = st$ix
-
     y.b = y.k[ix]
     s.b = s.k[ix, ]
     Z.b = Z.k[ix, ]
     W.b = as.matrix(W.k[ix, ])
     centre.b = centre.k[ix]
 
-    bfit = mplFit(y.b, s.b, Z.b, W.b, centre.b, control)
+    bfit = try(mplFit(y.b, s.b, Z.b, W.b, centre.b, control))
+    if (class(bfit) == "try-error") next
     thetab[i, ] = bfit$theta
+    i = i + 1
     cat('.')
   }
   cat('\n')
-  #sdb = apply(thetab, 2, sd)
-  Vb = var(thetab)
-  theta.jse = sqrt(diag(Vb))
+  theta.jse = apply(thetab, 2, sd)
+  #Vb = var(thetab)
+  #theta.jse = sqrt(diag(Vb))
   theta.bar = apply(thetab, 2, mean)
   
-  #theta.bar[p2] = exp(theta.bar[p2])
-  #theta.jse[p2] = theta.bar[p2]*theta.jse[p2]
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
 
