@@ -8,8 +8,7 @@ mpl = function(formula, ...) {
 }
 
 mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
-                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,
-                       parallel = FALSE, ...) {
+                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
   indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
@@ -50,7 +49,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   zNames = paste('glm', zNames, sep = '_')
   wNames = paste('cox', wNames, sep = '_')
   
-  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B, parallel = parallel)
+  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
   #control$subset = subset
@@ -199,8 +198,8 @@ mplFit = function (y, s, Z, W, centre, control) {
       espc = max(abs(coef2-coef1))
       #cat(espc, '\n')
       if(espc<0.01) break
-      if(ii > 20) {
-       stop("No converge")}
+      #if(ii > 100) {
+      # stop("No converge")}
     }
     U = pfit$U
     beta <- pfit$beta
@@ -283,38 +282,35 @@ mplFit = function (y, s, Z, W, centre, control) {
     
     jfit = mplFit(y.jk, s.jk, Z.jk, W.jk, centre.jk, control)
     thetai[k, ] = hi*theta + (1-hi)*jfit$theta
+    #print(jfit$theta)
+    print(thetai[k, ])
     theta.bar = theta.bar + w[k]*thetai[k, ]
     cat('.')
   }
   cat('\n')
   V = 0
+  print(1/w)
+  print(theta.bar)
   for (k in 1:ncentre){
     theta0 = thetai[k, ]-theta.bar
+    print(theta0)
     V = V + w[k]/(1-w[k])*((theta0)%*%t(theta0))
   }
   V = V/ncentre
+  print(V)
   theta.jse = sqrt(diag(V))
   
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
 
 .mplBoot = function (y, s, Z, W, centre, theta, control) {
-  control = control
-  centre = centre
-  y = y
-  s = s
-  Z = Z
-  W = W
-  
   n = length(centre)
   ncentre = length(unique(centre))
   control$varsig = FALSE
-  parallel = control$parallel
   
   theta.bar = 0
   B = control$B
-  sqB = seq_len(B)
-  
+
   thetab = matrix(0, B, length(theta))
   i = 1
   while (i <= B) {
@@ -366,8 +362,8 @@ print.mpl = function(x, digits = 3,...) {
   uci = exp(theta+1.96*jse)
   
   ### transfer s11, s22 to exp scale
-  jse[p2] = exp(theta[p2])*jse[p2]
-  out[p2, 1] = exp(out[p2, 1])
+  #jse[p2] = exp(theta[p2])*jse[p2]
+  #out[p2, 1] = exp(out[p2, 1])
   out = cbind(out, B.SE = jse, OR_HR = exp(theta), Lower.CI = lci, Upper.CI = uci)
 
   ## NA for sigma in OR_HR column
