@@ -8,7 +8,8 @@ mpl = function(formula, ...) {
 }
 
 mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
-                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,...) {
+                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE,
+                       parallel = FALSE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
   indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
@@ -18,7 +19,9 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   #print(indx)
   # sort the survival  data
   if (indx[1] == 0) stop("a formula argument is required")
+  if(!is.null(subset)) data = subset(data, subset)
 
+  
   mf = model.frame(formula = formula, data=data)
   s = model.response(mf)
 
@@ -47,10 +50,10 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   zNames = paste('glm', zNames, sep = '_')
   wNames = paste('cox', wNames, sep = '_')
   
-  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
+  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B, parallel = parallel)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
-  control$subset = subset
+  #control$subset = subset
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
@@ -182,7 +185,7 @@ mplFit = function (y, s, Z, W, centre, control) {
     }
   }
   
-  flag<-0
+  flag = 0
   for (l in 1:control$max.iter){
     theta2 = theta
     # find max penalized profile likelihood given sigma
@@ -296,12 +299,22 @@ mplFit = function (y, s, Z, W, centre, control) {
 }
 
 .mplBoot = function (y, s, Z, W, centre, theta, control) {
+  control = control
+  centre = centre
+  y = y
+  s = s
+  Z = Z
+  W = W
+  
   n = length(centre)
   ncentre = length(unique(centre))
   control$varsig = FALSE
+  parallel = control$parallel
   
   theta.bar = 0
   B = control$B
+  sqB = seq_len(B)
+  
   thetab = matrix(0, B, length(theta))
   i = 1
   while (i <= B) {
@@ -312,7 +325,7 @@ mplFit = function (y, s, Z, W, centre, control) {
     W.k = as.matrix(W[idx, ])
     ###convert all centres into 1 to ncentre ID scale
     centre.k = as.factor(as.numeric(as.factor(centre[idx])))
-
+    
     st = sort(s.k[, 1], decreasing = TRUE, index = TRUE)
     ix = st$ix
     y.b = y.k[ix]
@@ -327,6 +340,7 @@ mplFit = function (y, s, Z, W, centre, control) {
     i = i + 1
     cat('.')
   }
+  
   cat('\n')
   theta.jse = apply(thetab, 2, sd)
   #Vb = var(thetab)
