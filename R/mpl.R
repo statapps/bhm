@@ -52,10 +52,14 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
+  px = cumsum(c(length(zNames), length(wNames), 3))
+  control$px = px
+  control$theta0 = c(rep(0, sum(control$px[2])), 1, 1, 0)
   #control$subset = subset
   
   
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
+  fit$jse = NULL
   if(jackknife) {
     bootstrap = FALSE
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
@@ -150,25 +154,31 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
       U[e, ] = uv-score%*%inverse
       list_info[[e]] = inverse
     }
-    U = ifelse(U >  5,  5, U)
-    U = ifelse(U < -5, -5, U)
+    maxu = 10
+    U = ifelse(U >  maxu,  maxu, U)
+    U = ifelse(U < -maxu, -maxu, U)
     esp = max(abs(cur - U))
     #print(U)
-    if(esp < 0.01){ flag <- 1; break}   
+    if(esp < 0.001){ flag <- 1; break}   
   } 
   return (list(U = U, beta=beta, gamma=gamma,list_info=list_info,se.beta=se.beta,se.gamma=se.gamma,A=A,B=B))
 }
 
 ####joint model utilizing all the data
 mplFit = function (y, s, Z, W, centre, control) {
-  beta  = rep(0, length(Z[1, ]))
-  gamma = rep(0, length(W[1, ]))
-  sigma = c(1, 1, 0) #var_u var_v cov_uv
-  theta = c(beta, gamma, sigma)
+  #beta  = rep(0, length(Z[1, ]))
+  #gamma = rep(0, length(W[1, ]))
+  #sigma = c(1, 1, 0) #var_u var_v cov_uv
+  #theta = c(beta, gamma, sigma)
+  px = control$px
+  theta = control$theta0
+  beta = theta[1:px[1]]
+  gamma = theta[(px[1]+1):px[2]]
+  sigma = theta[(px[2]+1):px[3]]
   p     = length(theta)
-  p2    = c(p-2, p-1)
+  #p2    = c(p-2, p-1)
   
-  ncentre<-nlevels(centre)
+  ncentre = nlevels(centre)
   n = length(y)
   control$ncentre = ncentre
 
@@ -197,7 +207,7 @@ mplFit = function (y, s, Z, W, centre, control) {
       coef1 = c(pfit$beta, pfit$gamma)
       espc = max(abs(coef2-coef1))
       #cat(espc, '\n')
-      if(espc<0.01) break
+      if(espc<control$tol) break
       #if(ii > 100) {
       # stop("No converge")}
     }
@@ -209,7 +219,7 @@ mplFit = function (y, s, Z, W, centre, control) {
     l_info<-pfit$list_info
     mat_sum<-Reduce('+',l_info)
     
-    matrix_uv<-(t(U)%*%(U)-mat_sum)/ncentre
+    matrix_uv = (t(U)%*%(U)-mat_sum)/ncentre
 
     #update sigma
     sigma = c(matrix_uv[1, 1], matrix_uv[2, 2], matrix_uv[1, 2])
@@ -255,6 +265,7 @@ mplFit = function (y, s, Z, W, centre, control) {
 }  
 
 .mplJK=function (y, s, Z, W, centre, theta, control) {
+  control$theta0 = theta
   n = length(centre)
   ncentre = length(unique(centre))
 
@@ -264,13 +275,11 @@ mplFit = function (y, s, Z, W, centre, control) {
   w = rep(0, ncentre)
   theta.bar = 0
   p = length(theta)
-  #p2 = c(p-2, p-1)
   
   for (k in 1:ncentre) { 
     ####jack-knife method: each time remove one centre from the dataset
     hi = n/sum(as.numeric(centre) == k)  ### here hi = 1/wi in manuscript
     w[k] = 1/hi
-    #print(w[k])
     idx = (centre!=k)
     y.jk = subset(y, idx)
     s.jk = subset(s, idx)
@@ -281,23 +290,17 @@ mplFit = function (y, s, Z, W, centre, control) {
     centre.jk = as.factor(as.numeric(as.factor(centre[idx])))
     
     jfit = mplFit(y.jk, s.jk, Z.jk, W.jk, centre.jk, control)
-    thetai[k, ] = hi*theta + (1-hi)*jfit$theta
-    #print(jfit$theta)
-    print(thetai[k, ])
+    thetai[k, ] = hi*theta - (hi-1)*jfit$theta
     theta.bar = theta.bar + w[k]*thetai[k, ]
     cat('.')
   }
   cat('\n')
   V = 0
-  print(1/w)
-  print(theta.bar)
   for (k in 1:ncentre){
     theta0 = thetai[k, ]-theta.bar
-    print(theta0)
     V = V + w[k]/(1-w[k])*((theta0)%*%t(theta0))
   }
   V = V/ncentre
-  print(V)
   theta.jse = sqrt(diag(V))
   
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
@@ -353,18 +356,24 @@ print.mpl = function(x, digits = 3,...) {
   
   ase = x$ase
   s.idx = (p-2):p
+  cse = ase
   p2    = c(p-2, p-1)
-  out = cbind(Coefficients = theta, ASE = ase)
-  #if(control$jackknife) {
-  jse = x$jse
-
-  lci = exp(theta-1.96*jse)
-  uci = exp(theta+1.96*jse)
+  jse = NA*ase
+  if(!is.null(x$jse)) {
+    jse = x$jse
+    cse = jse
+  }
   
+  out = cbind(Coefficients = theta, ASE = ase, JSE = jse)
+
   ### transfer s11, s22 to exp scale
-  #jse[p2] = exp(theta[p2])*jse[p2]
-  #out[p2, 1] = exp(out[p2, 1])
-  out = cbind(out, B.SE = jse, OR_HR = exp(theta), Lower.CI = lci, Upper.CI = uci)
+  cse[p2] = 1/(theta[p2])*cse[p2]
+  theta[p2] = log(theta[p2])
+
+  lci = exp(theta-1.96*cse)
+  uci = exp(theta+1.96*cse)
+  
+  out = cbind(out, OR_HR = exp(theta), Lower.CI = lci, Upper.CI = uci)
 
   ## NA for sigma in OR_HR column
   out[s.idx, 4] = NA
@@ -373,9 +382,9 @@ print.mpl = function(x, digits = 3,...) {
   ### jse for log(sigma11, sigma22)
   #s.jse = jse[p2]
   
-  out[p, 5] = theta[p]-1.96*jse[p]
-  out[p, 6] = theta[p]+1.96*jse[p]
-  pv  = 2*pnorm(-abs(out[, 1]/jse))
+  out[p, 5] = theta[p]-1.96*cse[p]
+  out[p, 6] = theta[p]+1.96*cse[p]
+  pv  = 2*pnorm(-abs(theta/cse))
   pv = round(pv*10000)/10000
   out = cbind(out, pValue = pv)
 
