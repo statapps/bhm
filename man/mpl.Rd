@@ -5,7 +5,7 @@
 \alias{mplFit}
 
 \title{
-Joint models for clustered data with robust variance
+Joint models for clustered data with binary and survival outcomes.
 }
 \description{
 \{mpl\} is a function to fit a joint model for clustered binary and survival data using maximum penalized likelihood (MPL) method  with Jackknife variance.
