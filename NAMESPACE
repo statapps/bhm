@@ -26,6 +26,7 @@ S3method(mpl, formula)
 S3method(pIndex, default)
 S3method(pIndex, formula)
 
+S3method(plot, bhm)
 S3method(plot, pIndex)
 S3method(plot, resboot)
 

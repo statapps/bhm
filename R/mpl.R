@@ -8,7 +8,7 @@ mpl = function(formula, ...) {
 }
 
 mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL, subset=NULL, 
-                       max.iter = 300, tol = 0.005, B = 20, jackknife=FALSE, bootstrap = TRUE, ...) {
+                       max.iter = 100, tol = 0.005, jackknife=TRUE, ...) {
   Call = match.call()
   Call[[1]] = as.name("mpl")
   indx = match(c("formula", "formula.glm", "formula.cluster", "data", "weights", "subset", "na.action"),
@@ -49,7 +49,7 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   zNames = paste('glm', zNames, sep = '_')
   wNames = paste('cox', wNames, sep = '_')
   
-  control = list(max.iter = max.iter, tol = tol, varsig = TRUE, B = B)
+  control = list(max.iter = max.iter, tol = tol, varsig = TRUE)
   control$varNames = c(zNames, wNames, 'sigma1', 'sigma2', 'sigma_12')
   control$weights = weights
   px = cumsum(c(length(zNames), length(wNames), 3))
@@ -61,14 +61,14 @@ mpl.formula = function(formula, formula.glm, formula.cluster, data, weights=NULL
   fit = mplFit(y.glm, s.cox, Z.glm, W.cox, cluster, control)
   fit$jse = NULL
   if(jackknife) {
-    bootstrap = FALSE
+    #bootstrap = FALSE
     jfit = .mplJK(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
     fit$jse = jfit$theta.jse
   }
-  if(bootstrap) {
-    bfit = .mplBoot(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
-    fit$jse = bfit$theta.jse
-  }
+  #if(bootstrap) {
+  #  bfit = .mplBoot(y.glm, s.cox, Z.glm, W.cox, cluster, fit$theta, control)
+  #  fit$jse = bfit$theta.jse
+  #}
   theta = fit$theta
   p = length(theta)
   fit$coefficients = theta
@@ -302,49 +302,6 @@ mplFit = function (y, s, Z, W, centre, control) {
   }
   V = V/ncentre
   theta.jse = sqrt(diag(V))
-  
-  return(list(theta.bar = theta.bar, theta.jse = theta.jse))
-}
-
-.mplBoot = function (y, s, Z, W, centre, theta, control) {
-  n = length(centre)
-  ncentre = length(unique(centre))
-  control$varsig = FALSE
-  
-  theta.bar = 0
-  B = control$B
-
-  thetab = matrix(0, B, length(theta))
-  i = 1
-  while (i <= B) {
-    idx = sample(n, replace = TRUE)
-    y.k = y[idx]
-    s.k = s[idx, ]
-    Z.k = Z[idx, ]
-    W.k = as.matrix(W[idx, ])
-    ###convert all centres into 1 to ncentre ID scale
-    centre.k = as.factor(as.numeric(as.factor(centre[idx])))
-    
-    st = sort(s.k[, 1], decreasing = TRUE, index = TRUE)
-    ix = st$ix
-    y.b = y.k[ix]
-    s.b = s.k[ix, ]
-    Z.b = Z.k[ix, ]
-    W.b = as.matrix(W.k[ix, ])
-    centre.b = centre.k[ix]
-
-    bfit = try(mplFit(y.b, s.b, Z.b, W.b, centre.b, control))
-    if (class(bfit) == "try-error") next
-    thetab[i, ] = bfit$theta
-    i = i + 1
-    cat('.')
-  }
-  
-  cat('\n')
-  theta.jse = apply(thetab, 2, sd)
-  #Vb = var(thetab)
-  #theta.jse = sqrt(diag(Vb))
-  theta.bar = apply(thetab, 2, mean)
   
   return(list(theta.bar = theta.bar, theta.jse = theta.jse))
 }
