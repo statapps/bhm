@@ -7,8 +7,8 @@ import(survival)
 importFrom("graphics", "abline", "hist", "lines", "plot", "title")
 importFrom("methods", "is")
 importFrom("stats", "aggregate", "binomial", "cov", "dbeta", "dnorm", "glm", 
-           "logLik", "model.frame",
-           "model.matrix", "model.response", "nlm", "optim", "printCoefmat",
+           "logLik", "model.frame", "model.matrix", "model.response", 
+           "nlm", "optim", "pnorm", "printCoefmat",
            "quantile", "qnorm", "rbinom", "rexp", "rgamma", "rnorm", "runif", 
            "sd", "vcov")
 
