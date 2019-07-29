@@ -8,7 +8,7 @@
 Joint models for clustered data with robust variance
 }
 \description{
-\{mpl\} is a function to fit Joint model for clustered binary and survival data using maximum penalized likelihood (MPL) with robust Jackknife variance.
+\{mpl\} is a function to fit a joint model for clustered binary and survival data using maximum penalized likelihood (MPL) method  with Jackknife variance.
 }
 
 \usage{
@@ -19,7 +19,7 @@ mpl(formula, ...)
 #
 ##use:
 #
-# fit = mpl(Surv(time, status) ~ w + z, y~x, ~cluster, data = data)
+# fit = mpl(Surv(time, status)~w+z, y~x1+x2, ~cluster, data=data)
 #
 }
 
@@ -40,9 +40,9 @@ mpl(formula, ...)
 If not found in data, the variables are taken from environment(formula), typically the enviro
 nment from which mpl is called.}
 
-  \item{weights}{To be added in the future}
+  \item{weights}{to be added in the future}
 
-  \item{subset}{To be added in the future}
+  \item{subset}{only a subset of data will be used for model fitting.}
 
   \item{max.iter}{Maximum number of iterations, default is max.iter = 100}
 
@@ -55,7 +55,7 @@ functions (see below).}
 }
 
 \details{
-mpl(y~x, Surv(time, event)~w+z, ~cluster) will fit penalized likelihood for binary and survival data.
+mpl(Surv(time, event)~w+z, y~x1+x2, ~cluster) will fit penalized likelihood for binary and survival data with cluster effect.
 Function print(x) can be used to print a summary of mpl results.
 }
 
@@ -70,7 +70,8 @@ When jackknife = TRUE, an object of class "mpl" is a list containing the followi
 }
 
 \references{
-Chen, B. E. and Wang, J.(2018). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine.
+Chen, B. E. and Wang, J.(2019). Joint modelling of binary response and survival for clustered data in clinical trials. 
+Manuscript submitted to Statistics in Medicine.
 }
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)
@@ -82,15 +83,19 @@ Based on code from J. Wang.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link{glm}}
-\code{\link{coxph}}
+\code{\link{coxph}}, 
+\code{\link{glm}}, 
+\code{\link{print}}.
 }
 \examples{
 ##
 ### No run
 # 
-# fit = mpl(y~x, Surv(tm, status) ~ trt + ki67, ~center.id) 
+# fit = mpl(Surv(time, event)~trt+ki67, resp~trt+age, ~center.id) 
 #
 }
-\keyword{ Joint Model }
+\keyword{ Cox regression }
+\keyword{ Joint model }
 \keyword{ Jackknife }
+\keyword{ Logistic regression }
+\keyword{ Penalized likelihood }
