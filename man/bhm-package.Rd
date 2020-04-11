@@ -38,7 +38,7 @@ A stable version of View the "bhm" package is also available from the Comprehens
   install.packages("bhm")
 
 }
-\author{Bingshu E. Chen
+\author{Bingshu E. Chen, Tian Fang, Jia Wang, Shuoshuo Liu
 
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
 }
@@ -50,8 +50,14 @@ Fang, T., Mackillop, W., Jiang, W., Hildesheim, A., Wacholder, S. and Chen, B. E
 Jiang, S., Chen, B. E. and Tu, D.(2016). Inference on treatment-covariate interaction based on a nonparametric measure of treatment effects and censored survival data. Statistics in Medicine. 35, 2715-2725.
 
 Gavanji, P., Chen, B. E. and Jiang, W.(2018). Residual Bootstrap test for interactions in biomarker threshold models with survival data. Statistics in Biosciences.
+
+Chen, B. E. and Wang, J.(2020). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine. Vol 39. 326-339.
+
+Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way interactions in sur
+vival analysis. Canadian Journal of Statistics. 
+
 }
-\keyword{bhm}
+\keyword{bhm, brm}
 \seealso{
 \code{coxph, }
 \code{glm, }

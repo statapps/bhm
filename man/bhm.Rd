@@ -6,6 +6,7 @@
 \alias{bhmFit}
 \alias{bhmGibbs}
 \alias{prolikFit}
+\alias{summary.bhm}
 \alias{thm.fit}
 \alias{thm.lik}
 \alias{x.cdf}
@@ -42,6 +43,10 @@ bhm(x, ...)
 # to fit a model without the formula
 #
 # Biomarker shall be in the first dependent variable
+# 
+#  To summary a "bhm" boject,
+#
+          \method{summary}{bhm}(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -58,7 +63,9 @@ If not found in data, the variables are taken from environment(formula), typical
 
   \item{control}{a list of parameters for controlling the fitting process. See "bhmControl" for details} 
 
-  \item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below).}  
+  \item{object}{object returned from model fit}
+
+  \item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below)}  
 }
 \details{
 'biomarker' is a Biomarker variable. This variable is required and shall be the first dependent variable in the formula.

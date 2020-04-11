@@ -70,8 +70,7 @@ When jackknife = TRUE, an object of class "mpl" is a list containing the followi
 }
 
 \references{
-Chen, B. E. and Wang, J.(2019). Joint modelling of binary response and survival for clustered data in clinical trials. 
-Manuscript submitted to Statistics in Medicine.
+Chen, B. E. and Wang, J.(2020). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine. Vol 39. 326-339.
 }
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)

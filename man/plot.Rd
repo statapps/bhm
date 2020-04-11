@@ -1,7 +1,9 @@
 \name{plot}
 \alias{plot.bhm}
+\alias{plot.brm}
 \alias{plot.pIndex}
 \alias{plot.resboot}
+\alias{plot.residuals.brm}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Plot a fitted biomarker threhold model
@@ -14,13 +16,15 @@ Use "methods(plot)" and the documentation for these for other plot methods.
 }
 \usage{
 \method{plot}{bhm}(x, type = c("profile", "density"), ...)
+\method{plot}{brm}(x, type = c("HR"), ...)
 \method{plot}{pIndex}(x, ...)
 \method{plot}{resboot}(x, ...)
+\method{plot}{residuals.brm}(x, type="Martingale", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a class returned from "bhm", "pIndex" or "resboot" fit.}
-  \item{type}{type of plot in bhm object, "profile" to plot profile likelihood,   "density" to plot trace and density of the threshold distribution.}
+  \item{type}{type of plot in bhm object, "profile" to plot profile likelihood,   "density" to plot trace and density of the threshold distribution. "HR" to plot hazard ratio of the "brm" boject.}
   \item{\dots}{other options used in plot().}
 }
 \details{
