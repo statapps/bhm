@@ -29,4 +29,6 @@ Version history,
 
 4. version 1.04 is final version of hbthm.
 
-5. version 1.05  change name to bhm, adding profile likelihood method
+5. version 1.05  change name to bhm, adding profile likelihood method.
+
+6. version 1.16 added continuous threshold model 'brm'.

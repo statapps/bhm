@@ -1,7 +1,7 @@
 \name{data}
 \alias{data}
-\alias{glm.gendat}
-\alias{surv.gendat}
+\alias{gendat.glm}
+\alias{gendat.surv}
 \docType{data}
 \title{dataset}
 
@@ -11,16 +11,17 @@ dataset for biomarker threshold model (bhm)
 \usage{
 # to generate survival data, use: 
 
-   surv.gendat(n, c0, beta)
+   gendat.surv(n, c0, beta, type=c("bhm", "brm"))
 
 # to generate glm data, use:
 
-   glm.gendat(n, c0, beta)
+   gendat.glm(n, c0, beta)
 }
 \arguments{
   \item{n}{sample size}
   \item{c0}{cut off point, for example c0 = 0.4}
   \item{beta}{regression coefficient, for example, beta = c(0.3, log(0.5), log(0.25))}
+  \item{type}{type of biomarker threshold model, either bhm or brm, default is type = "bhm"}
 }
 \format{
   The format of the data set for analysis shall be a data frame with a response variable (either a 
@@ -44,6 +45,6 @@ ects in clinical trials. Computational Statistics and Data Analysis. vol 71, pag
 ## maybe str(data) ; plot(data) ...
 c0 = 0.4
 b = c(-0.5, 1.5, 1.3)
-data = surv.gendat(n=300, c0 = c0, beta = b)
+data = gendat.surv(n=300, c0 = c0, beta = b)
 }
 \keyword{datasets}

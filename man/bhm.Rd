@@ -116,7 +116,7 @@ The logistic regression part are based on codes wrote by Tian Fang.
 ## Generate a random data set
 n = 300
 b = c(0.5, 1, 1.5)
-data = surv.gendat(n, c0 = 0.40, beta = b)
+data = gendat.surv(n, c0 = 0.40, beta = b)
 age = runif(n, 0, 1)*100
 tm = data[, 1]
 status = data[, 2]
@@ -124,7 +124,7 @@ trt = data[, 3]
 ki67 = data[, 4]
 ## fit a biomarker threshold survival model with one single cut point
 
-fit = bhm(Surv(tm, status)~ki67+trt+age, interaction = TRUE, B=5, R=10)
+# fit = bhm(Surv(tm, status)~ki67+trt+age, interaction = TRUE, B=5, R=10)
 
 
 ## here B=5 and R=10 is used for test run. In general, B > 500 and R > 2000 is
@@ -135,9 +135,10 @@ fit = bhm(Surv(tm, status)~ki67+trt+age, interaction = TRUE, B=5, R=10)
 ##
 ## To print the output, use
 ##
-       print(fit)
+#       print(fit)
 ##
 }
-\keyword{ Biomarker interaction }
+\keyword{ Biomarker interaction}
+\keyword{ Indicator threshold models}
 \keyword{ Predictive effect}
 \keyword{ Prognostic effect}

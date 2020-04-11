@@ -89,9 +89,9 @@ Bingshu E. Chen (bingshu.chen@queensu.ca)
 \examples{
 ##
 ## Generate a random data set
-n = 300
+n = 30
 b = c(0.5, 1, 1.5)
-data = surv.gendat(n, c0 = 0.40, beta = b)
+data = gendat.surv(n, c0 = 0.40, beta = b)
 tm = data[, 1]
 status = data[, 2]
 trt = data[, 3]

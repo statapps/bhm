@@ -6,7 +6,6 @@
 \alias{predict.brm}
 \alias{residuals.brm}
 \alias{summary.brm}
-%\alias{brmFit}
 
 \title{
 Fitting Biomarker Continuous Threshold Models
@@ -106,7 +105,7 @@ Shuoshuo Liu (shuoshuo.liu@psu.edu) and Bingshu E. Chen (bingshu.chen@queensu.ca
 ## Generate a random data set
 n = 300
 b = c(0.5, 1, 1.5)
-data = surv.gendat(n, c0 = 0.40, beta = b)
+data = gendat.surv(n, c0 = 0.40, beta = b, type="brm")
 age = runif(n, 0, 1)*100
 tm = data[, 1]
 status = data[, 2]
@@ -114,20 +113,16 @@ trt = data[, 3]
 ki67 = data[, 4]
 ## fit a biomarker threshold survival model with one single cut point
 
-# fit = brm(Surv(tm, status)~ki67+trt+age, interaction = TRUE, B=5, R=10)
-
-
-## here B=5 and R=10 is used for test run. In general, B > 500 and R > 2000 is
-## recommend for the analysis of biomarker variable. To fit a model with 
-## two cut points, use: 
+# fit = brm(Surv(tm, status)~ki67+trt+age)
 ##
-##     fit = brm(Surv(tm, status)~bmk+trt+age, B = 500,  R = 2000, c.n = 2)
+     fit = brm(Surv(tm, status)~trt+age+ki67)
 ##
 ## To print the output, use
 ##
-#	print(fit)
+	print(fit)
 ##
 }
 \keyword{ Biomarker interaction }
+\keyword{ Continuous threshold models }
 \keyword{ Predictive effect}
 \keyword{ Prognostic effect}

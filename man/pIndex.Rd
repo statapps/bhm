@@ -88,9 +88,9 @@ This function is part of the bhm package.
 \examples{
 ##
 ## Generate a random data set
-n = 300
+n = 50
 b = c(0.5, 1, 1.5)
-data = surv.gendat(n, c0 = 0.40, beta = b)
+data = gendat.surv(n, c0 = 0.40, beta = b, type='brm')
 age = runif(n, 0, 1)*100
 tm = data[, 1]
 status = data[, 2]
