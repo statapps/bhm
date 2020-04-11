@@ -75,27 +75,7 @@ thm.lik = function(x, y, family, beta, q, cx, control){
   return(lik)
 }
 
-surv.gendat =  function(n, c0, beta){
-  n1 = n/2
-  #x = runif(n, -2, 2)
-  x = rnorm(n, 0.2, 1)
-  x1 = ifelse(x > c0, 1, 0)
-  z = c(rep(0, n1), rep(1, n1))
-  zx = z*x1
-  x0 = rep(1, n)
-  X = cbind(z, x1, zx)
-  h0 = 0.5
-  h = h0*exp(X%*%beta)
-  stime = rexp(n, h)               #Failure time.
-  endstudy = runif(n, 0, 5)
-  cstatus = ifelse(stime>endstudy, 0, 1) ##Censored at end of study time.
-  cat('\nCensoring: ', 1-mean(cstatus), '\n')
-  stime = ifelse(stime>endstudy, endstudy, stime)
-  dat = cbind(time=stime, status=cstatus, z=z, x=x)
-  return(dat)
-}
-
-glm.gendat =  function(n, c0, beta){
+gendat.glm =  function(n, c0, beta){
   n1 = n/2
   x = runif(n, 0, 1)
   c.n = length(c0)

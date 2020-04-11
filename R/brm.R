@@ -433,11 +433,14 @@ plot.brm = function(x, type=c("HR"), ...){
 }
 
 ###### Generate survival data ################
-surv.gendat =  function(n, c0, beta){
+gendat.surv =  function(n, c0, beta, type = c("brm", "bhm")){
+  type = match.arg(type)
   ### biomarkers
   x = rnorm(n, 0.2, 2)
   ### code below to generate data with ReLU
-  x1 = ifelse(x >= c0, x-c0, 0)
+  if(type == "bhm") x1 = ifelse(x>c0, 1, 0)
+  else x1 = ifelse(x >= c0, x-c0, 0)
+
   z = rbinom(n,1,0.5)  ####used binomial to determine 0 or 1####
   zx = z*x1
   X = cbind(z, x1, zx)
