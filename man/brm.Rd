@@ -25,14 +25,14 @@ brm(x, ...)
 # use 
 #          brm(y ~ biomarker)             
 #
-# to fit a prognostic model with biomarker term only
+# to fit a prognostic model with biomarker term only (will be implement in the future)
 #
 # use 
 #
-#          brm(y ~ biomarker+treatment)
+#          brm(y ~ treatment+x2+x3+biomarker)
 #
 # to fit a predictive model with interaciton between biomarker 
-# and treatment.
+# and treatment, adjusted for x2, x3, etc.
 # 
 # use 
 #          brm(x, y, method, ...)
@@ -68,7 +68,7 @@ When interaction = TRUE, a predictive biomarker model will be fitted.
 When interaction = FALSE, a prognostic biomarker model will be fitted.
 Both Biomarker and Treatment variables are required if 'interaction' = TRUE and 'treatment' shall be the second variable in the formula.
 
-"brmFit" is the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
+"brm.default" is the workhorse functions: they are not normally called directly but can be more efficient where the response vector, design matrix and family have already been calculated.
 
 }
 \value{
@@ -122,7 +122,7 @@ ki67 = data[, 4]
 	print(fit)
 ##
 }
-\keyword{ Biomarker interaction }
-\keyword{ Continuous threshold models }
-\keyword{ Predictive effect}
-\keyword{ Prognostic effect}
+\keyword{Biomarker interaction }
+\keyword{Continuous threshold models }
+\keyword{Predictive effect}
+\keyword{Prognostic effect}

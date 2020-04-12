@@ -57,11 +57,18 @@ Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way inte
 vival analysis. Canadian Journal of Statistics. 
 
 }
-\keyword{bhm, brm}
+\keyword{Biomarker threshold models}
+\keyword{Continuous threshold models}
+\keyword{Probability index}
+\keyword{Indicator threshold models}
+\keyword{Residual Bootrap}
+
 \seealso{
-\code{coxph, }
-\code{glm, }
-\code{survival}
+\code{\link{bhm}},  
+\code{\link{brm}}, 
+\code{\link{coxph}}, 
+\code{\link{glm}}, 
+\code{\link{survival}}
 }
 \examples{
 # fit = bhm(y~biomarker+treatment)

@@ -2,11 +2,11 @@ Package: bhm
 Type: Package
 Title: Biomarker Threshold Models
 Version: 1.16
-Date: 2020-04-10
+Date: 2020-04-12
 Author: Bingshu E. Chen
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
 Depends: R (>= 3.5.0), coda, ggplot2, MASS, survival
 Imports: methods
-Description: Contains tools to fit both predictive and prognostic biomarker effects using biomarker threshold models. Evaluate the treatment effect, biomarker effect and treatment-biomarker interaction using probability index measurement. Test for treatment-biomarker interaction using residual bootstrap method.
+Description: Contains tools to fit both predictive and prognostic biomarker effects using biomarker threshold models and continuous threshold models. Evaluate the treatment effect, biomarker effect and treatment-biomarker interaction using probability index measurement. Test for treatment-biomarker interaction using residual bootstrap method.
 License: GPL (>=2)
 LazyLoad: yes

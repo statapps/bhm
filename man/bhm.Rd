@@ -138,7 +138,8 @@ ki67 = data[, 4]
 #       print(fit)
 ##
 }
-\keyword{ Biomarker interaction}
-\keyword{ Indicator threshold models}
-\keyword{ Predictive effect}
-\keyword{ Prognostic effect}
+\keyword{Biomarker interaction}
+\keyword{Indicator threshold models}
+\keyword{Logistic regression}
+\keyword{Predictive effect}
+\keyword{Prognostic effect}

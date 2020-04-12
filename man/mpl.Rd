@@ -93,8 +93,8 @@ Based on code from J. Wang.
 # fit = mpl(Surv(time, event)~trt+ki67, resp~trt+age, ~center.id) 
 #
 }
-\keyword{ Cox regression }
-\keyword{ Joint model }
-\keyword{ Jackknife }
-\keyword{ Logistic regression }
-\keyword{ Penalized likelihood }
+\keyword{Cox regression}
+\keyword{Joint model}
+\keyword{Jackknife}
+\keyword{Logistic regression}
+\keyword{Penalized likelihood}

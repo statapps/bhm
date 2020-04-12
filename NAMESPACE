@@ -5,6 +5,7 @@ import(coda)
 import(ggplot2)
 import(MASS)
 import(survival)
+
 importFrom("graphics", "abline", "hist", "lines", "plot", "title")
 importFrom("methods", "is")
 importFrom("stats", "aggregate", "binomial", "complete.cases", "cov", "dbeta",

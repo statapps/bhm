@@ -11,7 +11,7 @@ dataset for biomarker threshold model (bhm)
 \usage{
 # to generate survival data, use: 
 
-   gendat.surv(n, c0, beta, type=c("bhm", "brm"))
+   gendat.surv(n, c0, beta, type=c("brm", "bhm"))
 
 # to generate glm data, use:
 
