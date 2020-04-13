@@ -29,10 +29,10 @@ brm(x, ...)
 #
 # use 
 #
-#          brm(y ~ treatment+x2+x3+biomarker)
+#          brm(y ~ biomarker+treatment+x1+x2+...)
 #
 # to fit a predictive model with interaciton between biomarker 
-# and treatment, adjusted for x2, x3, etc.
+# and treatment, adjusted for x1, x2, etc.
 # 
 # use 
 #          brm(x, y, method, ...)
@@ -94,16 +94,17 @@ Shuoshuo Liu (shuoshuo.liu@psu.edu) and Bingshu E. Chen (bingshu.chen@queensu.ca
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{bhm}}, 
+\code{\link{coxph}},
 \code{\link{plot.brm}},
 \code{\link{print.brm}},
-\code{\link{bhm}}, 
-\code{\link{coxph}}, 
-
+\code{\link{residuals.brm}},
+\code{\link{summary.brm}},
 }
 \examples{
 ##
 ## Generate a random data set
-n = 300
+n = 100
 b = c(0.5, 1, 1.5)
 data = gendat.surv(n, c0 = 0.40, beta = b, type="brm")
 age = runif(n, 0, 1)*100
@@ -113,13 +114,15 @@ trt = data[, 3]
 ki67 = data[, 4]
 ## fit a biomarker threshold survival model with one single cut point
 
-# fit = brm(Surv(tm, status)~ki67+trt+age)
+   fit = brm(Surv(tm, status)~ki67+trt+age)
 ##
-     fit = brm(Surv(tm, status)~trt+age+ki67)
+## fit a prognostic continuous threshold model with biomarker only
+##
+#    fit = brm(Surv(tm, status)~ki67)
 ##
 ## To print the output, use
 ##
-	print(fit)
+#    print(fit)
 ##
 }
 \keyword{Biomarker interaction }

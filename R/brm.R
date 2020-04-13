@@ -11,8 +11,8 @@ brm = function(x, ...) {
 
 ### the follow function take input like
 ###
-###       brm(Surv(time, status) ~ trt + z1 + z2 + z3 + w)
-###
+###       brm(Surv(time, status) ~ w + trt + z1 + z2 + z3)  # need this
+###          biomarker is the first, trt is the second, the interaction is the last
 ### and will fit a Cox PH model with
 ###
 ###       lambda_0(t) exp(b1*trt + b2*z1 + b3*z2 + b4*z3 +
@@ -33,16 +33,14 @@ brm.formula = function(formula, data=list(...),
     ## remove the intercept
     x = x[, -1]
   }
+  w = x[, 1]
   
-  p = length(x[1, ])
-  w = x[, p]
-
   ### Use 20 points for first pass search
   if(is.null(epsilon)) epsilon = (max(w) - min(w))/20;
   
   ### seq_c for search grid points
   seq_c=seq(min(w), max(w), epsilon)
-
+  
   fit = brm.default(x, y, method, seq_c, ...)
   fit$call = match.call()
   fit$formula = formula
@@ -52,9 +50,8 @@ brm.formula = function(formula, data=list(...),
 
 brm.default = function (x, y, method, seq_c, ...) {
   x = as.matrix(x)
-
   method = method
-
+  
   ### first pass search for initial value
   fit0 = .reluProFit(x, y, seq_c)
   theta0 = c(fit0$beta, fit0$c.max)
@@ -63,10 +60,10 @@ brm.default = function (x, y, method, seq_c, ...) {
     fit = .reluGradFit(x, y, theta0)
   else {
     lgc = as.matrix(fit0$log_c)
-
+    
     ### second pass: refined search around possible MLE
     c2 = lgc[lgc[, 2] > (fit0$logLik - 3.84), 1]
-
+    
     epsilon = seq_c[2]-seq_c[1]
     epsilon2 = (max(c2) - min(c2) + epsilon)/60
     seq_c2 = seq(min(c2)- 0.5*epsilon, max(c2) + 0.5*epsilon, epsilon2)
@@ -74,7 +71,7 @@ brm.default = function (x, y, method, seq_c, ...) {
     tmp = rbind(lgc, fit$log_c)
     fit$log_c = tmp[order(tmp[, 1]), ]
   }
-
+  
   ### Find s.e
   grdInfo = .reluGradient(fit$theta, x, y, info = TRUE)
   pi_theta = grdInfo$pi_theta
@@ -102,32 +99,30 @@ brm.default = function (x, y, method, seq_c, ...) {
 .evalLP = function(theta, x) {
   ### this code is re-written to handle model of
   ###
-  ###            Surv(time, status) ~ trt + x2 + x3 + ... + biomarker
+  ###            Surv(time, status) ~ biomarker + trt + x2 + x3 + ...  # need this
   ###
   ### input 'x' is a nxp matrix with 2 or more columns:
   ### x1 = treatment z,
   ### x2, ..., x_{p-1} are other covariates,
   ### xp = biomarker variable w.
   p = length(x[1, ])
-  p1 = p-1
-  x1 = x[, 1]
-  z = x[, 1:p1]
-  w = x[, p]
+  z = x[, 2:p]  # baseline including trt
+  x1 = x[, 2]   # trt
+  w = x[, 1]    # biomarker
   
   ### beta = theta1, ... theta[p+1], cut point = theta[p+2]
   beta = theta[1:(p+1)]
   cx   = theta[p+2]
   
   phi = ifelse(w >= cx, w-cx, 0)
-  eta = ifelse(w >= cx, -(beta[p]+beta[p+1]*x1), 0)
-  eta_i = -(beta[p]+beta[p+1]*x1)
+  eta = ifelse(w >= cx, -(beta[1]+beta[p+1]*x1), 0)
   
   ### output X is a n x (p+1) matrix: [x1, ... x_{p-1}, phi, phi*x1]
-  X = cbind(z, phi, phi*x1)
+  X = cbind(phi, z, phi*x1)
   
   ### Linear predict vector lp
   lp = (X%*%beta)[, 1]
-  return(list(X = X, lp = lp, eta = eta, eta_i = eta_i, w = w, cx = cx, phi = phi))
+  return(list(X = X, lp = lp, eta = eta, w = w, cx = cx, phi = phi))
 }
 
 
@@ -151,7 +146,7 @@ brm.default = function (x, y, method, seq_c, ...) {
   ev = .evalLP(theta, x)
   lp  = ev$lp
   elp = exp(lp)
-
+  
   status = y[, 2]
   ### find cost as negative of log likelihood function
   J = -sum(status*(lp-log(cumsum(elp))))
@@ -207,10 +202,10 @@ brm.default = function (x, y, method, seq_c, ...) {
     #for v_2rc
     s1rc = apply(z2_I*elp, 2, cumsum)
     V_2rc = status%*%(s1rc/(s0)-z2_I)
- 
+    
     #for v_2cc
     den=density(ev$w)
-
+    
     pt1=which(den$x>=theta[p])[1]
     f.w.c = 0.5*(den$y[pt1]+den$y[pt1-1])
     
@@ -240,7 +235,7 @@ brm.default = function (x, y, method, seq_c, ...) {
   ### p main effect, 1 interaction, 1 threshold
   theta0 = rep(0, p+2)
   c1 = seq_c
-
+  
   nc = length(c1)
   log_c = matrix(NaN, nc, 2)
   log_c[, 1] = c1
@@ -254,7 +249,7 @@ brm.default = function (x, y, method, seq_c, ...) {
     if(mean(X[, p+1]>0) < 0.05) next
     fit = coxph(y~X)
     log_c[j, 2]= fit$loglik[2]
-
+    
     if (log_c[j, 2] > lgLik) {
       beta = fit$coefficients
       lgLik = log_c[j, 2]
@@ -276,7 +271,7 @@ brm.default = function (x, y, method, seq_c, ...) {
   var_names = c(colnames(x)[1:p], int_names, "c.max")
   
   return(list(beta = beta, c.max = c.max, theta = theta, logLik = lgLik,
-          x = x, y = y, time = time, status = status, log_c = log_c, var_names = var_names))
+              x = x, y = y, time = time, status = status, log_c = log_c, var_names = var_names))
 }
 
 .reluGradFit = function(x, y, theta0) {
@@ -298,7 +293,7 @@ brm.default = function (x, y, method, seq_c, ...) {
   ev = .evalLP(theta, x)
   lp = ev$lp
   return(list(beta = beta, c.max = c.max, theta = theta, logLik = logLik,
-            lp = lp, x = x, y = y, time = time, status = status, var_names = var_names))
+              lp = lp, x = x, y = y, time = time, status = status, var_names = var_names))
 }
 
 print.brm = function(x, digits = 4, ...) {
@@ -315,7 +310,6 @@ print.brm = function(x, digits = 4, ...) {
 
 summary.brm = function(object, alpha = 0.05,...){
   zscore = qnorm(1-alpha/2)
-  
   sd = object$sd.score
   theta = t(cbind(unname(t(object$beta)), object$c.max))
   
@@ -324,7 +318,7 @@ summary.brm = function(object, alpha = 0.05,...){
   TAB1 = cbind(theta, sd, theta/sd, qtl[,1], qtl[,2], 2*pnorm(-abs(theta/sd)))
   colnames(TAB1) = c("Estimate", "Std.Err", "Z value", "95% CI(lower)", "95% CI(upper)", "Pr(>z)")
   rownames(TAB1) = object$var_names
- 
+  
   lp = -(object$lp)
   cidx = concordance(object$y~lp) 
   results = list(call=object$call,TAB1=TAB1, cidx = cidx)
@@ -360,7 +354,7 @@ residuals.brm = function(object, type="Margingale", ...) {
   H0 = rev(cumsum(rev(x$status/s0))) # cumulative baseline hazard
   H = H0*exp(X%*%beta)               # cumulative hazard
   r = x$status-H                     # martingale residuals
-
+  
   if (type=="Cox"){
     sv = survfit(Surv(H, x$status)~1)
     t=sv$time
@@ -440,7 +434,7 @@ gendat.surv =  function(n, c0, beta, type = c("brm", "bhm")){
   ### code below to generate data with ReLU
   if(type == "bhm") x1 = ifelse(x>c0, 1, 0)
   else x1 = ifelse(x >= c0, x-c0, 0)
-
+  
   z = rbinom(n,1,0.5)  ####used binomial to determine 0 or 1####
   zx = z*x1
   X = cbind(z, x1, zx)
