@@ -3,7 +3,7 @@
 \alias{brm}
 \alias{brm.default}
 \alias{brm.formula}
-\alias{predict.brm}
+%\alias{predict.brm}
 \alias{residuals.brm}
 \alias{summary.brm}
 
@@ -19,11 +19,12 @@ The model is specified by giving a symbolic description of the linear predictor 
 \usage{
 brm(x, ...)
 
-\method{brm}{formula}(formula, data = list(...), method = c("gradient",
-                  "profile"), epsilon = NULL, ...)
-
+\method{brm}{formula}(formula, data = list(...), interaction = TRUE, 
+      method = c("gradient", "profile"), epsilon = NULL, ...)
 # use 
 #          brm(y ~ biomarker)             
+# or
+#          brm(y ~ biomarker + x1 + x2, interactin = FALSE)
 #
 # to fit a prognostic model with biomarker term only (will be implement in the future)
 #
@@ -35,7 +36,7 @@ brm(x, ...)
 # and treatment, adjusted for x1, x2, etc.
 # 
 # use 
-#          brm(x, y, method, ...)
+#          brm(x, y, control, ...)
 #
 # to fit a model without formula
 #
@@ -51,7 +52,10 @@ brm(x, ...)
 
   \item{data}{an optional data frame, list or environment (or object coercible by 'as.data.frame' to a data frame) containing the variables in the model. 
 If not found in data, the variables are taken from environment(formula), typically the environment from which glm is called.}
-  \item{method}{Method to fit a brm model. The default method is "Gradient". We will expend to the single-index model in this package soon.}
+
+  \item{interaction}{model with interaction term between biomarker and treatment variables. Default is TRUE.}
+
+  \item{method}{method to fit a brm model. The default method is the "gradient" method. We will expend to the single-index model in this package soon.}
 
   \item{x}{For "brm.default", x is a design matrix of dimension n * p and y is a vector of observations of length n for a "Surv" survival object for "coxph" models.}
 
@@ -80,9 +84,14 @@ for example, the 95% CI of the parameters.
 
 An object of class "brm" is a list containing at least the following components:
   
-  \item{c.max }{a vector of the mean estimates for the threshold parameter(s)}
   \item{coefficients}{a named vector of coefficients from 'brm'}
-  \item{c.fit}{fitted conditional regression model given c = c.max}
+  \item{c.max}{the maximum likelihood estimate for the threshold parameter(s).}
+  \item{theta}{a vector contains both the coefficients and c.max.}
+  \item{var}{the variance matrix of theta.}
+  \item{loglik}{the log-likelihood with the final values of the coefficients.}
+  \item{linear.predictors}{the vector of linear predictors, one per subject.}
+  \item{first}{the first derivative vector at the solution.}
+  %\item{se}{estimate of the standard error.}
 }
 \references{
 Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way interactions in survival analysis. Canadian Journal of Statistics. 
