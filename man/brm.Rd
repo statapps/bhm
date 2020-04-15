@@ -20,7 +20,7 @@ The model is specified by giving a symbolic description of the linear predictor 
 brm(x, ...)
 
 \method{brm}{formula}(formula, data = list(...), interaction = TRUE, 
-      method = c("gradient", "profile"), epsilon = NULL, ...)
+      method = c("gradient", "profile", "single"), q=1, epsilon = NULL, ...)
 # use 
 #          brm(y ~ biomarker)             
 # or
@@ -55,7 +55,9 @@ If not found in data, the variables are taken from environment(formula), typical
 
   \item{interaction}{model with interaction term between biomarker and treatment variables. Default is TRUE.}
 
-  \item{method}{method to fit a brm model. The default method is the "gradient" method. We will expend to the single-index model in this package soon.}
+  \item{method}{method to fit a brm model, such as a gradient method or a single-index model. The default method is the "gradient" method.}
+
+  \item{q}{nubmer of biomarker variables. If q > 1, a single-index model will be fitted. Default is q = 1.}
 
   \item{x}{For "brm.default", x is a design matrix of dimension n * p and y is a vector of observations of length n for a "Surv" survival object for "coxph" models.}
 
