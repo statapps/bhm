@@ -403,14 +403,12 @@ residuals.brm = function(object, type=c("Martingale", "Cox"), ...) {
   #z = x$x[, 1:p1]
   w = x$index
   
-  #s0 = cumsum(exp(X%*%beta))
   status = x$y[, 2]
   elp = exp(x$linear.predictors)
   s0 = cumsum(elp)
   H0 = rev(cumsum(rev(x$status/s0))) # cumulative baseline hazard
-  #H = H0*exp(X%*%beta)               # cumulative hazard
-  H = H0*elp
-  r = status-H                     # martingale residuals
+  H = H0*elp                         # cumulative hazard
+  r = status-H                       # martingale residuals
   
   if (type=="Cox"){
     sv = survfit(Surv(H, x$status)~1)
@@ -501,9 +499,7 @@ plot.brm = function(x, type=c("HR"), ...){
 .singleGradient = function(theta, w, z, y, q){
   a = c(1, theta[1:q])
   z[, 1] = w%*%a
-  #print(head(z))
   theta.s = theta[-(1:q)]
-  
   ev = .evalLP(theta.s, z)
   lp = ev$lp
   elp = exp(lp)
@@ -512,7 +508,6 @@ plot.brm = function(x, type=c("HR"), ...){
   eta = ev$eta
   w1 = w[, -1]
   Xa = cbind(w = -w1*eta, ev$X, c.max = eta)
-  #print(head(Xa))
   s0 = cumsum(elp)
   s1 = apply(Xa*elp, 2, cumsum)
   U = Xa - s1/s0  ### U is a n*p matrix, each row ui
