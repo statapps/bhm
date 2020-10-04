@@ -29,7 +29,7 @@ dhpicexp = function(x, rate, cuts) {
 ### derivative of h(t) w.r.t time parameter.
 ### approximated by linear
 dhtpicexp = function(x, rate, cuts) {
-  h = 0.01
+  h = 0.05
   cut1 = cuts+h
   cut2 = sort(c(cuts, cut1))
   index = findInterval(x, cut2)
