@@ -1,4 +1,5 @@
-\name{Piecexp}
+##########Note: git pull before working on the code.
+\name{rpicexp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \alias{dpicexp}
 \alias{ppicexp}
@@ -11,10 +12,11 @@
 \alias{summary.picreg}
 
 \title{
-The piecewise exponential Distribution
+The Piecewise Exponential Distribution
 }
 \description{
-Density, distribution function, quantile function and random 
+Density, distribution function, quantile function, hazard function h(t), 
+cumulative hazard function H(t), and random 
 generation for the piecewise exponential distribution with rate equal to 'rate'
 and cut points equal to 'cuts'.
 }
@@ -26,9 +28,11 @@ qpicexp(p, rate=1, cuts=c(0, 10), lower.tail = TRUE)
 rpicexp(n, rate=1, cuts=c(0, 10))
 
 hpicexp(x, rate, cuts, index=NULL)
+Hpicexp(x, rate, cuts, index=NULL)
 #
-##use:
+## to fit a piece exponential survival model use:
 #
+picfit = function(y, cuts=c(0, 10))
 #
 }
 
@@ -68,7 +72,9 @@ Only the first elements of the logical arguments are used.
 }
 
 \references{
-Chen, B. E. and Wang, J.(2020). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine. Vol 39. 326-339.
+Chen, B. E., Cook, R. J., Lawless, J. F. and Zhan, M. (2005). 
+Statistical methods for multivariate interval-censored recurrent events. 
+Statistics in Medicine. Vol 24, 671-691.
 }
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)
@@ -90,8 +96,16 @@ or more efficiently call function Hpicexp(t, rate, cuts).
 \examples{
 ##
 ### No run
-# 
-# fit = picexp(Surv(time, event)~trt+ki67, resp~trt+age, ~center.id) 
+# n = 100
+# rate = c(1, 1, 0.5, 0.25) 
+# cuts = c(0, 1, 2.5, 5, 10)
+# x = rpicexp(n, rate, cuts)
+#
+### compare rexp and rpicexp
+#
+#print(ppicexp(2.5, rate = .5))
+#print(pexp(2.5, rate = 0.5))
+#
 #
 }
 \keyword{Piecewise exponential distribution}

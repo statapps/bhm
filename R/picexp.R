@@ -1,11 +1,4 @@
-#picexp = list(name = "Picexp", 
-#        init = function(x, weights, ...) {
-#          c(mean(x), var(x))},
-#        density = function(x, parms) {
-#       }
-#        deviance= function(...) stop('deviance residuals not defined')
-#      )
-
+##########Note: git pull before working on the code.
 hpicexp = function(x, rate, cuts, index=NULL) {
   if(is.null(index)) index = findInterval(x, cuts)
   return(rate[index])
@@ -24,17 +17,6 @@ dhpicexp = function(x, rate, cuts) {
   index = findInterval(x, cuts) + s
   dh[index] = 1
   return(t(dh))
-}
-
-### derivative of h(t) w.r.t time parameter.
-### approximated by linear
-dhtpicexp = function(x, rate, cuts) {
-  h = 0.05
-  cut1 = cuts+h
-  cut2 = sort(c(cuts, cut1))
-  index = findInterval(x, cut2)
-  drate = diff(c(0, lambda))/h
-  dht = ifelse(index%%2, drate[ceiling(index/2)], 0)
 }
 
 Hpicexp = function(x, rate, cuts, index=NULL) {
@@ -172,32 +154,33 @@ summary.picreg = function(object, alpha = 0.05,...){
   return(results)
 }
 
-############################ Examples
-#n = 6
-#y = runif(n, 0, 5)
-#cuts = c(0, 1, 2, 3, 4, 5)
-#lambda = c(0.2, 0.2, 0.1, 0.1, 0.1)
-#print(y)
-#print(lambda)
-#ht = Hpicexp(y, lambda, cuts)
-
-#print(ppicexp(2.5, rate = .5))
-#print(pexp(2.5, rate = 0.5))
-
-#print(qpicexp.slow(c(0.3, 0.01, 0.45), lambda, cuts))
-#print(qpicexp(c(0.3, 0.01, 0.45), lambda, cuts))
-
-#print(dhpicexp(y, lambda, cuts))
-
+### derivative of h(t) w.r.t time parameter.
+### approximated by linear
+.dhtpicexp = function(x, rate, cuts) {
+  h = 0.05
+  cut1 = cuts+h
+  cut2 = sort(c(cuts, cut1))
+  index = findInterval(x, cut2)
+  drate = diff(c(0, lambda))/h
+  dht = ifelse(index%%2, drate[ceiling(index/2)], 0)
+}
 
 #########Useless
-.qpicexp.slow = function(p, rate=1, cuts=c(0, 10)) {
-  p = as.matrix(p)
-  max.cut = max(cuts) - 1E-9
-  if(max(p) > ppicexp(max.cut, rate, cuts)) 
-    stop("Error: p too large, consider a large value for the max cut point.")
-  f = function(x, p0) {(ppicexp(x, rate, cuts) - p0)}
-  r = function(p0) uniroot(f, c(0, max.cut), p0 = p0)$root
-  q = apply(p, 1, r)
-  return(q)
-}
+#.qpicexp.slow = function(p, rate=1, cuts=c(0, 10)) {
+#  p = as.matrix(p)
+#  max.cut = max(cuts) - 1E-9
+#  if(max(p) > ppicexp(max.cut, rate, cuts)) 
+#    stop("Error: p too large, consider a large value for the max cut point.")
+#  f = function(x, p0) {(ppicexp(x, rate, cuts) - p0)}
+#  r = function(p0) uniroot(f, c(0, max.cut), p0 = p0)$root
+#  q = apply(p, 1, r)
+#  return(q)
+#}
+
+#picexp = list(name = "Picexp", 
+#        init = function(x, weights, ...) {
+#          c(mean(x), var(x))},
+#        density = function(x, parms) {
+#       }
+#        deviance= function(...) stop('deviance residuals not defined')
+#      )
