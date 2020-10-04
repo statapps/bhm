@@ -24,6 +24,7 @@ S3method(brm, formula)
 S3method(print, bhm)
 S3method(print, brm)
 S3method(print, mpl)
+S3method(print, picreg)
 S3method(print, pIndex)
 S3method(print, resboot)
 S3method(print, summary.bhm)
@@ -47,4 +48,5 @@ S3method(residuals, brm)
 
 S3method(summary, bhm)
 S3method(summary, brm)
+S3method(summary, picreg)
 

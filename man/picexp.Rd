@@ -1,5 +1,5 @@
-##########Note: git pull before working on the code.
 \name{rpicexp}
+%##########Note: git pull before working on the code.
 %- Also NEED an '\alias' for EACH other topic documented here.
 \alias{dpicexp}
 \alias{ppicexp}
@@ -9,6 +9,8 @@
 \alias{hpicexp}
 \alias{Hpicexp}
 \alias{picfit}
+
+\alias{picreg}
 \alias{summary.picreg}
 
 \title{
@@ -32,7 +34,7 @@ Hpicexp(x, rate, cuts, index=NULL)
 #
 ## to fit a piece exponential survival model use:
 #
-picfit = function(y, cuts=c(0, 10))
+# picfit(y, cuts=c(0, 10))
 #
 }
 
@@ -97,7 +99,7 @@ or more efficiently call function Hpicexp(t, rate, cuts).
 ##
 ### No run
 # n = 100
-# rate = c(1, 1, 0.5, 0.25) 
+# rate = c(1, 1, 0.5, 0.125) 
 # cuts = c(0, 1, 2.5, 5, 10)
 # x = rpicexp(n, rate, cuts)
 #
@@ -109,5 +111,5 @@ or more efficiently call function Hpicexp(t, rate, cuts).
 #
 }
 \keyword{Piecewise exponential distribution}
+\keyword{Piecewise exponential survival fit}
 \keyword{Piecewise exponential regression}
-

@@ -5,7 +5,7 @@ hpicexp = function(x, rate, cuts, index=NULL) {
 }
 
 ### derivative of h(t) w.r.t baseline rate parameter.
-dhpicexp = function(x, rate, cuts) {
+.dhpicexp = function(x, rate, cuts) {
   p = length(rate)
   n = length(x)
   
@@ -32,7 +32,7 @@ Hpicexp = function(x, rate, cuts, index=NULL) {
   return(H)
 }
 
-dHpicexp = function(x, rate, cuts) {
+.dHpicexp = function(x, rate, cuts) {
   p = length(rate)
   n = length(x)
   
@@ -78,10 +78,9 @@ dpicexp = function(x, rate=1, cuts=c(0, 10), log = FALSE) {
   else return(h*s);
 }
 
-
 ############ Piecewise exponential regression ###########
 ### log likelihood function 
-logPic = function(lambda, y, cuts) {
+.logPic = function(lambda, y, cuts) {
   time = y[, 1]
   event = y[, 2]
   
@@ -91,21 +90,22 @@ logPic = function(lambda, y, cuts) {
   return(-sum(ell))
 }
 
-scorePic = function(lambda, y, cuts) {
+.scorePic = function(lambda, y, cuts) {
   time = y[, 1]
   event = y[, 2]
   
   h = hpicexp(time, lambda, cuts)
-  dh = dhpicexp(time, lambda, cuts)
-  dH = dHpicexp(time, lambda, cuts)
-  #print(head(dh))
-  #print(head(dH))
+  dh = .dhpicexp(time, lambda, cuts)
+  dH = .dHpicexp(time, lambda, cuts)
   dl = -(event/h*dh - dH)
   return((apply(dl, 2, sum)))
 }
 
+picreg = function(...) {
+  UseMethod("picreg")
+}
 
-picfit = function(y, cuts=c[0, 10]) {
+picfit = function(y, cuts=c(0, 10)) {
   if(cuts[1] !=0) stop("cuts[1] must be 0.")
   if(min(0, diff(cuts))<0) stop("custs cannot decrease.")
   time = y[, 1]
@@ -113,7 +113,7 @@ picfit = function(y, cuts=c[0, 10]) {
   p0 = length(cuts)-1
   lambda = rep(0.2, p0)
   
-  ml = optim(lambda, logPic, lower = 1e-9, method = "L", hessian = TRUE,
+  ml = optim(lambda, .logPic, .scorePic,lower = 1e-9, method = "L", hessian = TRUE,
              y = y, cuts=cuts)
   lambda = ml$par
   var = solve(ml$hessian)
@@ -134,6 +134,7 @@ print.picreg=function(x, digits=3,...) {
   bc = cbind(unname(t(x$coefficients)))
   colnames(bc) = t(x$varNames)
   print(bc, digits=digits)
+  print("log likelihood = ", x$logLik, "\n")
 }
 
 summary.picreg = function(object, alpha = 0.05,...){
@@ -161,7 +162,7 @@ summary.picreg = function(object, alpha = 0.05,...){
   cut1 = cuts+h
   cut2 = sort(c(cuts, cut1))
   index = findInterval(x, cut2)
-  drate = diff(c(0, lambda))/h
+  drate = diff(c(0, rate))/h
   dht = ifelse(index%%2, drate[ceiling(index/2)], 0)
 }
 
