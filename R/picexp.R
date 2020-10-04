@@ -134,7 +134,7 @@ print.picreg=function(x, digits=3,...) {
   bc = cbind(unname(t(x$coefficients)))
   colnames(bc) = t(x$varNames)
   print(bc, digits=digits)
-  print("log likelihood = ", x$logLik, "\n")
+  cat("log likelihood = ", x$logLik, "\n")
 }
 
 summary.picreg = function(object, alpha = 0.05,...){
