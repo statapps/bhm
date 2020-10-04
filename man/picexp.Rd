@@ -4,7 +4,11 @@
 \alias{ppicexp}
 \alias{qpicexp}
 \alias{rpicexp}
+
+\alias{hpicexp}
+\alias{Hpicexp}
 \alias{picfit}
+\alias{summary.picreg}
 
 \title{
 The piecewise exponential Distribution
@@ -29,21 +33,23 @@ hpicexp(x, rate, cuts, index=NULL)
 }
 
 \arguments{
-  \item{x, q} vector of quantiles.
+  \item{x, q}{vector of quantiles.}
 
-  \item{p} vector of probabilities.
+  \item{p}{vector of probabilities.}
 
-  \item{n} number of observations. If 'length(n) > 1', the length is
-          taken to be the number required.
+  \item{n}{number of observations. If 'length(n) > 1', the length is
+          taken to be the number required.}
   
-  \item{rate} vector rate parameter, defaulting to 1.
+  \item{rate}{vector rate parameter, defaulting to 1.}
 
-  \item{cuts} cut points, defaulting 0 to 10.
+  \item{cuts}{cut points, defaulting 0 to 10.}
   
-  \item{log} logical; if TRUE, probability p are given as log(p).
+  \item{log}{logical; if TRUE, probability p are given as log(p).}
   
-  \item{lower.tail} logical; if TRUE(default), probabilities are P[X <= x],
-  otherwise, P[X>x].
+  \item{lower.tail}{logical; if TRUE(default), probabilities are P[X <= x],
+  otherwise, P[X>x].}
+
+  \item{index}{index of x, q in the interval defined by cuts, it saves time if index is known.}
 }
 
 \details{

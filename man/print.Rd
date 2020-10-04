@@ -2,6 +2,7 @@
 \alias{print.bhm}
 \alias{print.brm}
 \alias{print.mpl}
+\alias{print.picreg}
 \alias{print.pIndex}
 \alias{print.resboot}
 \alias{print.summary.bhm}
@@ -18,6 +19,7 @@ print and summary are used to provide a short summary of outputs from "bhm", "br
 \method{print}{brm}(x, digits = 4, ...)
 \method{print}{mpl}(x, digits = 3, ...)
 \method{print}{pIndex}(x, ...)
+\method{print}{picreg}(x, digits=3, ...)
 \method{print}{resboot}(x, ...)
 \method{print}{summary.bhm}(x, ...)
 }

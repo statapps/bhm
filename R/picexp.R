@@ -70,8 +70,8 @@ ppicexp = function(q, rate=1, cuts=c(0, 10), lower.tail = TRUE, index = NULL) {
   else return (s)
 }
 
-qpicexp = function(p, rate=1, cuts=c(0, 10)) {
-  p1 = p
+qpicexp = function(p, rate=1, cuts=c(0, 10), lower.tail=TRUE) {
+  if(lower.tail==FALSE) p = (1-p)
   qc = cuts
   cuts.n = length(cuts)
   qc[cuts.n] = cuts[cuts.n] - 1E-9
@@ -142,7 +142,7 @@ picfit = function(y, cuts=c[0, 10]) {
   return(fit)
 }
 
-print.picreg=function(x, digits=4,...) {
+print.picreg=function(x, digits=3,...) {
   cat("picreg: AFT model with piecewise exponential\n")
   cat("Call:\n")
   print(x$call)
