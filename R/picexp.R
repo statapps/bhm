@@ -148,9 +148,10 @@ summary.picreg = function(object, alpha = 0.05,...){
   colnames(TAB1) = c("Estimate", "Std.Err", "Z value", "95% CI(Low)", "95% CI(Up)", "Pr(>z)")
   rownames(TAB1) = object$varNames
   
-  lp = -(object$linear.predictors)
-  cidx = concordance(object$y~lp)
-  results = list(call=object$call,TAB1=TAB1, cidx = cidx)
+  #lp = -(object$linear.predictors)
+  #cidx = concordance(object$y~lp)
+  #iter = object$iter
+  results = list(call=object$call,TAB1=TAB1, logLik=object$logLik) #cidx = cidx)
   class(results) = "summary.picreg"
   return(results)
 }
