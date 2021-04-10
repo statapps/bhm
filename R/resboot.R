@@ -46,7 +46,7 @@ resboot.formula = function(formula, family, data=list(...), B = 100, epsilon = 0
 # max LR
 .maxLR = function(y, w, z, epsilon) {
 	  #epsilon = control$epsilon
-	  ux = seq(0.05, 0.95, epsilon)
+	  ux = seq(0.1, 0.9, epsilon)
   
   lik = -length(w)*10
     lik0  = lik
@@ -135,6 +135,7 @@ resboot.default = function(x, y, family, control, ...) {
        
     tmStar=1-uStar^(1/exb0)
     yStar[, 1] = tmStar
+    #print(summary(tmStar))
 
     pfStar = try(.maxLR(yStar, w, z, epsilon))
     if(class(pfStar) == "try-error") next
