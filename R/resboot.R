@@ -1,3 +1,6 @@
+### Approximate function
+.appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
+
 resboot = function(x, ...) UseMethod("resboot")
 
 resboot.formula = function(formula, family, data=list(...), B = 100, epsilon = 0.01, ...) {
@@ -16,6 +19,7 @@ resboot.formula = function(formula, family, data=list(...), B = 100, epsilon = 0
   }
       
   n.col  = ncol(x)
+  if(n.col < 4) stop("Use resboot(Surv(time, event)~biomarker+trt+biomarker*trt)")
         
   # inverse cdf transformation of biomarker
   w = x[, 2]
@@ -30,7 +34,8 @@ resboot.formula = function(formula, family, data=list(...), B = 100, epsilon = 0
 
 #function to calculate lik0, lik1, and LR(c) statistic
 .LRatio=function(y, w, z) {
-  fit1=coxph(y~z+w+z*w)
+  zw  = z*w
+  fit1=coxph(y~z+w+zw)
   fit0=coxph(y~z+w)
   l1=fit1$loglik[2]
   l0=fit0$loglik[2]
@@ -116,7 +121,10 @@ resboot.default = function(x, y, family, control, ...) {
   } 
       
   #estimated residuals under the alternative hypothesis
-  uhat = (exp(-S0$hazard))^exb
+  chaz = S0$hazard
+  tm0 = S0$time
+  xchz = .appxf(chaz, tm0, y[, 1])
+  uhat = (exp(-xchz))^exb
   i=1
   LRb = rep(0, B)
   while (i<=B) {

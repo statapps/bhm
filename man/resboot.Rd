@@ -99,7 +99,7 @@ ki67 = data[, 4]
 #
 ### No run
 # 
-# fit = resboot(Surv(tm, status) ~ trt + ki67) 
+# fit = resboot(Surv(tm, status) ~ ki67+trt+ki67:trt) 
 #
 }
 \keyword{ Biomarker interaction }
