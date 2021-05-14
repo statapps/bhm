@@ -221,10 +221,12 @@ pIndexFit = function(x, y, control) {
     if(n > 100){
       cat("|=>                                             Done!\n|")
     }
+    ct = control
     for(i in 1:n) {
       x.b = x[-i, ]
       y.b = y[-i, ]
-      theta.b[i] = .pIndexFit1(x.b, y.b, control)
+      ct$weights = control$weights[-i]
+      theta.b[i] = .pIndexFit1(x.b, y.b, ct)
       if(n > 100 & i %% floor(n/40) == 0) cat("=")
       control$B = n
     }
