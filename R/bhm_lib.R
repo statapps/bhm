@@ -44,6 +44,7 @@ thm.lik = function(x, y, family, beta, q, cx, control){
     x[, 2] = x[, 2]*x[, 3]                         #interaction
 
   if (family == "surv") {
+    if(y[1, 1]<y[1, 2]) stop("Survival time must be sorted from max to min.")
     x = x[, -1]
     if(n.col == 2) x = as.matrix(x, ncol = 1)
     xbeta = x%*%beta
