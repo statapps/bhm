@@ -40,7 +40,9 @@ mpl(formula, ...)
 If not found in data, the variables are taken from environment(formula), typically the enviro
 nment from which mpl is called.}
 
-  \item{weights}{to be added in the future}
+  \item{weights}{an optional vector of weights to be used in the fitting
+          process.  Should be ‘NULL’ or a numeric vector. If non-NULL, weights options 
+	  in the glm model and the coxph model will be assinged with the supplied weights.}
 
   \item{subset}{only a subset of data will be used for model fitting.}
 
