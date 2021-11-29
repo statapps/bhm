@@ -3,7 +3,7 @@
 \alias{bhm-doc}
 \docType{package}
 \title{
-Biomarker Threshold Models
+An R package for the biomarker threshold models
 }
 \description{
 This package fits biomarker threshold regression models for predictive and prognostic biomarker effects 
