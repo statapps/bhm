@@ -96,7 +96,7 @@ An object of class "brm" is a list containing at least the following components:
   %\item{se}{estimate of the standard error.}
 }
 \references{
-Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way interactions in survival analysis. Canadian Journal of Statistics. 
+Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way interactions in survival analysis. Canadian Journal of Statistics. Vol. 48, page 751-772. 
 }
 \author{
 Shuoshuo Liu (shuoshuo.liu@psu.edu) and Bingshu E. Chen (bingshu.chen@queensu.ca)
