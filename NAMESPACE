@@ -8,11 +8,12 @@ import(survival)
 
 importFrom("graphics", "abline", "hist", "lines", "plot", "title")
 importFrom("methods", "is")
-importFrom("stats", "aggregate", "binomial", "complete.cases", "cov", "dbeta",
-           "density", "dnorm", "glm", 
+importFrom("stats", "approx", "aggregate", "binomial", "complete.cases", "cov", "dbeta",
+           "density", "dnorm", "ecdf", "glm", 
            "lowess", "logLik", "model.frame", "model.matrix", "model.response", 
-           "nlm", "nlminb", "optim", "pnorm", "printCoefmat",
-           "quantile", "qnorm", "rbinom", "rexp", "rgamma", "rnorm", "runif", 
+           "nlm", "nlminb", "optim", "pchisq", "predict", "pnorm", "printCoefmat", 
+           "quantile", "qnorm", "quasibinomial", 
+	   "rbinom", "rexp", "rgamma", "rnorm", "runif", 
            "sd", "vcov")
 
 S3method(bhm, default)
@@ -21,8 +22,12 @@ S3method(bhm, formula)
 S3method(brm, default)
 S3method(brm, formula)
 
+S3method(glmpLRT, default)
+S3method(glmpLRT, formula)
+
 S3method(print, bhm)
 S3method(print, brm)
+S3method(print, glmpLRT)
 S3method(print, mpl)
 S3method(print, picreg)
 S3method(print, pIndex)
@@ -37,6 +42,7 @@ S3method(pIndex, formula)
 
 S3method(plot, bhm)
 S3method(plot, brm)
+S3method(plot, glmpLRT)
 S3method(plot, pIndex)
 S3method(plot, resboot)
 S3method(plot, residuals.brm)

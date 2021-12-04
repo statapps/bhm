@@ -17,7 +17,7 @@ mpl(formula, ...)
 \method{mpl}{formula}(formula, formula.glm, formula.cluster, data, weights=NULL,
     subset = NULL, max.iter=100, tol = 0.005, jackknife=TRUE, ...)
 #
-##use:
+# Use:
 #
 # fit = mpl(Surv(time, status)~w+z, y~x1+x2, ~cluster, data=data)
 #
@@ -41,7 +41,7 @@ If not found in data, the variables are taken from environment(formula), typical
 nment from which mpl is called.}
 
   \item{weights}{an optional vector of weights to be used in the fitting
-          process.  Should be ‘NULL’ or a numeric vector. If non-NULL, weights options 
+          process.  Should be 'NULL' or a numeric vector. If non-NULL, weights options 
 	  in the glm model and the coxph model will be assinged with the supplied weights.}
 
   \item{subset}{only a subset of data will be used for model fitting.}
@@ -53,7 +53,7 @@ nment from which mpl is called.}
   \item{jackknife}{Jackknife method for variance, default is jackknife = TRUE}
 
   \item{\dots}{additional arguments to be passed to the low level regression fitting 
-functions (see below).}  
+           functions (see below).}  
 }
 
 \details{
@@ -72,7 +72,7 @@ When jackknife = TRUE, an object of class "mpl" is a list containing the followi
 }
 
 \references{
-Chen, B. E. and Wang, J.(2020). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine. Vol 39. 326-339.
+Chen, B. E. and Wang, J. (2020). Joint modelling of binary response and survival for clustered data in clinical trials. Statistics in Medicine. Vol 39. 326-339.
 }
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)

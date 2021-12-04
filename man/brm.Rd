@@ -11,7 +11,7 @@
 Fitting Biomarker Continuous Threshold Models
 }
 \description{
-\{brm\} is a R package for Continuous Threshold Models.
+\{brm\} is an R function for Continuous Threshold Models.
 It uses the maximum likehood method (Liu and Chen, 2020) 
 to identify a cut-point (thershold parameter) for the biomarker in the Cox proportional hazards model.
 The model is specified by giving a symbolic description of the linear predictor and a description of the distribution family.
