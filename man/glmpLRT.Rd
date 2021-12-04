@@ -77,6 +77,9 @@ An object of class "glmpLRT" is a list containing at least the following compone
   \item{c.max}{the maximum likelihood estimate for the threshold parameter(s).}
   \item{loglik}{the log-likelihood with the final values of the coefficients.}
   \item{linear.predictors}{the vector of linear predictors, one per subject.}
+  \item{mpv}{p-value for the penalized likelihood ratio test.}
+  \item{rpv}{p-value for the Davis test.}
+  \item{bpv}{p-value for the Bootstrap test.}
 }
 \references{
 Gavanji, P., Jiang, W. and Chen, B. E. (2021).
