@@ -5,9 +5,9 @@
 \alias{plot.llm}
 \alias{print.llm}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Fit a L-shape linear model}
+\title{Fit an L-shape linear model}
 \description{
-Fit a L-shape linear model with the cut point estimated by the profile likelihood method.
+Fit an L-shape linear model with the cut point estimated by the profile likelihood method.
 }
 \usage{
 \method{llm}{formula}(formula, data=list(...), epsilon = 0.025, ...)
@@ -50,10 +50,9 @@ Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way inte
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)
 }
-%\note{ }
+%\note{}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 \code{\link{brm}}, 
@@ -61,22 +60,19 @@ Bingshu E. Chen (bingshu.chen@queensu.ca)
 \code{\link{glm}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-n = 20 ; p <- 2
+#### simulate the data and fit a L-shape model.
+n = 50 ; p <- 2
 X = matrix(rnorm(n * p), n, p) # no intercept!
 w = X[, 1]; age = X[, 2]
 
-wc = w - 0.2; sigma = 0.5
+wc = w - 0.2; sigma = 0.25
 y = rnorm(n, -0.1+0.7*w-1.2*ifelse(wc>0, wc, 0), sigma)
 
-fit=llm(y~w+age, epsilon = 0.005)
+fit=llm(y~w+age)
 print(fit)
 print(summary(fit))
-#### No run
-## plot(fit)
+#### to plot the L-shape function
+# plot(fit)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
