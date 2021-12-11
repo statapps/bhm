@@ -7,8 +7,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Fit a L-shape linear model}
 \description{
-Fit a L-shape linear model with the cut point estimated by the 
-profie likelihood method.
+Fit a L-shape linear model with the cut point estimated by the profile likelihood method.
 }
 \usage{
 \method{llm}{formula}(formula, data=list(...), epsilon = 0.025, ...)
@@ -44,9 +43,10 @@ An object of class "llm" is a list containing at least the following components:
   \item{c.max}{the maximum likelihood estimate for the threshold parameter(s).}
   \item{loglik}{the log-likelihood with the final values of the coefficients.}
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
+\references{
+Liu, S. S. and Chen, B. E. (2020). Continuous threshold models with two-way interactions in survival analysis. Canadian Journal of Statistics. Vol. 48, page 751-772.
+}
+
 \author{
 Bingshu E. Chen (bingshu.chen@queensu.ca)
 }
