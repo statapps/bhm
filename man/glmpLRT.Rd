@@ -4,6 +4,7 @@
 \alias{glmpLRT.formula}
 \alias{plot.glmpLRT}
 \alias{print.glmpLRT}
+\alias{summary.glmpLRT}
 \title{Penalized likelihood ratio test for the generalized linear models.
 }
 \description{
@@ -52,8 +53,8 @@ a description of the distribution family.
   \item{p1}{the number of covariates interact with the biomarker variable, the default is p1 = 1. If p1 = 0, then fit a model with biomarker main effect, adjusted for other potential covariates.}
   \item{B}{the number of bootstrap sample if the Bootstrap method is used.}
   \item{K}{smoothing parameter for the indicator function, the large value of K the better approximation of the indicator function, default is K = 50.}
-\item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below).}  
   \item{epsilon}{Step width for the profile likelihood method, default is epsilon = 0.025.}
+  \item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below).}  
 
 %  \item{x}{For "glmpLRT.default", x is a design matrix of dimension n * p.}
 %  \item{y}{y is a vector of observations of length n for the glm models}
@@ -67,6 +68,7 @@ a description of the distribution family.
 called directly but can be more efficient where the response 
 vector, design matrix and family have already been calculated.
 
+"print", "plot" and "summary" methods can be applied to a fitted "glmpLRT" class to display the results.
 }
 \value{
 glmpLRT returns an object of class inheriting from "glmpLRT" which inherits from the class glm. See later in this section.  

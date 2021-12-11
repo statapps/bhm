@@ -1,18 +1,4 @@
-####
-#### Any file of my_lib.R version date May 24, 2021 after 9pm EST can be deleted.
-####
-# generate binary data set, note that data set should be generated using I(x>c)
-#bindat = function(n, thetat) {
-#  x=runif(n, 0, 1)
-#  Ix=ifelse(x>thetat[5],1,0)
-#  n1 = round(0.5*n)
-#  z=c(rep(1,n1),rep(0,n-n1))
-#  eb=exp(thetat[1]+thetat[2]*z+thetat[3]*Ix+thetat[4]*z*Ix)
-#  p = eb/(1+eb) 
-#  y=rbinom(n,size=1,prob=p)
-#  dat = data.frame(cbind(y, z, x))
-#  return(dat)
-#}
+#### penalized likelihood ratio test for glm
 
 glmpLRT = function(x, ...) UseMethod("glmpLRT") 
 
@@ -140,6 +126,7 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
     Mx[i] = Mi
     if(Rn<Ri) {
       lp = predict(gm)
+      gmx = gm
       c.max = cx
       Rn = Ri
       bn = gm$coef ##### coeficient to be used in bootstrap method
@@ -207,7 +194,7 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
   rpv = (1 - pchisq(Rn, s)) + V*Rn^{(s-1)/2}*exp(-0.5*Rn)*2^{-0.5*s}/gamma(0.5*s)
   if(rpv>1) rpv = 1
   return(list(mpv=mpv, rpv=rpv, cLRT = cLRT, df = sdf, varNames=varNames,
-         zeta = zeta, lglk0 = ml0, loglik = Rn, Mn = Mn, 
+         zeta = zeta, lglk0 = ml0, loglik = Rn, Mn = Mn, gmx = gmx,
          c.max = c.max, coefficients = bn, linear.predictors = lp))
 }
 ###### bootstrap
@@ -273,3 +260,12 @@ plot.glmpLRT = function(x, ..., scale = c('original', 'transformed')) {
   lines(w0, Mn, lty = 2)
 }
 #plot(fit3)
+
+summary.glmpLRT = function(object, ...) {
+  if(object$rpv > 0.05) cat('There is not evidence to support the biomarker threshold and/or interaction effects')
+  if(object$rpv <=0.05) {
+    cat("The threshold parameter is estimated by\n")
+    print(quantile(object$w, object$c.max))
+    print(summary(object$gmx))
+  }
+}
