@@ -106,7 +106,7 @@ rmscb.formula = function(formula, data, subset, na.action, tau= 5, h = 0.2, w0=N
   L = length(w0)
   m = w0; v = w0; f = w0
   for (i in 1:L) {
-    kh = K_func(w, w0[i], h)
+    kh = .K_func(w, w0[i], h)
     skh = sum(kh)
     m[i]=sum(kh*time*status/G, na.rm=TRUE)/skh
     v[i]=sum(kh*(time)^2*status/G^2, na.rm=TRUE)/skh
@@ -179,15 +179,15 @@ rmscb.formula = function(formula, data, subset, na.action, tau= 5, h = 0.2, w0=N
   ### fit the smooth curves
   m1 = w0; m2 = w0; v1 = w0; v2 = w0; f = w0
   for (i in 1:length(w0)) {
-    kh=K_func(w1, w0[i], h) 
+    kh=.K_func(w1, w0[i], h) 
     m1[i]=sum(kh*time1*status1/G1, na.rm=TRUE)/sum(kh)
     v1[i]=sum(kh*time1^2*status1/G1^2, na.rm=TRUE)/sum(kh)
     
-    kh=K_func(w2, w0[i], h) 
+    kh=.K_func(w2, w0[i], h) 
     m2[i]=sum(kh*time2*status2/G2, na.rm=TRUE)/sum(kh)
     v2[i]=sum(kh*time2^2*status2/G2^2, na.rm=TRUE)/sum(kh)
     
-    kh=K_func(w, w0[i], h) 
+    kh=.K_func(w, w0[i], h) 
     f[i]=mean(kh)
   }
   m = m1-m2
@@ -253,7 +253,7 @@ summary.rmscb = function(object, ...) {
   h = n^(-1/a)
   for (k in 1:length(Idx)) {
     j=Idx[k]
-    kh=K_func(w[-j], w[j], h)  ### K_func(w, w0, h, kernel) default is "epanechnikov"
+    kh=.K_func(w[-j], w[j], h)  ### .K_func(w, w0, h, kernel) default is "epanechnikov"
     mh=sum(kh*time[-j]*status[-j]/G[-j], na.rm=TRUE)/sum(kh)
     ms[k]=(abs(time[j]-mh))^rho
   }
@@ -289,7 +289,7 @@ summary.rmscb = function(object, ...) {
     #fit.train = lm(y.train~X.train)
     for(j in 1:size) {
       if(status.test[j] == 1) {
-        kh = K_func(w.train, w.test[j], h)  ### K_func(w, w0, h, kernel) default is "epanechnikov"
+        kh = .K_func(w.train, w.test[j], h)  ### .K_func(w, w0, h, kernel) default is "epanechnikov"
         mh = sum(kh*time.train*status.train/G.train, na.rm=TRUE)/sum(kh)
         mse = mse + (abs(time.test[j] - mh))^rho
       }

@@ -8,10 +8,6 @@
 \alias{print.rmscb}
 \alias{summary.rmscb}
 \alias{summary.rmscb}
-\alias{K_func}
-\alias{getdat}
-\alias{getdat1}
-\alias{getdat2}
 
 \title{
 Fitting Restricted Mean Survival Time Models with a Continuous Biomarker
@@ -115,6 +111,7 @@ age = runif(n, 0, 1)*100
 tm = rexp(n, 1/10)
 status = rbinom(n, 1, 0.5)
 trt= rbinom(n, 1, 0.5)
+
 ## fit a restricted mean survival time with one biomarker 
 
    fit = rmscb(Surv(tm, status)~age)
