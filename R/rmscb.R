@@ -246,24 +246,6 @@ summary.rmscb = function(object, ...) {
   results = data.frame(cbind(w0, rms, LB, UB))
 }
 
-### Kernel function
-K_func<-function(w, w0, h, kernel = c("epanechnikov", "gaussian", "rectangular", "triangular", "biweight", "cosine", "optcosine")) {
-  kernel = match.arg(kernel)
-  x = w-w0
-  ax = abs(x)
-  esp = 1e-40
-
-  kh = switch(kernel, gaussian = ifelse(ax < 5*h, dnorm(x, sd = h), esp), 
-         rectangular = ifelse(ax < h, 0.5/h, esp), 
-         triangular = ifelse(ax < h, (1 - ax/h)/h, esp),
-         epanechnikov = ifelse(ax < h, 3/4 * (1 - (ax/h)^2)/h, esp), 
-         biweight = ifelse(ax < h, 15/16 * (1 - (ax/h)^2)^2/h, esp),
-         cosine = ifelse(ax < h, (1 + cos(pi * x/h))/(2*h), esp),
-         optcosine = ifelse(ax < h, pi/4 * cos(pi * x/(2*h))/h, esp)
-         )
-  return(kh)
-}
-
 ### Leave one out cross validation
 .loocv = function(a, time, status, w, G, Idx, rho) {
   n  = length(w)
@@ -315,38 +297,3 @@ K_func<-function(w, w0, h, kernel = c("epanechnikov", "gaussian", "rectangular",
   }
   return(sum(mse))
 }
-
-getdat = function(n, censoring_pt, shape=10) {
-  w = runif(n,0,1)
-  fail_time = rweibull(n, shape=shape, scale = w)
-  
-  #censoring = runif(n,0,censoring_pt)
-  censoring = rexp(n, rate = censoring_pt)
-  status = ifelse(fail_time<=censoring, 1, 0)
-  cat('censoring = ', (1-mean(status))*100, '%\n') 
-  
-  time = ifelse(fail_time <= censoring, fail_time, censoring)
-
-  #idx  = order(time)
-  #w    = w[idx]
-  #status = status[idx]
-  #time   = time[idx]
-  
-  data = cbind(time, status, w)
-  return(data.frame(data))
-}
-
-getdat2 = function(n, censoring_pt) {
-  w = runif(n,0,1)
-  fail_time = rweibull(n, shape=0.5, scale = w)
-  
-  #censoring = runif(n,0,censoring_pt)
-  censoring = rexp(n, rate = censoring_pt)
-  status = ifelse(fail_time<=censoring, 1, 0)
-  cat('censoring = ', (1-mean(status))*100, '%\n') 
-  
-  time = ifelse(fail_time <= censoring, fail_time, censoring)
-  data = cbind(time, status, w)
-  return(data.frame(data))
-}
-

@@ -7,7 +7,7 @@ vers <- paste("R package version", meta$Version)
 
 bibentry(bibtype="Manual",
          title = "A Package for Biomarker Threshold Models",
-	 author= c(person(c("Bingshu E"), "Chen")),
+	 author= c(person(c("Bingshu E", "Chen"))),
 	 year = "2021",
 	 note =vers,
  	 url="https://CRAN.R-project.org/package=bhm",
@@ -16,9 +16,10 @@ bibentry(bibtype="Manual",
 
 bibentry(bibtype= "article",
          title="A Hierarchical Bayes Model for Biomarker Subset Effects in Clinical Trials",
-	 author=c(person(c("Bingshu E"), "Chen"),
+	 author=c(person(c("Bingshu E", "Chen")),
 	          person(c("Wenyu", "Jiang")),
-		  person(c("Dongsheng", "Tu"))),
+		  person(c("Dongsheng", "Tu"))
+	 ),
          year = "2014",
          journal= "Computational Statistics and Data Analysis",
          address = "New York",
@@ -28,12 +29,12 @@ bibentry(bibtype= "article",
 
 bibentry(bibtype= "article",
          title="A Bayesian method for risk window estimation with application to HPV vaccine trial",
-         author=c(person("Tian", "Fang"),
-                  person("William", "Mackillop"),
-                  person("Wenyu", "Jiang"),
-                  person("Allan", "Hildesheim"),
-                  person("Sholom", "Wacholder"),
-                  person(c("Bingshu E"), "Chen")
+         author=c(person(c("Tian", "Fang")),
+                  person(c("William", "Mackillop")),
+                  person(c("Wenyu", "Jiang")),
+                  person(c("Allan", "Hildesheim")),
+                  person(c("Sholom", "Wacholder")),
+                  person(c("Bingshu E", "Chen"))
 
          ),
          year = "2017",
