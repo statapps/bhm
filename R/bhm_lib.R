@@ -1,3 +1,6 @@
+### approximate a function
+.appxf = function(y, x, xout){ approx(x,y,xout=xout,rule=2)$y }
+
 #generate regression coefficients
 thm.fit <-function(x, y, family, cx){
   #Remove the intercept term
@@ -117,7 +120,7 @@ x.cdf = function(x){
   ax = abs(x)
   esp = 1e-40
 
-  kh = switch(kernel, gaussian = dnorm(x, sd = h/2),
+  kh = switch(kernel, gaussian = ifelse(ax < 5*h, dnorm(x, sd = h), esp),
     rectangular = ifelse(ax < h, 0.5/h, esp), 
     triangular = ifelse(ax < h, (1 - ax/h)/h, esp),
     epanechnikov = ifelse(ax < h, 3/4 * (1 - (ax/h)^2)/h, esp),

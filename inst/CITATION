@@ -8,7 +8,7 @@ vers <- paste("R package version", meta$Version)
 bibentry(bibtype="Manual",
          title = "A Package for Biomarker Threshold Models",
 	 author= c(person(c("Bingshu E"), "Chen")),
-	 year = "2017",
+	 year = "2021",
 	 note =vers,
  	 url="https://CRAN.R-project.org/package=bhm",
 	 key= "Biomarker Threshold Models-package"
