@@ -24,7 +24,7 @@ brm.formula = function(formula, data=list(...), interaction = TRUE,
   y = model.response(mf)
   var_names = colnames(x)
 
-  if (class(y) == "Surv") {
+  if (is(y, "Surv")) {
     family = "surv"
     st = sort(y[, 1], decreasing = TRUE, index.return = TRUE)
     idx = st$ix

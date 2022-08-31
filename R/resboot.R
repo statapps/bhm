@@ -10,7 +10,7 @@ resboot.formula = function(formula, family, data=list(...), B = 100, epsilon = 0
   y = model.response(mf)
     
   control = list(B = B, epsilon = epsilon)
-  if (class(y) == "Surv") {
+  if (is(y, "Surv")) {
     family = "surv";
     st = sort(y[, 1], decreasing = TRUE, index.return = TRUE)
     idx = st$ix
@@ -138,7 +138,7 @@ resboot.default = function(x, y, family, control, ...) {
     #print(summary(tmStar))
 
     pfStar = try(.maxLR(yStar, w, z, epsilon))
-    if(class(pfStar) == "try-error") next
+    if(is(pfStar, "try-error")) next
 	        
     LRb[i] = pfStar$mLR
     i=i+1

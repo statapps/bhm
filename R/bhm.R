@@ -23,7 +23,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   x = model.matrix(attr(mf, "terms"), data = mf)
   y = model.response(mf)
   
-  if (class(y) == "Surv") {
+  if (is(y, "Surv")) {
     family = "surv";
     st = sort(y[, 1], decreasing = TRUE, index.return = TRUE)
     idx = st$ix

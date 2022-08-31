@@ -5,7 +5,7 @@
 rmscb = function(x, ...) UseMethod("rmscb") 
 
 rmscb.default=function(x, y, control, ...) {
-  if (class(y) != "Surv") stop("y must be a Surv object")
+  if (!is(y, "Surv")) stop("y must be a Surv object")
   
   ### sort survival time
   #st = sort(y[, 1], decreasing = FALSE, index.return = TRUE)

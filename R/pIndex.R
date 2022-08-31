@@ -438,7 +438,7 @@ pIndexThreshold = function(x, y, control) {
   for (i in 1:length(rx)){
     fitb = try(optim(beta.max, .ellc, method = "BFGS", r = rx[i], m1 = m1, m2 = m2, W = W), 
                silent = TRUE)
-    if(class(fitb) == "try-error") next
+    if(is(fitb, "try-error")) next
     ell = fitb$value
     if (ell < elm) {
       elm = ell
@@ -500,7 +500,7 @@ pIndexThreshold = function(x, y, control) {
   for (i in 1:length(rx)){
     fitb = try(optim(beta.max, .ellw, method = "BFGS", r = rx[i], m1 = m1, m2 = m2, W = W), 
                silent = TRUE)
-    if(class(fitb) == 'try-error') next
+    if(is(fitb, 'try-error')) next
     ell = fitb$value
     if (ell < elm) {
       elm = ell
