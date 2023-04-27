@@ -5,12 +5,13 @@
 \description{Calculate a numerical approximation to the Hessian matrix of a 
 function at a parameter value.}
 \usage{
-    hessian(func, theta, h = 0.0001, method=("fast", "easy"), ...)
+    numHessian(func, theta, h = 0.0001, method=c("fast", "easy"), ...)
 }
 \arguments{
     \item{func}{a function for which the first (vector) argument 
         is used as a parameter vector.}
-    \item{thera}{the parameter vector first argument to func.}
+    \item{theta}{the parameter vector first argument to func.}
+    \item{h}{the step used in the numerical calculation.}
     \item{method}{one of {"fast"} or {"easy"} indicating 
     the method to use for the approximation.}
     \item{...}{an additional arguments passed to \code{func}.}
@@ -31,8 +32,8 @@ function at a parameter value.}
 }
 
 \examples{
-g = function(x, a) (x[1]+2*x[2]^3 - x[3]^3 + a*sin(x[1]*x[2]))
-x0 = c(1, 2, 3)
-#print(numScore(g, theta = x0, a = -3))
-print(numHessian(g, theta = x0, a = 9))
-print(numHessian(g, theta = x0, method = 'easy', a = 9))
+  g = function(x, a) (x[1]+2*x[2]^3 - x[3]^3 + a*sin(x[1]*x[2]))
+  x0= c(1, 2, 3)
+  numHessian(g, theta = x0, a = 9)
+  numHessian(g, theta = x0, method = 'easy', a = 9)
+}

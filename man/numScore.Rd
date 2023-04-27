@@ -5,12 +5,13 @@
 \description{Calculate a numerical approximation to the Score function of a 
 function at a parameter value.}
 \usage{
-    hessian(func, theta, h = 0.0001, ...)
+    numScore(func, theta, h = 0.0001, ...)
 }
 \arguments{
     \item{func}{a function for which the first (vector) argument 
         is used as a parameter vector.}
-    \item{thera}{the parameter vector first argument to func.}
+    \item{theta}{the parameter vector first argument to func.}
+    \item{h}{the step used in the numerical calculation.}
     \item{...}{an additional arguments passed to \code{func}.}
 }
 \value{An p by 1 vector of the score of the function calculated at the 
@@ -31,5 +32,5 @@ function at a parameter value.}
 \examples{
   g = function(x, a) (x[1]+2*x[2]^3 - x[3]^3 + a*sin(x[1]*x[2]))
   x0 = c(1, 2, 3)
-  numScore(g, theta = x0, a = -3)
+  numScore(g, x0, a = -3)
 }
