@@ -2,7 +2,7 @@ Package: bhm
 Type: Package
 Title: Biomarker Threshold Models
 Version: 1.18
-Date: 2021-12-03
+Date: 2022-08-29
 Author: Bingshu E. Chen
 Maintainer: Bingshu E. Chen <bingshu.chen@queensu.ca>
 Depends: R (>= 3.5.0), coda, ggplot2, MASS, survival

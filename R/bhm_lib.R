@@ -130,3 +130,57 @@ x.cdf = function(x){
   return(kh)
 }
 
+### score function for the log likelihood using numerical derivative
+numScore = function(func, theta, h = 0.0001, ...) {
+  p = length(theta)
+  score = rep(NA, p)
+  for(i in 1:p) {
+    theta1 = theta; theta2 = theta
+    theta1[i] = theta[i] - h
+    theta2[i] = theta[i] + h
+    score[i] = (func(theta2, ...) - func(theta1, ...))/(2*h)
+  }
+  return(score)
+}
+
+### Hessian matrix for the log pseudo likelihood using numerical derivative
+numHessian = function(func, theta, h = 0.0001, method = c("fast", "easy"), ...) {
+  p = length(theta)
+  H = matrix(NA, p, p)
+  method = match.arg(method)
+
+  ### easy to understand, evaluate func(...) [4*p*p] times
+  if(method == "easy") {
+    cat("Easy num hessian method\n")
+    sc = function(theta, ...) {
+      numScore(func = func, theta = theta, h = h, ...)
+    }
+    for(i in 1:p) {
+      theta1 = theta; theta2 = theta
+      theta1[i] = theta[i] - h
+      theta2[i] = theta[i] + h
+      H[i, ] = (sc(theta2, ...) - sc(theta1, ...))/(2*h)
+    }
+  }
+  ### faster, evaluate func(theta, ...) [1 + p + p*p] times
+  if (method == "fast") {
+    cat("Fast num hessian method\n")
+    f0 = func(theta, ...)
+    for(i in 1:p) {
+      theta1 = theta; theta2 = theta
+      theta1[i] = theta[i] - h
+      theta2[i] = theta[i] + h
+      H[i, i] = (func(theta2, ...) - 2*f0 + func(theta1, ...))/h^2
+    }
+    for(i in 1:(p-1)){
+      for(j in (i+1):p) {
+        theta1 = theta; theta2 = theta
+        theta1[i] = theta[i] - h; theta1[j] = theta[j] - h
+        theta2[i] = theta[i] + h; theta2[j] = theta[j] + h
+        H[i, j] = (func(theta2, ...) - 2*f0 + func(theta1, ...))/(2*h^2) - (H[i, i] + H[j, j])/2
+        H[j, i] = H[i, j]
+      }
+    }
+  }
+  return(H)
+}
