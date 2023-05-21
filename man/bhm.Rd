@@ -107,8 +107,14 @@ The logistic regression part are based on codes wrote by Tian Fang.
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %% code{\link{prolik}},
-\code{\link{glm}}, 
+\code{\link{brm}}, 
 \code{\link{coxph}}, 
+\code{\link{glm}}, 
+\code{\link{glmpLRT}}, 
+\code{\link{mpl}}, 
+\code{\link{pIndex}}, 
+\code{\link{resboot}}, 
+\code{\link{rmscb}}, 
 \code{\link{bhmControl}}
 }
 \examples{
