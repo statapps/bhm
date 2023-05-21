@@ -6,7 +6,8 @@ hpicexp = function(x, rate, cuts, index=NULL) {
 
 ### derivative of h(t) w.r.t baseline rate parameter.
 .dhpicexp = function(x, rate, cuts) {
-  p = length(rate)
+  ### p is the col number of rate, which is n.cuts - 1
+  p = length(cuts)-1
   n = length(x)
   
   ### dh_i = 1 if x is in the ith interval, 0 otherwise
@@ -33,7 +34,8 @@ Hpicexp = function(x, rate, cuts, index=NULL) {
 }
 
 .dHpicexp = function(x, rate, cuts) {
-  p = length(rate)
+  ### p is the col number of rate, which is n.cuts - 1
+  p = length(cuts)-1
   n = length(x)
   
   dH = matrix(0, n, p)
