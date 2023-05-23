@@ -309,7 +309,7 @@ ggkm <- function(sfit,
     
     risk.data$strata <- factor(risk.data$strata, levels=rev(levels(risk.data$strata)))
     
-    data.table <- ggplot(risk.data,aes(x = time, y = strata, label = format(risk.data$n.risk, nsmall = 0))) +
+    data.table <- ggplot(risk.data,aes(x = time, y = strata, label = format(n.risk, nsmall = 0))) +
       geom_text(size = 3.5) + theme_bw() +
       scale_y_discrete(breaks = as.character(levels(risk.data$strata)),
                        labels = rev(ystratalabs)) +

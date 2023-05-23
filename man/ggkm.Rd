@@ -54,6 +54,7 @@ ggkm(sfit, table = FALSE, xlabs = "Time-to-event", ylabs = "Survival (\%)", xlim
 \description{
 Creates a Kaplan-Meier plot with at risk tables below.
 
+Based on the original packge by Michael Way(https://github.com/michaelway/ggkm), 
 I added some minor changes that allow users to:
 
 1) add hazards ratio (HR) and CI for HR to the plot.
