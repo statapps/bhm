@@ -15,8 +15,8 @@ importFrom("stats", "approx", "aggregate", "binomial", "complete.cases", "cov", 
            "nlm", "nlminb", "optim", "pchisq", "predict", "pnorm", "printCoefmat", 
            "quantile", "qnorm", "quasibinomial", 
 	   "rbinom", "rexp", "rgamma", "rnorm", "runif", "rweibull", 
-           "sd", "vcov")
-
+           "sd", "time", "vcov")
+importFrom(gridExtra,grid.arrange)
 S3method(bhm, default)
 S3method(bhm, formula)
 
