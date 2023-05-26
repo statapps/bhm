@@ -14,7 +14,7 @@ function at a parameter value.}
     \item{h}{the step used in the numerical calculation.}
     \item{method}{one of {"fast"} or {"easy"} indicating 
     the method to use for the approximation.}
-    \item{...}{an additional arguments passed to \code{func}.}
+    \item{...}{additional named or unmaned arguments to be passed to \code{func}.}
 }
 \value{An p by p matrix of the Hessian of the function calculated at the 
        point \code{theta}. If the \code{func} is a log likelihood function, 

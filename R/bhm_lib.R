@@ -143,6 +143,20 @@ numScore = function(func, theta, h = 0.0001, ...) {
   return(score)
 }
 
+### numerical Jacobian function 
+numJacobian = function (func, theta, h = 0.0001, m = 2, ...) {
+  p = length(theta)
+  jacobian = matrix(NA, m, p)
+  for (i in 1:p) {
+    theta1 = theta
+    theta2 = theta
+    theta1[i] = theta[i] - h
+    theta2[i] = theta[i] + h
+    jacobian[ ,i] = (func(theta2, ...) - func(theta1, ...))/(2*h)
+  }
+  return(jacobian)
+}
+
 ### Hessian matrix for the log pseudo likelihood using numerical derivative
 numHessian = function(func, theta, h = 0.0001, method = c("fast", "easy"), ...) {
   p = length(theta)
@@ -184,3 +198,43 @@ numHessian = function(func, theta, h = 0.0001, method = c("fast", "easy"), ...) 
   }
   return(H)
 }
+
+multiRoots = function(func, theta,..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25) {
+  U = func(theta, ...)
+  m = length(U)
+  p = length(theta)
+  if (m == p) mp = TRUE
+  else mp = FALSE
+  convergence = 0
+  mU1 = sum(U^2)
+  for(i in 1:maxIter) {
+    J = numJacobian(func, theta, m = m,...)
+    if(mp) dtheta = solve(J, U)
+    else {
+     tJ = t(J) ## mx1-(pxm)x(mxp)x(pxm)x(mx1)
+     #dtheta = solve(tJ%*%J)%*%tJ%*%U
+     dtheta = solve(tJ%*%J, tJ%*%U)
+    }
+    theta = theta - dtheta
+    U = func(theta, ...)
+    mU = sum(U^2)
+    dU = abs(mU1 - mU)
+    mU1= mU
+    if(verbose) cat("||U|| = ", mU, dU, '\n')
+
+    if ((mU < tol) | (dU < tol)) {
+      convergence = 1
+      break
+    }
+  }
+  return(list(theta = theta, f.theta = U, iter = i, convergence = convergence))
+}
+
+#sc = function(x) {
+#  gc = c(3*x[1]+log(abs(x[2]))-3, 5*x[2]-exp(x[3])+1, 2*sin(x[3])-x[2]+1, x[1]+10)
+#  return(gc)
+#}
+
+#theta0 = rep(1, 3)
+#obj = multiRoots(theta0, sc, tol = 1E-6)
+#print(obj)

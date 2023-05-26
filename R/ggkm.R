@@ -301,6 +301,7 @@ ggkm <- function(sfit,
   }
   
   if(table == TRUE) {
+    n.risk = NULL
     risk.data <- data.frame(
       strata = Factor,
       time = summary(sfit,times = times,extend = TRUE)$time[subs3],

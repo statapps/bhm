@@ -7,6 +7,8 @@ import(MASS)
 import(survival)
 
 importFrom("graphics", "abline", "hist", "lines", "plot", "title")
+importFrom("grid", unit)
+importFrom("gridExtra", grid.arrange)
 importFrom("methods", "is")
 importFrom("stats", "approx", "aggregate", "binomial", "complete.cases", "cov", "dbeta",
            "density", "dnorm", "ecdf", "glm", 
@@ -16,7 +18,7 @@ importFrom("stats", "approx", "aggregate", "binomial", "complete.cases", "cov", 
            "quantile", "qnorm", "quasibinomial", 
 	   "rbinom", "rexp", "rgamma", "rnorm", "runif", "rweibull", 
            "sd", "time", "vcov")
-importFrom(gridExtra,grid.arrange)
+
 S3method(bhm, default)
 S3method(bhm, formula)
 
@@ -68,4 +70,3 @@ S3method(summary, brm)
 S3method(summary, glmpLRT)
 S3method(summary, picreg)
 S3method(summary, rmscb)
-
