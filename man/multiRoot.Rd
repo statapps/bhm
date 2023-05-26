@@ -3,7 +3,8 @@
 
 \title{m-Dimensional Root (Zero) Finding}
 \description{The function \code{multiRoot} searches for roots (i.e, zeros) of 
-the vector-valued function \code{func} with repsect to its first argument.
+the vector-valued function \code{func} with repsect to its first argument using 
+the Gauss-Newton alorightm.
 } 
 \usage{
     multiRoot(func, theta, ..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25)
@@ -37,7 +38,8 @@ the vector-valued function \code{func} with repsect to its first argument.
   theta = theta - solve((t(J) x J), J x func(theta))
 
   When m > p,  if the nonlinear system has not solution, 
-  the method attempts to find a solution in the non-linear least squares sense.
+  the method attempts to find a solution in the non-linear least squares sense 
+  (Gauss-Newton algorithm).
   The sum of square sum(t(U)xU), where U = func(theta), will be minized. 
 }
 
@@ -45,7 +47,11 @@ the vector-valued function \code{func} with repsect to its first argument.
     \code{\link{numJacobian}}
     \code{\link{numScore}}
 }
-
+\references{
+Gauss, Carl Friedrich(1809). Theoria motus corporum coelestium in sectionibus conicis solem ambientum.}
+\author{
+Bingshu E. Chen (bingshu.chen@queensu.ca)
+}
 \examples{
   g = function(x, a) (c(x[1]+2*x[2]^3, x[2] - x[3]^3, a*sin(x[1]*x[2])))
   theta = c(1, 2, 3)
