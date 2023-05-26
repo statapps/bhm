@@ -32,12 +32,12 @@ function at a parameter value.}
   with p-vector
   argument theta.
   This function can be used to find the solution of score functions for
-  a log likelihood using the \code{multiRoots} function.
+  a log likelihood using the \code{multiRoot} function.
 }
 
 \seealso{
     \code{\link{numHessian}}
-    \code{\link{multiRoots}}
+    \code{\link{multiRoot}}
 }
 
 \examples{

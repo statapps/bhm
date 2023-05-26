@@ -199,7 +199,7 @@ numHessian = function(func, theta, h = 0.0001, method = c("fast", "easy"), ...) 
   return(H)
 }
 
-multiRoots = function(func, theta,..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25) {
+multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25) {
   U = func(theta, ...)
   m = length(U)
   p = length(theta)
@@ -227,14 +227,5 @@ multiRoots = function(func, theta,..., verbose = FALSE, maxIter = 20, tol = .Mac
       break
     }
   }
-  return(list(theta = theta, f.theta = U, iter = i, convergence = convergence))
+  return(list(root = theta, f.root = U, iter = i, convergence = convergence))
 }
-
-#sc = function(x) {
-#  gc = c(3*x[1]+log(abs(x[2]))-3, 5*x[2]-exp(x[3])+1, 2*sin(x[3])-x[2]+1, x[1]+10)
-#  return(gc)
-#}
-
-#theta0 = rep(1, 3)
-#obj = multiRoots(theta0, sc, tol = 1E-6)
-#print(obj)
