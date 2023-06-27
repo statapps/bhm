@@ -144,7 +144,7 @@ numScore = function(func, theta, h = 0.0001, ...) {
 }
 
 ### numerical Jacobian function 
-numJacobian = function (func, theta, h = 0.0001, m = 2, ...) {
+numJacobian = function (func, theta, m, h = 0.0001, ...) {
   p = length(theta)
   jacobian = matrix(NA, m, p)
   for (i in 1:p) {
@@ -200,7 +200,7 @@ numHessian = function(func, theta, h = 0.0001, method = c("fast", "easy"), ...) 
 }
 
 ### find roots for the multiple non-linear equations.
-multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20, 
+multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 50, 
         thetaUp = NULL, thetaLow = NULL,
         tol = .Machine$double.eps^0.25) {
   alpha = 0.0001
@@ -215,7 +215,7 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20,
   i = 1
 
   while(i < maxIter) {
-    J = numJacobian(func, theta, m = m,...)
+    J = numJacobian(func, theta, m=m, ...)
     if(mp) dtheta = solve(J, U)
     else {
       tJ = t(J)       ## m*1-(p*m) x (m*p) x (p*m) x (m*1)
@@ -246,4 +246,33 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20,
     }
   }
   return(list(root = theta, f.root = U, iter = i, convergence = convergence))
+}
+
+coxScoreHess = function(eb, delta, X, hess = FALSE) {
+  ### eb = exp(x%*%beta)
+  ### delta shall be sorted from smallest to largest.
+  S0 = rcumsum(eb)
+  S1 = apply(eb*X, 2, rcumsum)
+  score = colSums(delta*(X - S1/S0))
+
+  if(!hess) return(score)
+  n = length(delta)
+  p = ncol(X)
+  SS1 = array(apply(S1, 1, function(x){return(x%*%t(x))}),c(p, p, n)) # ((p*p)*n)
+  SS1 = aperm(array(SS1, c(p, p, n)), c(3, 1, 2))                     # (n*(p*p))
+
+  Xt = apply(X, 1, function(x){return(x%*%t(x))})                    # X*t(X)
+  X2 = array(Xt, c(p, p, n))
+  ## multiply each X2(p, p, i) with eb[i],
+  ## by change eb to a p*p*n array with each of ith pxp matrix = eb[i]
+  X2eb = X2 * array(rep(eb, each = p*p), c(p, p, n))
+
+  ## Sm is a upper triangular matrix of 1
+  Sm = matrix(1, n, n)
+  Sm[lower.tri(Sm)] = 0
+
+  ## calculate S2, a n*p*p array
+  S2 = apply(X2eb, c(1, 2), function(x, y){return(y%*%x)}, Sm)
+  H = colSums(delta*(S2/c(S0)-SS1/c(S0)^2), dims = 1)
+  return(list(score = score, H = H))
 }
