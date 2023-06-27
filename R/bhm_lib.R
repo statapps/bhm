@@ -220,6 +220,8 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20,
       V = alpha*V + lr_rate*U
       
       theta = theta + V
+      if(!is.null(thetaUp)) theta = ifelse(theta > thetaUp, thetaUp, theta)
+      if(!is.null(thetaLow)) theta = ifelse(theta < thetaLow, thetaLow, theta)
       U = func(theta, ...)
       mU = sum(U^2)
       dU = abs(mU1 - mU)
@@ -274,12 +276,15 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 20,
     V = 0
     while(i < maxIter*10) {
       V = alpha*V + lr_rate*U
+      theta0 = theta
       theta = theta + V
+      if(!is.null(thetaUp)) theta = ifelse(theta > thetaUp, thetaUp, theta)
+      if(!is.null(thetaLow)) theta = ifelse(theta < thetaLow, thetaLow, theta)
       U = func(theta, ...)
       mU = sum(U^2)
       dU = abs(mU1 - mU)
       if(mU > mU1) {
-        theta = theta - V
+        theta = theta0
         V = 0
       }
       mU1 = mU
