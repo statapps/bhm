@@ -253,9 +253,13 @@ coxScoreHess = function(eb, delta, X, hess = FALSE) {
   ### delta shall be sorted from smallest to largest.
   S0 = rcumsum(eb)
   S1 = apply(eb*X, 2, rcumsum)
-  score = colSums(delta*(X - S1/S0))
-
+  SX = delta * (X - S1/S0)
+  score = colSums(SX)
   if(!hess) return(score)
+
+  ### Sigma = Var(Score)
+  Sigma = t(SX)%*%SX
+
   n = length(delta)
   p = ncol(X)
   SS1 = array(apply(S1, 1, function(x){return(x%*%t(x))}),c(p, p, n)) # ((p*p)*n)
@@ -274,5 +278,5 @@ coxScoreHess = function(eb, delta, X, hess = FALSE) {
   ## calculate S2, a n*p*p array
   S2 = apply(X2eb, c(1, 2), function(x, y){return(y%*%x)}, Sm)
   H = colSums(delta*(S2/c(S0)-SS1/c(S0)^2), dims = 1)
-  return(list(score = score, H = H))
+  return(list(score = score, Sigma = Sigma, H = H))
 }
