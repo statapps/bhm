@@ -85,7 +85,7 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
   a = control$ab[1]
   b = control$ab[2]
   gc = control$ab[3]
-  c0 = control$c0
+  c0 = control$c0              ## evaluate under the null H0: c = c0
   lambda = control$lambda
   family = control$family
   K = control$K
@@ -98,22 +98,21 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
   
   Rx = rep(0, J)
   Mx = Rx
-  c.max = 0.5
+  c.max = NA  ### replace c.max = 0.5
   
   ### Null model without biomarker
   if(is.null(z1)) g0=glm(y~1,family=family)
   else g0=glm(y~z1,family=family)
-  #print(g0)
   ml0 = logLik(g0)
   
   mpv = NULL
   sdf = NULL
   zeta = NULL
   #### Loop the profilelikelihood
-  #c.max = rep(0,5, 2)
   for (i in 1:J) {
     cx = cq[i]
-    w=exp(K*(x-cx))/(1+exp(K*(x-cx)))
+    #w=exp(K*(x-cx))/(1+exp(K*(x-cx)))
+    w = 1/(1+exp(-K*(x-cx)))   ### faster
     z2w = z2*w
     if(is.null(z1)) gm=glm(y~z2w, family=family)
     else gm=glm(y~z1+z2w, family=family)
@@ -133,10 +132,12 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
     }
     if(Mn<Mi) Mn = Mi
   }
+
   cLRT = cbind(cq, Mx, Rx)
   varNames = names(bn)
   if(control$method == 'pLRT') {
-    w0=exp(K*(x-c0))/(1+exp(K*(x-c0)))
+    #w0=exp(K*(x-c0))/(1+exp(K*(x-c0)))
+    w0 = 1/(1+exp(-K*(x-c0)))   ###faster
     z2w0 = z2*w0
     #X = cbind(rep(1, n), z, w0, z*w0)
     #x2 = X[, 3:4]
@@ -150,7 +151,6 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
 
     x2 = X[, idx2]  ### X matrix with biomarker term
     #print(head(X), digits=3)
-    #print(head(x2), digits = 3)
 
     xb = predict(g0)
     eb = exp(xb)
@@ -161,10 +161,6 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
     An = t(X)%*%diag(b2)%*%X/n
     #cat("An = \n")
     #print(An, digits = 3)
-
-    # A22 = An[3:4, 3:4]
-    # A12 = An[1:2, 3:4]
-    # A11 = An[1:2, 1:2]
 
     A22 = An[idx2, idx2]
     A12 = An[idx1, idx2]
@@ -179,6 +175,8 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
     Ij = J2%*%solve(H)%*%t(J2)
     sdf = sum(diag(Ij))
     egn = eigen(Ij)$values
+    if(min(egn) < 0) stop("Error: Negative eigen value here.\n")
+
     mu1 = sum(egn)
     mu2 = 2*sum(egn^2)
     zeta = mu2/(2*mu1)
