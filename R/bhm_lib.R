@@ -239,14 +239,18 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 50,
     dU = abs(mU1 - mU)
     mU1 = mU
     i = i + 1
-    if(verbose) cat("||U|| = ", mU, dU, '\n')
+    if(verbose) cat("||U|| = ", mU, "dU = ", dU, '\n')
     if ((mU < tol) | (dU < tol)) {
       convergence = 1
+      if(mU > tol) convergence = 0
       break
     }
   }
   return(list(root = theta, f.root = U, iter = i, convergence = convergence))
 }
+
+#reverse cumsum
+rcumsum=function(x) rev(cumsum(rev(x))) # sum from last to first
 
 coxScoreHess = function(eb, delta, X, hess = FALSE) {
   ### eb = exp(x%*%beta)

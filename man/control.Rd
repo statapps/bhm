@@ -33,7 +33,7 @@ Typically only used internally by 'bhmFit', but may be used to construct a contr
 Control is used in model fitting of "bhm".
 }
 \value{
-This function checks the internal consisitency and returns a list of value as inputed to control model fit of bhm.
+This function checks the internal consisitency and returns a list of value as inputed to control model fitting of "bhm".
 }
 
 \author{Bingshu E. Chen}

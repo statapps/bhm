@@ -2,9 +2,9 @@
 \alias{multiRoot}
 
 \title{m-Dimensional Root (Zero) Finding}
-\description{The function \code{multiRoot} searches for roots (i.e, zeros) of 
-the vector-valued function \code{func} with repsect to its first argument using 
-the Gauss-Newton alorightm.
+\description{The function \code{multiRoot} searches for root (i.e, zero) of 
+the vector-valued function \code{func} with respect to its first argument using 
+the Gauss-Newton algorithm.
 } 
 \usage{
     multiRoot(func, theta, ..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25)
@@ -45,8 +45,11 @@ the Gauss-Newton alorightm.
 }
 
 \seealso{
-    \code{\link{numJacobian}}
-    \code{\link{numScore}}
+    \code{\link{optim}} (which is preferred) and \code{\link{nlm}}, 
+    \code{\link{nlminb}},
+    \code{\link{numJacobian}}, 
+    \code{\link{numScore}}, 
+    \code{\link{optimize}} and \code{\link{uniroot}} for one-dimension optimization.
 }
 
 \references{
