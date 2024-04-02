@@ -277,7 +277,8 @@ coxScoreHess = function(eb, delta, X, hess = FALSE) {
 
   ## Sm is a upper triangular matrix of 1
   Sm = matrix(1, n, n)
-  Sm[lower.tri(Sm)] = 0
+  #Sm[lower.tri(Sm)] = 0
+  Sm[upper(Sm)] = 0
 
   ## calculate S2, a n*p*p array
   S2 = apply(X2eb, c(1, 2), function(x, y){return(y%*%x)}, Sm)
