@@ -249,14 +249,14 @@ multiRoot = function(func, theta,..., verbose = FALSE, maxIter = 50,
   return(list(root = theta, f.root = U, iter = i, convergence = convergence))
 }
 
-#reverse cumsum
-rcumsum=function(x) rev(cumsum(rev(x))) # sum from last to first
+#reverse rcumsum can be avoided if scored largest time to smallest time
+#rcumsum=function(x) rev(cumsum(rev(x))) # sum from last to first
 
 coxScoreHess = function(eb, delta, X, hess = FALSE) {
   ### eb = exp(x%*%beta)
   ### delta shall be sorted from smallest to largest.
-  S0 = rcumsum(eb)
-  S1 = apply(eb*X, 2, rcumsum)
+  S0 = cumsum(eb)
+  S1 = apply(eb*X, 2, cumsum)
   SX = delta * (X - S1/S0)
   score = colSums(SX)
   if(!hess) return(score)
