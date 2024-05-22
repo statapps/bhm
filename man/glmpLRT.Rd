@@ -16,10 +16,9 @@ a description of the distribution family.
 }
 \usage{
 %glmpLRT(x, ...)
-\method{glmpLRT}{formula}(formula, family = binomial, 
-  data=list(...), lambda = 15, c0 = 0.5, p1 = 1, 
-  method = c("pLRT", "Davies", "Bootstrap"), 
-  B=10, K = 50, epsilon = 0.025,...)
+\method{glmpLRT}{formula}(formula, family = binomial, data=list(...), lambda = 15, 
+  c0 = 0.5, p1 = 1, method = c("pLRT", "Davies", "Bootstrap"), B=10, K = 50,
+  epsilon = 0.025,...)
 # use 
 #          glmpLRT(y ~ biomarker)             
 # or
