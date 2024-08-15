@@ -24,8 +24,8 @@ Define a L shape linear funcation that change slope at c0:
 
 when x <c0, y = b1 + b2*x
 
-when x>=c0, y = b1 + b2*x  + b3*(x-x0)
-             = (b1-b3*c0) + (b2+b3)*x
+when x>=c0, y = b1 + b2*x  +  b3*(x-c0)
+              = (b1-b3*c0) + (b2+b3)*x
 
 }
 \value{

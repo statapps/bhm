@@ -17,6 +17,7 @@ llm.default = function(x, y, epsilon, ...) {
     xr = ifelse(x2>ci, (x2-ci), 0)
     X = cbind(x, xr)
     lmf = lm.fit(X, y)
+    fit = lmf
     rsm1 = sum(lmf$residuals^2)
     #print(rsm1)
     if(rsm1 < rsm) {
@@ -39,6 +40,9 @@ llm.formula = function(formula, data=list(...), epsilon = 0.025,...) {
   mt <- attr(mf, "terms")
   x = model.matrix(attr(mf, "terms"), data = mf)
   y = model.response(mf)
+  yna = is.na(y)
+  y   = y[!yna]
+  x   = x[!yna, ]
   fit = llm.default(x, y, epsilon)
   fit$terms = mt
   fit$call = match.call()
