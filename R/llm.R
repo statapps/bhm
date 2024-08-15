@@ -57,7 +57,7 @@ print.llm = function(x, ...) {
   cat("L-shape linear model:\n")
   cat("Cut off value = ", c0, '\n')
   cat("beta = ", beta, '\n')
-  cat("Model 1: when x < ", c0, "\n")
+  cat("Model 1: when x < or =  ", c0, "\n")
   cat("y = ", beta[1])
   if(beta[2]>0) cat ('+') else cat('-')
   cat(abs(beta[2]), '* x')
@@ -65,7 +65,7 @@ print.llm = function(x, ...) {
   b20 = beta[1]-beta[p]*c0
   b21 = beta[2]+beta[p]
   
-  cat("\nModel 2: when x >= ", c0, "\n")
+  cat("\nModel 2: when x > ", c0, "\n")
   cat("y = ", b20)
   if(b21>0) cat ('+') else cat('-')
   cat(abs(b21), '* x')
