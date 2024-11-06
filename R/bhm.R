@@ -97,7 +97,7 @@ bhm.formula = function(formula, family, data=list(...), control=list(...), ...){
   return(fit)
 }
 
-bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=100, thin = 1, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 10000) {
+bhmControl=function(method = 'Bayes', interaction = TRUE, biomarker.main = TRUE, alpha = 0.05, B=50, R=2, thin = 1, epsilon = 0.01, c.n = 1, beta0=0, sigma0 = 10000) {
 
   if(method != 'profile' && method != 'Bayes')
     stop("Please use either 'Bayes' or 'profile' method for model fit")
