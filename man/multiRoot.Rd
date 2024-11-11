@@ -7,15 +7,18 @@ the vector-valued function \code{func} with respect to its first argument using
 the Gauss-Newton algorithm.
 } 
 \usage{
-    multiRoot(func, theta, ..., verbose = FALSE, maxIter = 20, tol = .Machine$double.eps^0.25)
+    multiRoot(func, theta, ..., verbose = FALSE, maxIter = 50, 
+           thetaUp = NULL, thetaLow = NULL, tol = .Machine$double.eps^0.25)
 }
 \arguments{
     \item{func}{a m-vector function for which the root is sought.}
     \item{theta}{the parameter vector first argument to func.}
-    \item{...}{an additional named or unmaned arguments to be passed to \code{func}.}
+    \item{thetaLow}{the lower bound of theta.}
+    \item{thetaUp}{the upper bound of theta.}
     \item{verbose}{print out the verbose, default is FALSE. }
     \item{maxIter}{the maximum number of iterations, default is 20.}
     \item{tol}{the desired accuracy (convergence tolerance), default is .Machine$double.eps^0.25.}
+    \item{...}{an additional named or unmaned arguments to be passed to \code{func}.}
 }
 
 \value{A list with at least four components:

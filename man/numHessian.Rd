@@ -12,7 +12,7 @@ function at a parameter value.}
         is used as a parameter vector.}
     \item{theta}{the parameter vector first argument to func.}
     \item{h}{the step used in the numerical calculation.}
-    \item{method}{one of {"fast"} or {"easy"} indicating 
+    \item{method}{one of "fast" or "easy" indicating 
     the method to use for the approximation.}
     \item{...}{additional named or unmaned arguments to be passed to \code{func}.}
 }

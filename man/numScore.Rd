@@ -1,13 +1,14 @@
 \name{numScore}
 \alias{numScore}
 \alias{numJacobian}
+\alias{coxScoreHess}
 
 \title{Calculate the Score / Jacobian Function}
 \description{Calculate a numerical approximation to the Score function of a 
 function at a parameter value.}
 \usage{
     numScore(func, theta, h = 0.0001, ...)
-    numJacobian(func, theta, h = 0.0001, m = 2, ...)
+    numJacobian(func, theta, m, h = 0.0001, ...)
 }
 \arguments{
     \item{func}{a function for which the first (vector) argument 
