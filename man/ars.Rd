@@ -7,16 +7,20 @@
 Generates a sequence of random variables using Adaptive Rejection Sampling (ARS). 
 }
 \usage{
-ars(n, logpdf, x0 = 0, lower=-14, upper=15, ...)
-#arns(n, logpdf, lower = -5, upper = 5, sigma.offset = 0.05, 
-#              fx.offset = 0.03, K = 100, verbose = FALSE, ...)
+ars(logpdf, n = 1, lower=-14, upper=15, x0 = 0, ...)
+arns(logpdf, n = 1, lower = -5, upper = 5, sigma.offset = 0.05, 
+              fx.offset = 0.03, K = 100, verbose = FALSE, ...)
 }
 \arguments{
-  \item{n}{Desired sample size}
-  \item{x0}{Initial point}
-  \item{logpdf}{Univariate log target density}
-  \item{lower}{lower limit of the random variable}
-  \item{upper}{upper limit of the random variable}
+  \item{n}{Desired sample size.}
+  \item{x0}{Initial point.}
+  \item{logpdf}{Univariate log target density.}
+  \item{lower}{lower limit of the random variable.}
+  \item{upper}{upper limit of the random variable.}
+  \item{sigma.offset}{offset of sigma for the normal envelope function to ensure it covers the logpdf.}
+  \item{fx.offset}{offset of maximum for the normal envelope function to ensure it covers the logpdf.}
+  \item{K}{number of points between lower and upper to evaluate logpdf to find the peak and bottom values.}
+  \item{verbose}{print out the verbose, default is FALSE.}
   \item{...}{Parameters passed to \code{logpdf}}
 }
 \details{
@@ -41,10 +45,7 @@ Adaptive rejection Metropolis sampling within Gibbs sampling
 }
 
 \author{Bingshu E. Chen \email{bingshu.chen@queensu.ca}}
-\note{The function is based on original C code by Wally Gilks for the 
-univariate case.
-}
-
+%\note{The function is based on original C code by Wally Gilks for the univariate case.}
 
 \examples{
 #### ==> Warning: running the examples may take a few minutes! <== ####    

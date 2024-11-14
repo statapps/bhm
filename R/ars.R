@@ -9,7 +9,7 @@
 ### Let h(x) = log(f(x)) defines the log-likelihood function
 ###
 ##################### main ars function ########################################
-ars = function(n, logpdf, x0 = 0, lower = -14, upper = 15, ...) {
+ars = function(logpdf, n = 1, lower = -14, upper = 15, x0 = 0, ...) {
   ### the log pdf can not be too small
   xmin = log(.Machine$double.xmin)
   eps = 1e-7
@@ -76,7 +76,7 @@ rpwexp = function(h, dh, Tk, lower, upper) {
 }
 
 ### adaptive reject normal sampling, using a normal distribution as an envelope function
-arns = function (n, logpdf, lower = -5, upper = 5, sigma.offset = 0.05,
+arns = function (logpdf, n = 1, lower = -5, upper = 5, sigma.offset = 0.05,
           fx.offset = 0.03, K = 100, verbose = FALSE, ...) {
 
   width = (upper - lower)/K
