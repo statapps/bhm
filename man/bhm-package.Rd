@@ -66,9 +66,8 @@ vival analysis. Canadian Journal of Statistics.
 \seealso{
 \code{\link{bhm}},  
 \code{\link{brm}}, 
-\code{\link{coxph}}, 
-\code{\link{glm}}, 
-\code{\link{survival}}
+\code{\link[survival]{coxph}}, 
+\code{\link{glm}} 
 }
 \examples{
 # fit = bhm(y~biomarker+treatment)

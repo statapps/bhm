@@ -51,8 +51,8 @@ Adaptive rejection Metropolis sampling within Gibbs sampling
 #### ==> Warning: running the examples may take a few minutes! <== ####    
 ### Univariate densities
 ## Normal(mean,1)
-norldens <- function(x, mean) -(x-mean)^2/2 
-y <- ars(10, norldens, mean=10, upper = 30)
+normlogdens <- function(x, mean) -(x-mean)^2/2 
+y <- ars(normlogdens, n = 10, mean = 3.0)
 summary(y); 
 }
 

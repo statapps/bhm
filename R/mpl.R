@@ -187,7 +187,7 @@ mplFit = function (y, s, Z, W, centre, control) {
 
   var_cov<-matrix(c(sigma[1], sigma[3], sigma[3], sigma[2]),2,2)
   #print(centre)
-  U = mvrnorm(ncentre, c(0,0), var_cov)
+  U = .mvrnorm(ncentre, c(0,0), var_cov)
 
   ###create the matrix which indicates the centre ID for each patient
   c_matrix<-matrix(rep(0,n*ncentre), n, ncentre)
@@ -355,3 +355,23 @@ print.mpl = function(x, digits = 3,...) {
   rownames(out) = control$varNames
   print(out, digits=digits)
 }
+
+.mvrnorm = function (n = 1, mu, Sigma, tol = 1e-06) {
+    p <- length(mu)
+    if (!all(dim(Sigma) == c(p, p)))
+        stop("incompatible arguments")
+    eS <- eigen(Sigma, symmetric = TRUE)
+    ev <- eS$values
+    if (!all(ev >= -tol * abs(ev[1L])))
+        stop("'Sigma' is not positive definite")
+    X <- matrix(rnorm(p * n), n)
+    X <- drop(mu) + eS$vectors %*% diag(sqrt(pmax(ev, 0)), p) %*% t(X)
+    nm <- names(mu)
+    if (is.null(nm) && !is.null(dn <- dimnames(Sigma)))
+        nm <- dn[[1L]]
+    dimnames(X) <- list(nm, NULL)
+    if (n == 1)
+        drop(X)
+    else t(X)
+}
+

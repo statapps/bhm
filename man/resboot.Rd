@@ -84,7 +84,7 @@ Bingshu E. Chen (bingshu.chen@queensu.ca)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %%\code{\link{prolik}},
 \code{\link{bhm}}
-\code{\link{coxph}}
+\code{\link[survival]{coxph}}
 }
 \examples{
 ##

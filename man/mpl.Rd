@@ -84,7 +84,7 @@ Based on code from J. Wang.
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 \seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-\code{\link{coxph}}, 
+\code{\link[survival]{coxph}}, 
 \code{\link{glm}}, 
 \code{\link{print}}.
 }

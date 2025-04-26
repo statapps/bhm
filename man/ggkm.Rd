@@ -2,7 +2,13 @@
 \alias{ggkm}
 \title{Creates a Kaplan-Meier plot with at risk tables below}
 \usage{
-ggkm(sfit, table = FALSE, xlabs = "Time-to-event", ylabs = "Survival (\%)", xlims = c(0, max(sfit$time)), ylims = c(0, 1), ystratalabs = names(sfit$strata), ystrataname = "Strata", timeby = signif(max(sfit$time)/7, 1), main = "", pval = FALSE, pvposition = c(0.3, 0.6), marks = TRUE, shape = 3, legend = TRUE, legendposition = c(0.85, 0.8), ci = FALSE, subs = NULL, linecols = "Set1", dashed = FALSE, aspectRatio = 0.7143, black = FALSE, data = NULL, HR = FALSE, incid = FALSE, pvaltxt = NULL, hrtxt = NULL, ...)
+ggkm(sfit, table = FALSE, xlabs = "Time-to-event", ylabs = "Survival (\%)", 
+     xlims = c(0, max(sfit$time)), ylims = c(0, 1), ystratalabs = names(sfit$strata), 
+     ystrataname = "Strata", timeby = signif(max(sfit$time)/7, 1), main = "", 
+     pval = FALSE, pvposition = c(0.3, 0.6), marks = TRUE, shape = 3, 
+     legend = TRUE, legendposition = c(0.85, 0.8), ci = FALSE, subs = NULL, 
+     linecols = "Set1", dashed = FALSE, aspectRatio = 0.7143, black = FALSE, 
+     data = NULL, HR = FALSE, incid = FALSE, pvaltxt = NULL, hrtxt = NULL, ...)
 }
 \arguments{
 \item{sfit}{a survfit object}
@@ -73,7 +79,7 @@ I added some minor changes that allow users to:
 }
 \author{
 Michael Way(https://github.com/michaelway/ggkm), heavily modified version of a script created by Abhijit Dasgupta with contributions by Gil Tomas.
-\url{http://statbandit.wordpress.com/2011/03/08/an-enhanced-kaplan-meier-plot/}
+\url{https://statbandit.wordpress.com/2011/03/08/an-enhanced-kaplan-meier-plot/}
 Michael have packaged this function, added functions to namespace and included a range of new parameters. 
 Bingshu Chen added more options to the plot (see above) and made minor corrections of the R code and the R docments files to pass the R CMD check.
 }

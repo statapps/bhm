@@ -107,13 +107,15 @@ brm.default = function (x, y, control, ...) {
   ### Find s.e
   #numerical method in specified
   I_numerical = .reluInfo(fit$theta, x, y)
-  I_numerical_inv = ginv(I_numerical, tol = sqrt(.Machine$double.eps))
+  ### I_numerical_inv = ginv(I_numerical, tol = sqrt(.Machine$double.eps))
+  I_numerical_inv = solve(I_numerical)
 
   grdInfo = .reluGradient(fit$theta, x, y, info = TRUE)
   pi_theta = grdInfo$pi_theta
   
   #score in specified model
-  sV = ginv(pi_theta) 
+  # sV = ginv(pi_theta) 
+  sV = solve(pi_theta) 
   
   #robust var by second derivative in misspecified
   second = grdInfo$second
@@ -160,7 +162,8 @@ brm.default = function (x, y, control, ...) {
   #print(rbind(s1, s2))
   info = .singleInfo(theta, w, z, y, q)
   #print(info)
-  var = ginv(info)
+  #var = ginv(info)
+  var = solve(info)
   #print(var)
   sd.score = sqrt(diag(var))
 

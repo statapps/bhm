@@ -139,7 +139,8 @@ resboot.default = function(x, y, family, control, ...) {
 
     pfStar = try(.maxLR(yStar, w, z, epsilon))
     if(is(pfStar, "try-error")) next
-	        
+    #if(inherits(pfStar, "try-error")) next
+           
     LRb[i] = pfStar$mLR
     i=i+1
   }

@@ -3,13 +3,14 @@ exportPattern("^[^\\.]")
 
 import(coda)
 import(ggplot2)
-import(MASS)
 import(survival)
 
 importFrom("graphics", "abline", "hist", "lines", "plot", "title")
 importFrom("grid", unit)
 importFrom("gridExtra", grid.arrange)
+importFrom("lpl", "ibs")
 importFrom("methods", "is")
+#importFrom("MASS", "ginv", "mvrnorm")
 importFrom("stats", "approx", "aggregate", "binomial", "complete.cases", "cov", "dbeta",
            "density", "dnorm", "ecdf", "glm", 
            "lm.fit", "lowess", "logLik", 
