@@ -365,7 +365,7 @@ plot.coxpLRT = function(x, ...) {
   for(j in 1:m) {
     for(i in 1:length(cq)) {
       thetai = theta; thetai[p+j] = cq[i]
-      lk[i] = coxLoglikScore(thetai, delta, wx, z, z2, lambda, pm, K, cxterm)
+      lk[i] = .coxLoglikScore(thetai, delta, wx, z, z2, lambda, pm, K, cxterm)
     }
     plot(cq, 2*lk, type = 'l', xlab = paste('biomarker', j), ylab = '2logLik', ...)
     if(j<m) readline("Press Enter to continue...")
