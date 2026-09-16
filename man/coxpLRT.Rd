@@ -144,12 +144,17 @@ vector and design matrix have already been calculated.
   \item{loglik}{(Penalized) log partial likelihood(s) under the null and/or fitted model, used to form the likelihood ratio statistic.}
   \item{statistic}{The likelihood ratio test statistic for the threshold effect.}
   \item{x}{The model design (\code{X}) matrix, if \code{x = TRUE}.}
+  \item{y}{The \code{\link[survival]{Surv}} response used to fit the model, sorted in decreasing order of time. Used by \code{\link{plot.coxpLRT}}.}
   \item{boot}{
     A list with the results of the residual bootstrap, including
     \code{pValue} (the bootstrap p-value; \code{pValue = NA} if
     \code{bootstrap = 0}) and the vector of bootstrap replicate
-    statistics for the LRT.
-  }
+    statistics for the LRT.}
+  \item{XZ}{The design object (as constructed internally by \code{.getXZ})
+    used to fit the model, combining the biomarker terms, the linear
+    covariates from \code{formula2}, and the interaction structure
+    from \code{formulaList}. Used by \code{\link{plot.coxpLRT}} to
+    profile the log-likelihood over candidate cut points.}
 }
 \note{
   \code{.getXZ} and \code{.resbootCox} are internal, unexported
@@ -157,9 +162,6 @@ vector and design matrix have already been calculated.
   users.
 }
 \references{
-  Davies, R. B. (1987). Hypothesis testing when a nuisance parameter
-  is present only under the alternative. \emph{Biometrika}, 74(1), 33--43.
-
   Jiang, W. and Chen, B. E. (2026). Tests for covariate threshold effects for survival data based on penalized Cox regression model with application to biomarker study. Biometrics. Revised manuscripted submitted. 
 }
 \seealso{

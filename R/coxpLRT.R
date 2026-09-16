@@ -248,7 +248,7 @@ coxpLRT.default = function(XZ, y, lambda = 25, naive.test = FALSE, ...) {
   test = c(Mn/zeta, Wn1, Wn2)
   
   fit= list(mpv=mpv, df = c(sdf, p2, p2), test = test, 
-            pValue = c(mpv, wpv), y = y, 
+            pValue = c(mpv, wpv), y = y, lambda = lambda,
             testName = c('pLRT', 'Wald', 'Robust'),
             zeta = zeta, Z = Z_, theta = theta, XZ = XZ,
             iter = obj$iter, convergence = obj$convergence, 
@@ -345,7 +345,32 @@ resbootCox = function(formula, formula2 = NULL, formulaList = NULL,
 #  lines(cq, lk2, lty = 2)
 #}
 
-plot.coxpLRT = function(x, ...) {}
+plot.coxpLRT = function(x, ...) {
+  theta = x$theta
+  XZ = x$XZ
+  
+  cq = seq(0.02, 0.98, 0.02);  lk = cq
+  delta = x$y[, 2]
+  lambda = x$lambda
+  pm = XZ$pm
+  z  = XZ$z
+  z2 = XZ$z2
+  wx = XZ$x
+  K  = XZ$K
+  cxterm = XZ$cxterm
+  
+  p0 = ncol(z)
+  m = ncol(wx)
+  p = p0 + pm[m+1]
+  for(j in 1:m) {
+    for(i in 1:length(cq)) {
+      thetai = theta; thetai[p+j] = cq[i]
+      lk[i] = coxLoglikScore(thetai, delta, wx, z, z2, lambda, pm, K, cxterm)
+    }
+    plot(cq, 2*lk, type = 'l', xlab = paste('biomarker', j), ylab = '2logLik', ...)
+    if(j<m) readline("Press Enter to continue...")
+  }
+}
 
 print.coxpLRT = function (x, ...) {
   cat("Call:\n")

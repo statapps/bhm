@@ -1,6 +1,7 @@
 \name{plot}
 \alias{plot.bhm}
 \alias{plot.brm}
+\alias{plot.coxpLRT}
 \alias{plot.pIndex}
 \alias{plot.resboot}
 \alias{plot.residuals.brm}
@@ -10,13 +11,14 @@ Plot a fitted biomarker threhold model
 }
 \description{
 Several different type of plots can be produced for biomarker threshold mdels. 
-Plot method is used to provide a summary of outputs from "bhm", "pIndex", "resboot".
+Plot method is used to provide a summary of outputs from "bhm", "coxpLRT", "pIndex", "resboot".
 
 Use "methods(plot)" and the documentation for these for other plot methods.
 }
 \usage{
 \method{plot}{bhm}(x, type = c("profile", "density"), ...)
 \method{plot}{brm}(x, type = c("HR"), ...)
+\method{plot}{coxpLRT}(x, ...)
 \method{plot}{pIndex}(x, ...)
 \method{plot}{resboot}(x, ...)
 \method{plot}{residuals.brm}(x, type="Martingale", ...)
