@@ -2,9 +2,6 @@
 \alias{coxpLRT}
 \alias{coxpLRT.formula}
 \alias{coxpLRT.default}
-\alias{plot.coxpLRT}
-\alias{predict.coxpLRT}
-\alias{print.coxpLRT}
 \alias{resbootCox}
 \alias{coxpLRTcvPredErr}
 

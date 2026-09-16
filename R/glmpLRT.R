@@ -201,7 +201,9 @@ glmpLRT.formula = function(formula, family = binomial, data=list(...),
   if(is.null(z1)) p0 = 1
   else p0 = length(z1[1, ])+1
   m0 = .pLRTest(x, y, z1, z2, control)
-  b1 = m0$coefficients[1:p0]
+  ### instead of fitting a model under H0, 
+  ### fit under H1 then let b[(p1+1):p] = 0 is a better unbiased estimate
+  b1 = m0$coefficients[1:p0]    
   Rn = m0$loglik
   n  = length(y)
 

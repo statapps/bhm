@@ -10,6 +10,8 @@
 Fit an L-shape linear model with the cut point estimated by the profile likelihood method.
 }
 \usage{
+llm(x, ...)
+\method{llm}{default}(x, y, epsilon, ...)
 \method{llm}{formula}(formula, data=list(...), epsilon = 0.025, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -17,6 +19,8 @@ Fit an L-shape linear model with the cut point estimated by the profile likeliho
   \item{formula}{an object of class "\code{formula}": a sympolic description of the model to be fitted. The details of model specificatoin are given under 'Details'.}
   \item{data}{an optional data frame, list or enviroment containing the variables in the model.}
   \item{epsilon}{Step width for the profile likelihood method, default is 0.025}
+  \item{x}{covariate matrix x.}
+  \item{y}{continuous response vector y.}
   \item{\dots}{additional arguments to be passed to the low level regression fitting functions (see below).}
 }
 \details{

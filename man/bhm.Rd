@@ -23,7 +23,7 @@ The model is specified by giving a symbolic description of the linear predictor 
 }
 \usage{
 bhm(x, ...)
-
+\method{bhm}{default}(x, y, family, control, ...)
 \method{bhm}{formula}(formula, family, data, control = list(...),...)
 
 # use 
@@ -120,7 +120,7 @@ The logistic regression part are based on codes wrote by Tian Fang.
 \examples{
 ##
 ## Generate a random data set
-n = 300
+n = 100
 b = c(0.5, 1, 1.5)
 data = gendat.surv(n, c0 = 0.40, beta = b)
 age = runif(n, 0, 1)*100

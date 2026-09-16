@@ -27,6 +27,9 @@ S3method(bhm, formula)
 S3method(brm, default)
 S3method(brm, formula)
 
+S3method(coxpLRT, default)
+S3method(coxpLRT, formula)
+
 S3method(glmpLRT, default)
 S3method(glmpLRT, formula)
 
@@ -40,6 +43,7 @@ S3method(pIndex, formula)
 
 S3method(plot, bhm)
 S3method(plot, brm)
+S3method(plot, coxpLRT)
 S3method(plot, glmpLRT)
 S3method(plot, llm)
 S3method(plot, pIndex)
@@ -49,6 +53,7 @@ S3method(plot, residuals.brm)
 
 S3method(print, bhm)
 S3method(print, brm)
+S3method(print, coxpLRT)
 S3method(print, glmpLRT)
 S3method(print, llm)
 S3method(print, mpl)
@@ -58,6 +63,8 @@ S3method(print, resboot)
 S3method(print, rmscb)
 S3method(print, summary.bhm)
 S3method(print, summary.brm)
+
+S3method(predict, coxpLRT)
 
 S3method(resboot, default)
 S3method(resboot, formula)

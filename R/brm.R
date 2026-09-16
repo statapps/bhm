@@ -4,9 +4,7 @@
 
 ###  generic function for Biomarker Rectifier Models(brm) using the
 ###  Rectifier Linear Unit (ReLU).
-brm = function(x, ...) {
-  UseMethod("brm")
-}
+brm = function(x, ...) {  UseMethod("brm") }
 ### the follow function take input like
 ###
 ###       brm(Surv(time, status) ~ w + trt + z1 + z2 + z3)  # need this
@@ -75,7 +73,7 @@ brm.formula = function(formula, data=list(...), interaction = TRUE,
   return(fit)
 }
 
-brm.default = function (x, y, control, ...) {
+brm.default = function(x, y, control, ...) {
   x = as.matrix(x)
   method = control$method
   seq_c = control$seq_c

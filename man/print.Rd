@@ -1,5 +1,6 @@
 \name{print}
 \alias{print.bhm}
+\alias{print.coxpLRT}
 \alias{print.brm}
 \alias{print.mpl}
 \alias{print.picreg}
@@ -16,6 +17,7 @@ print and summary are used to provide a short summary of outputs from "bhm", "br
 }
 \usage{
 \method{print}{bhm}(x, ...)
+\method{print}{coxpLRT}(x, ...)
 \method{print}{brm}(x, digits = 4, ...)
 \method{print}{mpl}(x, digits = 3, ...)
 \method{print}{pIndex}(x, ...)
