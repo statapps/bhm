@@ -27,6 +27,7 @@ coxpLRT.formula = function(formula, formula2 = NULL, formulaList = NULL,
   if(bootstrap>0) {
     fit$boot = .resbootCox(XZ, y, bootstrap)
   } else {fit$boot$pValue = 1}
+  fit$call = match.call()
   return(fit)
 }
 
@@ -247,10 +248,9 @@ coxpLRT.default = function(XZ, y, lambda = 25, naive.test = FALSE, ...) {
   test = c(Mn/zeta, Wn1, Wn2)
   
   fit= list(mpv=mpv, df = c(sdf, p2, p2), test = test, 
-            xNames=XZ$xNames, pValue = c(mpv, wpv), 
+            pValue = c(mpv, wpv), y = y, 
             testName = c('pLRT', 'Wald', 'Robust'),
-            zNames = XZ$zNames, varNames=varNames, pm = pm, 
-            zeta = zeta, Zx = Z_, theta = theta,
+            zeta = zeta, Z = Z_, theta = theta, XZ = XZ,
             iter = obj$iter, convergence = obj$convergence, 
             lglk0 = ml0, loglik = ml, Mn = Mn, coxCmx= gmx,
             c.max = c.max, coefficients = bn, linear.predictors = lp
@@ -354,27 +354,24 @@ print.coxpLRT = function (x, ...) {
   #p = length(varNames)
   p1 = x$control$p1
   cat("\nMain effect: ")
-  cat(x$zNames)
+  cat(x$XZ$zNames)
   
-  cat("\nInteraction:", x$xNames, "\n")
+  cat("\nInteraction:", x$XZ$xNames, "\n")
   df = x$df
   rpv = round(x$rpv * 10000)/10000
   pv = x$pValue
   bpv = x$boot$pValue
-  #Wn  = x$test[2]
-  #dfw = x$df[2]
-  #wpv = x$wpv
-  if (!is.null(pv[1])) 
-    cat("pLRT   test p-value =", round(pv[1] * 10000)/10000, 
-        "df =", df[1], "\n")
-  cat("Wald   test p-value =", pv[2], "df =", df[2], "\n")
-  cat("Robust test p-value =", pv[3], "df =", df[2], "\n\n")
+  if(bpv == 1) bpv = NULL
+  if (!is.null(pv[1])) {
+    cat("pLRT   test p-value =", pv[1], "df =", df[1], "\n")
+    cat("Wald   test p-value =", pv[2], "df =", df[2], "\n")
+    cat("Robust test p-value =", pv[3], "df =", df[2], "\n\n")
+  }
   if (!is.null(bpv)) 
-    cat("Bootstrap test p-value =", x$bpv, "\n")
+    cat("Bootstrap test p-value =", bpv, "\n")
   cat("Cox PH model with the optimal cut point = ", x$c.max, " :\n")
   print(x$coxCmx)
 }
-
 
 ###Process the value of penalty term using c0 for the pLRT
 .plterm = function(c0) {
