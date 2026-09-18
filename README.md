@@ -32,3 +32,4 @@ Version history,
 5. version 1.05  change name to bhm, adding profile likelihood method.
 
 6. version 1.16 added continuous threshold model 'brm'.
+7. version 1.20
